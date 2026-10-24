@@ -506,6 +506,69 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
 .vt-sub { color: var(--ink-2); font-size: 15px; }
 .vt-chart { width: 100%; display: block; }
 
+/* ---------- coach ---------- */
+.coach { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; display: grid; gap: 12px; }
+.coach-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.coach h2 { font-size: 24px; font-weight: 720; letter-spacing: -0.015em; }
+.lvl { display: grid; justify-items: end; text-align: right; flex: none; }
+.lvl-num { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--accent-text); letter-spacing: 0.06em; text-transform: uppercase; }
+.lvl-name { font-family: var(--font-display); font-weight: 680; font-size: 16px; }
+.lvl-track { height: 6px; border-radius: 99px; background: var(--hair); overflow: hidden; }
+.lvl-track span { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 99px; transition: width .4s ease; }
+.focus { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+.focus li { padding-left: 2px; }
+.focus li.rest { color: var(--accent-text); font-weight: 600; }
+.goal-tip { font-size: 13px; color: var(--ink-2); border-top: 1px solid var(--line); padding-top: 10px; }
+.goal-tip:empty { display: none; }
+#focus-drill { display: grid; gap: 10px; }
+#focus-drill[hidden] { display: none; }
+.feedback .tip { display: block; font-weight: 500; color: var(--ink-2); margin-top: 4px; }
+
+/* ---------- plan ---------- */
+.plan summary { cursor: pointer; list-style: none; display: flex; flex-direction: column; gap: 2px; }
+.plan summary::-webkit-details-marker { display: none; }
+.plan summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
+.plan-title { font-family: var(--font-display); font-weight: 680; font-size: 18px; }
+.plan-title::after { content: " ▾"; color: var(--muted); font-size: 14px; }
+.plan[open] .plan-title::after { content: " ▴"; }
+.plan-body { display: grid; gap: 16px; margin-top: 14px; }
+.plan fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+.plan legend { font-size: 13px; font-weight: 600; color: var(--ink-2); padding: 0; margin-bottom: 6px; }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg label { position: relative; }
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.seg span { display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px; border-radius: 99px; border: 1px solid var(--line); background: var(--card); font-size: 14px; font-weight: 500; cursor: pointer; }
+.seg input:checked + span { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-text); font-weight: 600; }
+.seg input:focus-visible + span { outline: 3px solid var(--accent); outline-offset: 2px; }
+.checks { display: flex; flex-wrap: wrap; gap: 6px 16px; }
+.chips .chip:disabled { opacity: 0.5; cursor: default; }
+
+/* ---------- level drills ---------- */
+.bonus { display: grid; gap: 14px; margin-top: 18px; }
+.drill { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; display: grid; gap: 12px; }
+.drill h3 { font-size: 20px; font-weight: 680; }
+
+/* ---------- roadmap ---------- */
+.road-list { list-style: none; margin: 16px 0 0; padding: 0; display: grid; }
+.mile { position: relative; padding: 0 0 22px 36px; }
+.mile::before { content: ""; position: absolute; left: 12px; top: 20px; bottom: 0; width: 2px; background: var(--line); }
+.mile:last-child::before { display: none; }
+.mile-head { display: flex; align-items: flex-start; gap: 10px; }
+.mile-dot { position: absolute; left: 0; top: 4px; width: 24px; height: 17px; border-radius: 50%; border: 3px solid var(--accent); transform: rotate(-22deg); background: var(--bg); }
+.mile.reached .mile-dot { background: var(--accent); }
+.mile.next .mile-dot { box-shadow: 0 0 0 5px var(--accent-soft); }
+.mile-title { display: grid; flex: 1; min-width: 0; }
+.mile-when { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.mile-title strong { font-family: var(--font-display); font-size: 18px; font-weight: 680; }
+.mile-count { font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); flex: none; padding-top: 2px; }
+.mile-expect { color: var(--ink-2); font-size: 14px; margin-top: 4px; max-width: 38em; }
+.mile-goals { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 4px; font-size: 14px; }
+.mile-goals li { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.mile-goals .g-mark { width: 1em; color: var(--muted); }
+.mile-goals li.done .g-mark { color: var(--good-text); font-weight: 700; }
+.g-prog { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.mile-here { font-size: 13px; font-weight: 600; color: var(--accent-text); margin-top: 6px; }
+
 /* ---------- device sync ---------- */
 .sync {
   margin-top: 22px;
@@ -558,13 +621,42 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   <header class="top">
     <p class="eyebrow" id="today-label">Today</p>
     <h1>Voice Ladder</h1>
-    <p class="lede">Five short steps, about 11 minutes a day. Work down the ladder from <em>do</em> to <em>sol</em>, then check your pitch once a week.</p>
+    <p class="lede"><span id="lede-steps">5</span> short steps, about <span id="lede-min">11</span> minutes a day. Work down the ladder from <em>do</em> to <em>sol</em>, then check your pitch once a week.</p>
     <dl class="stats">
       <div><dt>Streak</dt><dd><span id="st-streak">0</span><small>days</small></dd></div>
       <div><dt>This week</dt><dd><span id="st-week">0</span><small>/ 7</small></dd></div>
       <div><dt>Best hiss</dt><dd><span id="st-hiss">–</span><small id="st-hiss-unit"></small></dd></div>
     </dl>
   </header>
+
+  <section class="coach" id="coach" aria-labelledby="coach-h">
+    <div class="coach-top">
+      <div>
+        <p class="eyebrow">Your coach</p>
+        <h2 id="coach-h">Today's focus</h2>
+      </div>
+      <div class="lvl">
+        <span class="lvl-num" id="lvl-num">Level 1</span>
+        <span class="lvl-name" id="lvl-name">Foundations</span>
+      </div>
+    </div>
+    <div class="lvl-track" aria-hidden="true"><span id="lvl-fill"></span></div>
+    <p class="small" id="lvl-note"></p>
+    <button class="primary" id="lvl-up" hidden style="justify-self: start">Level up</button>
+    <ol class="focus" id="focus-list"></ol>
+    <button id="focus-start" hidden style="justify-self: start">Drill my weak notes</button>
+    <div id="focus-drill" hidden>
+      <div class="pattern" id="focus-chips" role="group" aria-label="Weak notes. Tap one to hear it."></div>
+      <div class="tuner" id="tuner-focus" hidden>
+            <div class="tuner-top"><span class="tuner-note">–</span><span class="tuner-cents">Sing</span><span class="tuner-hint"></span></div>
+            <div class="tuner-bar" aria-hidden="true"><span class="z-close"></span><span class="z-on"></span><span class="center"></span><span class="needle"></span></div>
+            <div class="tuner-scale" aria-hidden="true"><span>♭ flat</span><span>on pitch</span><span>sharp ♯</span></div>
+            <div class="hold" aria-hidden="true"><span></span></div>
+          </div>
+      <p class="feedback" id="focus-fb" role="status"></p>
+    </div>
+    <p class="goal-tip" id="goal-tip"></p>
+  </section>
 
   <section class="home" aria-labelledby="home-h">
     <div class="home-row">
@@ -597,6 +689,68 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     </div>
   </section>
 
+  <details class="home plan" id="plan">
+    <summary><span class="plan-title">Your plan</span><span class="small" id="plan-sum"></span></summary>
+    <div class="plan-body">
+      <fieldset>
+        <legend>Session length</legend>
+        <div class="seg">
+          <label><input type="radio" name="p-length" id="p-len-5" value="5"><span>5 min</span></label>
+          <label><input type="radio" name="p-length" id="p-len-11" value="11"><span>11 min</span></label>
+          <label><input type="radio" name="p-length" id="p-len-20" value="20"><span>20 min</span></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Warm-up</legend>
+        <div class="seg">
+          <label><input type="radio" name="p-warm" id="p-warm-trill" value="trill"><span>Lip trills</span></label>
+          <label><input type="radio" name="p-warm" id="p-warm-straw" value="straw"><span>Straw</span></label>
+          <label><input type="radio" name="p-warm" id="p-warm-hum" value="hum"><span>Hum</span></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Vowel to sing on</legend>
+        <div class="seg">
+          <label><input type="radio" name="p-vowel" id="p-vow-ah" value="ah"><span>ah</span></label>
+          <label><input type="radio" name="p-vowel" id="p-vow-ee" value="ee"><span>ee</span></label>
+          <label><input type="radio" name="p-vowel" id="p-vow-oo" value="oo"><span>oo</span></label>
+          <label><input type="radio" name="p-vowel" id="p-vow-mix" value="mix"><span>Rotate daily</span></label>
+        </div>
+      </fieldset>
+      <label class="inline" for="p-goal">Your goal
+        <select id="p-goal">
+          <option value="fun">Just for fun</option>
+          <option value="pop">Pop</option>
+          <option value="rnb">R&amp;B / soul</option>
+          <option value="rock">Rock</option>
+          <option value="theater">Musical theater</option>
+          <option value="choir">Choir / classical</option>
+        </select>
+      </label>
+      <fieldset>
+        <legend>Steps to include</legend>
+        <div class="checks">
+          <label class="inline"><input type="checkbox" class="p-step" id="p-step-do" data-step="do"> Breathe</label>
+          <label class="inline"><input type="checkbox" class="p-step" id="p-step-re" data-step="re"> Warm up</label>
+          <label class="inline"><input type="checkbox" class="p-step" id="p-step-mi" data-step="mi"> Match</label>
+          <label class="inline"><input type="checkbox" class="p-step" id="p-step-fa" data-step="fa"> Scales</label>
+          <label class="inline"><input type="checkbox" class="p-step" id="p-step-sol" data-step="sol"> Cool down</label>
+        </div>
+      </fieldset>
+      <label class="inline" for="p-level">Level
+        <select id="p-level">
+          <option value="1">1 · Foundations (±40¢)</option>
+          <option value="2">2 · Pitch control (±30¢)</option>
+          <option value="3">3 · Range &amp; registers (±25¢)</option>
+          <option value="4">4 · Agility (±20¢)</option>
+          <option value="5">5 · Polish (±15¢)</option>
+        </select>
+      </label>
+      <label class="inline"><input type="checkbox" id="p-blind"> Ear training: hide the needle until each note is done</label>
+      <p class="small muted">Practice like the pros: short, focused sessions 5–6 days a week with one full rest day. Stop early if your voice feels tired or scratchy.</p>
+    </div>
+  </details>
+
   <section class="home" id="voice-sec" aria-labelledby="voice-h" hidden>
     <div class="sec-head">
       <h2 id="voice-h">What's my voice type?</h2>
@@ -612,6 +766,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       </div>
       <div class="row" style="margin-top: 8px">
         <button class="primary" id="vt-next">That's my lowest</button>
+        <button class="ghost" id="vt-skip" hidden>Skip this step</button>
         <button class="ghost" id="vt-cancel">Cancel</button>
       </div>
     </div>
@@ -633,7 +788,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
         <div class="head-col" aria-hidden="true"><span class="notehead"></span><span class="syl">do</span></div>
         <div class="rung-body">
           <div class="rung-top"><h3>Breathe</h3><span class="dur">2 min</span></div>
-          <p class="how">Stand tall with loose shoulders. Breathe in through your nose for four counts so your belly and lower ribs expand, not your chest. Then let it out on a steady "sss" for as long as it stays even. Do three rounds.</p>
+          <p class="how">Stand tall with loose shoulders. Breathe in through your nose for four counts so your belly and lower ribs expand, not your chest. Then let it out on a steady "sss" for as long as it stays even. Do <span id="do-rounds">3</span> rounds.</p>
           <div class="breath">
             <div class="breath-read">
               <span class="breath-phase" id="hiss-phase">Tap start when you're ready</span>
@@ -658,8 +813,8 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       <li class="rung" data-step="re">
         <div class="head-col" aria-hidden="true"><span class="notehead"></span><span class="syl">re</span></div>
         <div class="rung-body">
-          <div class="rung-top"><h3>Warm up</h3><span class="dur">2 min</span></div>
-          <p class="how">Do lip trills: close your lips loosely and blow so they flutter like a motorboat, then add your voice and slide up and back down with the tone. If trills won't happen yet, hum with your lips closed instead. Five slides.</p>
+          <div class="rung-top"><h3 id="re-title">Warm up</h3><span class="dur">2 min</span></div>
+          <p class="how" id="re-how"></p>
           <div class="row">
             <button class="primary" id="siren-btn">Play a slide</button>
             <button id="siren-sing" hidden>Sing a slide</button>
@@ -675,7 +830,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
         <div class="head-col" aria-hidden="true"><span class="notehead"></span><span class="syl">mi</span></div>
         <div class="rung-body">
           <div class="rung-top"><h3>Match the note</h3><span class="dur">3 min</span></div>
-          <p class="how">Tap a note, listen, then sing it back on "ah" and hold it for three seconds. If it sounds wavy against the tone, slide slowly up or down until the waves smooth out. That smooth sound means you've matched it.</p>
+          <p class="how">Tap a note, listen, then sing it back on <span class="vw">"ah"</span> and hold it. If it sounds wavy against the tone, slide slowly up or down until the waves smooth out. That smooth sound means you've matched it.</p>
           <div class="pills" id="match-pills" role="group" aria-label="Notes to match"></div>
           <label class="inline"><input type="checkbox" id="drone-toggle"> Keep the note sounding while I sing</label>
           <button id="match-check" hidden style="justify-self: start">Check me with the mic</button>
@@ -684,7 +839,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
             <div class="tuner-bar" aria-hidden="true"><span class="z-close"></span><span class="z-on"></span><span class="center"></span><span class="needle"></span></div>
             <div class="tuner-scale" aria-hidden="true"><span>♭ flat</span><span>on pitch</span><span>sharp ♯</span></div>
             <div class="hold" aria-hidden="true"><span></span></div>
-            <p class="hold-label">Keep the needle in the green for 3 seconds to match the note.</p>
+            <p class="hold-label" id="mi-hold-label">Keep the needle in the green for 3 seconds to match the note.</p>
           </div>
           <button class="done-btn" data-done="mi">Mark done</button>
         </div>
@@ -693,8 +848,9 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       <li class="rung" data-step="fa">
         <div class="head-col" aria-hidden="true"><span class="notehead"></span><span class="syl">fa</span></div>
         <div class="rung-body">
-          <div class="rung-top"><h3>Five-note scale</h3><span class="dur">3 min</span></div>
-          <p class="how">Tap Play pattern to hear do re mi fa sol fa mi re do, or tap any note to hear just that one.<span id="fa-mic-how" hidden> Then tap Sing it back: the app plays one note at a time and waits for you to sing it on "ahhh" before moving on.</span> Move up a half step each round, and stop going higher as soon as your throat feels tight; that's today's top.</p>
+          <div class="rung-top"><h3>Scales &amp; arpeggios</h3><span class="dur">3 min</span></div>
+          <p class="how">Pick a pattern, tap Play pattern to hear it, or tap any note to hear just that one.<span id="fa-mic-how" hidden> Then tap Sing it back: the app plays one note at a time and waits for you to sing it on <span class="vw">"ah"</span> before moving on.</span> Move up a half step each round, and stop going higher as soon as your throat feels tight; that's today's top.</p>
+          <div class="chips" id="pat-chips" role="group" aria-label="Pattern"></div>
           <div class="pattern" id="scale-pattern" role="group" aria-label="Scale notes. Tap one to hear it."></div>
           <div class="row">
             <button class="primary" id="scale-play">Play pattern</button>
@@ -704,6 +860,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
               <button id="scale-up" aria-label="Move the scale up a half step">+</button>
             </div>
           </div>
+          <p class="small" id="fa-range"></p>
           <button id="scale-sing" hidden style="justify-self: start">Sing it back</button>
           <div class="tuner" id="tuner-fa" hidden>
             <div class="tuner-top"><span class="tuner-note">–</span><span class="tuner-cents">Sing "ah"</span><span class="tuner-hint"></span></div>
@@ -722,7 +879,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
         <div class="head-col" aria-hidden="true"><span class="notehead"></span><span class="syl">sol</span></div>
         <div class="rung-body">
           <div class="rung-top"><h3>Cool down</h3><span class="dur">1 min</span></div>
-          <p class="how">Hum quietly with your lips closed and slide down from the middle of your range to your lowest easy note. Keep it soft and lazy. Three slides, then you're done for today.</p>
+          <p class="how">Hum quietly with your lips closed and slide down from the middle of your range to your lowest easy note. Keep it soft and lazy. <span id="sol-rounds">3</span> slides, then you're done for today.</p>
           <div class="row">
             <button class="primary" id="cool-btn">Play a slide down</button>
             <button id="cool-sing" hidden>Sing a slide down</button>
@@ -734,6 +891,30 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
         </div>
       </li>
     </ol>
+
+    <div class="bonus" id="bonus" hidden>
+      <h3 class="sub-h">Level drills</h3>
+      <div class="drill" id="swell-card" hidden>
+        <div class="rung-top"><h3>Hold &amp; swell</h3><span class="dur">2 min</span></div>
+        <p class="how">The classic <em>messa di voce</em>. Hold one note (<span id="swell-how-note">E3</span>) for 8 seconds: start soft, swell louder, then fade back to soft, keeping the pitch perfectly still. Follow the curve. It builds breath control and keeps your pitch steady when you change volume.</p>
+        <div class="row"><button class="primary" id="swell-btn">Start a swell</button><span class="small" id="swell-note"></span></div>
+        <canvas class="slide-cv" id="swell-cv" hidden></canvas>
+        <p class="feedback" id="swell-fb" role="status"></p>
+      </div>
+      <div class="drill" id="agility-card" hidden>
+        <div class="rung-top"><h3>Agility run</h3><span class="dur">2 min</span></div>
+        <p class="how">Hear the run once at speed, then sing it back quickly and lightly. Each note only needs a quick, clean touch, so keep it small and easy.</p>
+        <div class="pattern" id="agility-chips" role="group" aria-label="Run notes"></div>
+        <div class="row"><button class="primary" id="agility-play">Hear the run</button><button id="agility-sing">Sing the run</button></div>
+        <div class="tuner" id="tuner-agility" hidden>
+            <div class="tuner-top"><span class="tuner-note">–</span><span class="tuner-cents">Sing</span><span class="tuner-hint"></span></div>
+            <div class="tuner-bar" aria-hidden="true"><span class="z-close"></span><span class="z-on"></span><span class="center"></span><span class="needle"></span></div>
+            <div class="tuner-scale" aria-hidden="true"><span>♭ flat</span><span>on pitch</span><span>sharp ♯</span></div>
+            <div class="hold" aria-hidden="true"><span></span></div>
+          </div>
+        <p class="feedback" id="agility-fb" role="status"></p>
+      </div>
+    </div>
   </section>
 
   <section class="check" aria-labelledby="check-h">
@@ -826,6 +1007,15 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     </div>
   </section>
 
+  <section class="road" aria-labelledby="road-h">
+    <div class="sec-head">
+      <h2 id="road-h">Your roadmap</h2>
+      <p class="small" id="road-pos"></p>
+    </div>
+    <p class="small" style="margin-top: 6px; max-width: 38em">What to expect with about 15 focused minutes a day, 5–6 days a week. These are typical timelines from voice teachers and practice data, not deadlines; everyone moves at their own pace. Goals check off automatically from your log.</p>
+    <ol class="road-list" id="road-list"></ol>
+  </section>
+
   <section class="rules" aria-labelledby="rules-h">
     <h2 id="rules-h">Ground rules</h2>
     <ul>
@@ -859,6 +1049,44 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   const PATTERN = [0, 2, 4, 5, 7, 5, 4, 2, 0];
   const PATTERN_SYL = ['do', 're', 'mi', 'fa', 'sol', 'fa', 'mi', 're', 'do'];
   const STEPS = ['do', 're', 'mi', 'fa', 'sol'];
+  // Levels follow a voice-clinic progression: glides and short scales, then arpeggios,
+  // wider leaps, sustained dynamics and agility, with a tighter pitch target each step.
+  const OCT = [0, 2, 4, 5, 7, 9, 11, 12];
+  const LEVELS = [null,
+    { name: 'Foundations', tol: 40, hold: 2, land: 0.6, pats: ['three', 'five'], glide: 7, match: [0, 2, 4, 5, 7], bonus: [] },
+    { name: 'Pitch control', tol: 30, hold: 2.5, land: 0.7, pats: ['three', 'five', 'arp'], glide: 7, match: OCT, bonus: [] },
+    { name: 'Range & registers', tol: 25, hold: 3, land: 0.8, pats: ['five', 'arp', 'arp8'], glide: 12, match: OCT, bonus: ['swell'] },
+    { name: 'Agility', tol: 20, hold: 3, land: 0.6, pats: ['five', 'arp', 'arp8'], glide: 12, match: OCT, bonus: ['swell', 'agility'] },
+    { name: 'Polish', tol: 15, hold: 4, land: 0.6, pats: ['five', 'arp', 'arp8', 'nine'], glide: 12, match: OCT, bonus: ['swell', 'agility'] },
+  ];
+  const PATTERNS = {
+    three: { label: '1-2-3-2-1', notes: [0, 2, 4, 2, 0] },
+    five: { label: '5-note scale', notes: [0, 2, 4, 5, 7, 5, 4, 2, 0] },
+    arp: { label: 'Arpeggio 1-3-5', notes: [0, 4, 7, 4, 0] },
+    arp8: { label: 'Octave arpeggio', notes: [0, 4, 7, 12, 7, 4, 0] },
+    nine: { label: '9-note scale', notes: [0, 2, 4, 5, 7, 9, 11, 12, 14, 12, 11, 9, 7, 5, 4, 2, 0] },
+  };
+  const DEG_SYL = { 0: 'do', 2: 're', 4: 'mi', 5: 'fa', 7: 'sol', 9: 'la', 11: 'ti', 12: 'do′', 14: 're′' };
+  const sylOf = d => DEG_SYL[d] || '';
+  function defaultProfile() {
+    return {
+      length: 11, warm: 'trill', vowel: 'ah', goal: 'fun', skip: {}, blind: false,
+      level: 1, levelSince: null, strong: [], pattern: null,
+      notes: {}, dir: { up: { n: 0, s: 0 }, down: { n: 0, s: 0 } }, habits: {}, flags: {},
+    };
+  }
+  function normProfile(p) {
+    const d = defaultProfile();
+    if (!p || typeof p !== 'object') return d;
+    const o = Object.assign(d, p);
+    o.dir = { up: Object.assign({ n: 0, s: 0 }, p.dir && p.dir.up), down: Object.assign({ n: 0, s: 0 }, p.dir && p.dir.down) };
+    ['notes', 'habits', 'flags', 'skip'].forEach(k => { o[k] = p[k] && typeof p[k] === 'object' ? p[k] : {}; });
+    o.strong = Array.isArray(p.strong) ? p.strong : [];
+    o.level = Math.max(1, Math.min(5, Number(p.level) || 1));
+    if (![5, 11, 20].includes(Number(o.length))) o.length = 11;
+    o.length = Number(o.length);
+    return o;
+  }
   const HOME_MIN = 43, HOME_MAX = 65; // G2 .. F4
 
   const $ = s => document.querySelector(s);
@@ -882,6 +1110,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     reps: { do: 0, re: 0, sol: 0 },
     compare: 'scale',
     voice: null,
+    profile: defaultProfile(),
   };
   const peekDay = k => state.days[k] || null;
   const dayOf = k => state.days[k] || (state.days[k] = { date: k, steps: {}, hiss: 0, onTarget: null, avgMiss: null, updated: 0 });
@@ -899,12 +1128,13 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
         if (typeof o.home === 'number') state.home = o.home;
         state.settingsUpdated = o.settingsUpdated || 0;
         if (o.voice && typeof o.voice === 'object') state.voice = o.voice;
+        if (o.profile) state.profile = normProfile(o.profile);
       }
     } catch (e) { /* storage unavailable */ }
   }
   function lsSave() {
     try {
-      localStorage.setItem(LS_KEY, JSON.stringify({ days: state.days, home: state.home, settingsUpdated: state.settingsUpdated, voice: state.voice }));
+      localStorage.setItem(LS_KEY, JSON.stringify({ days: state.days, home: state.home, settingsUpdated: state.settingsUpdated, voice: state.voice, profile: state.profile }));
     } catch (e) { /* storage unavailable */ }
   }
 
@@ -942,7 +1172,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   function saveSettings() {
     state.settingsUpdated = Date.now();
     lsSave();
-    queueWrite('settings', () => ({ home: state.home, voice: state.voice, updated: state.settingsUpdated }));
+    queueWrite('settings', () => ({ home: state.home, voice: state.voice, profile: state.profile, updated: state.settingsUpdated }));
     ghSchedule();
   }
 
@@ -972,7 +1202,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     if (!res.ok) { const err = new Error('GitHub ' + res.status); err.status = res.status; throw err; }
     return res.status === 204 ? null : res.json();
   }
-  const payload = () => ({ v: 1, home: state.home, voice: state.voice, settingsUpdated: state.settingsUpdated, days: state.days });
+  const payload = () => ({ v: 1, home: state.home, voice: state.voice, profile: state.profile, settingsUpdated: state.settingsUpdated, days: state.days });
   function mergeIn(o) {
     let changedLocal = false, localNewer = false;
     const days = (o && o.days && typeof o.days === 'object') ? o.days : {};
@@ -983,7 +1213,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       else if (l && lu > ru) localNewer = true;
     });
     const rs = o && typeof o.home === 'number' ? (o.settingsUpdated || 0) : -1;
-    if (rs > state.settingsUpdated) { state.home = o.home; state.voice = o.voice || null; state.settingsUpdated = rs; changedLocal = true; }
+    if (rs > state.settingsUpdated) { state.home = o.home; state.voice = o.voice || null; state.profile = normProfile(o.profile); state.settingsUpdated = rs; changedLocal = true; }
     else if (state.settingsUpdated > rs && state.settingsUpdated > 0) localNewer = true;
     return { changedLocal, localNewer };
   }
@@ -1111,6 +1341,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       if (serverSettings && typeof serverSettings.home === 'number' && (serverSettings.updated || 0) >= state.settingsUpdated) {
         state.home = serverSettings.home;
         state.voice = serverSettings.voice || state.voice;
+        if (serverSettings.profile) state.profile = normProfile(serverSettings.profile);
         state.settingsUpdated = serverSettings.updated || 0;
       } else if (state.settingsUpdated) pushSettings = true;
       remote.col = col;
@@ -1118,7 +1349,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       setSync('account');
       renderAll();
       push.forEach(k => queueWrite('day-' + k, () => state.days[k]));
-      if (pushSettings) queueWrite('settings', () => ({ home: state.home, voice: state.voice, updated: state.settingsUpdated }));
+      if (pushSettings) queueWrite('settings', () => ({ home: state.home, voice: state.voice, profile: state.profile, updated: state.settingsUpdated }));
     } catch (e) {
       setSync('device');
     }
@@ -1756,18 +1987,25 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   // ---------- tuner bar ----------
   function makeTuner(root) {
     const q = s => root.querySelector(s);
-    const els = { note: q('.tuner-note'), cents: q('.tuner-cents'), hint: q('.tuner-hint'), needle: q('.needle'), hold: q('.hold span') };
+    const els = { note: q('.tuner-note'), cents: q('.tuner-cents'), hint: q('.tuner-hint'), needle: q('.needle'), hold: q('.hold span'), zon: q('.z-on'), zclose: q('.z-close') };
     let pos = 50;
     return {
       show(on) { root.hidden = !on; },
       render(o) {
+        const tol = o.tol || lv().tol;
+        els.zon.style.left = els.zon.style.right = (50 - tol / 2) + '%';
+        const cl = Math.min(45, tol * 1.2);
+        els.zclose.style.left = els.zclose.style.right = (50 - cl) + '%';
         els.note.textContent = noteName(o.target);
-        els.hold.style.width = Math.round(Math.max(0, Math.min(1, o.hold || 0)) * 100) + '%';
-        if (o.blocked || o.dev == null) {
+        const blind = P().blind && !o.reveal;
+        els.hold.style.width = blind ? '0' : Math.round(Math.max(0, Math.min(1, o.hold || 0)) * 100) + '%';
+        const top = rangeTop();
+        const nearTop = top != null && o.target >= top - 2 ? ' Near the top of your range: keep it light.' : '';
+        if (o.blocked || o.dev == null || blind) {
           els.needle.classList.remove('on');
           els.note.style.color = '';
-          els.cents.textContent = o.blocked ? 'Listening after the tone…' : 'Sing "ah"';
-          els.hint.textContent = o.msg || (o.blocked ? '' : 'Waiting to hear you…');
+          els.cents.textContent = o.blocked ? 'Listening after the tone…' : blind && o.dev != null ? 'Ear training: trust your ear' : 'Sing ' + vowelWord();
+          els.hint.textContent = (o.msg || (o.blocked ? '' : blind ? 'The result shows when the note is done.' : 'Waiting to hear you…')) + (o.blocked ? '' : nearTop);
           return;
         }
         const a = Math.abs(o.dev);
@@ -1779,11 +2017,12 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
         els.cents.textContent = a > 100 && o.sung != null
           ? 'You: ' + noteName(Math.round(o.sung))
           : (dv > 0 ? '+' : dv < 0 ? '−' : '±') + Math.abs(dv) + '¢';
-        els.note.style.color = a <= 25 ? css('--good-text') : a <= 60 ? css('--warn-text') : css('--bad-text');
+        els.note.style.color = a <= tol ? css('--good-text') : a <= tol * 2.4 ? css('--warn-text') : css('--bad-text');
         let h = o.msg;
         if (!h) {
-          h = a <= 25 ? 'On pitch. Hold it.' : o.dev < 0 ? (a > 100 ? '↑ Go higher' : '↑ A little higher') : (a > 100 ? '↓ Go lower' : '↓ A little lower');
+          h = a <= tol ? 'On pitch. Hold it.' : o.dev < 0 ? (a > 100 ? '↑ Go higher' : '↑ A little higher') : (a > 100 ? '↓ Go lower' : '↓ A little lower');
           if (o.oct) h += " (You're an octave " + (o.oct < 0 ? 'lower' : 'higher') + ', which counts.)';
+          h += nearTop;
         }
         els.hint.textContent = h;
       },
@@ -1994,7 +2233,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
         hissFb(steady >= 75 ? 'ok' : steady >= 55 ? 'meh' : 'bad',
           'Steady ' + steady + '% of the time. ' + (steady >= 75 ? 'Nice, even airflow.' : steady >= 55 ? 'Pretty good. Keep the hiss the same loudness the whole way.' : 'Wobbly. Use a gentler hiss you can hold evenly.'));
       }
-      addRep('do', 3);
+      addRep('do', repTotal('do'));
       renderStats();
       renderTrends();
       renderBreathMeta();
@@ -2122,7 +2361,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
         const k = todayKey();
         const d = dayOf(k);
         if (d.follow == null || follow > d.follow) { d.follow = follow; saveDay(k); renderTrends(); }
-        addRep(opts.step, opts.total);
+        addRep(opts.step, repTotal(opts.step));
       }
       setConsumer(null);
       draw(dur() + 1);
@@ -2172,16 +2411,16 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   }
   const sirenSlide = makeSlide({
     cv: $('#siren-cv'), fb: $('#siren-fb'), btn: $('#siren-sing'), label: 'Sing a slide', step: 're', total: 5,
-    points: () => [[state.home, 0], [state.home + 7, 1.8], [state.home, 3.6]],
+    points: () => warmPoints(),
   });
   const coolSlide = makeSlide({
     cv: $('#cool-cv'), fb: $('#cool-fb'), btn: $('#cool-sing'), label: 'Sing a slide down', step: 'sol', total: 3, soft: true,
-    points: () => [[state.home + 5, 0], [state.home - 5, 3.2]],
+    points: () => coolPoints(),
   });
 
   // ---------- mi · match the note with a tuner ----------
   const tunerMi = makeTuner($('#tuner-mi'));
-  const match = { hold: 0, last: 0, matched: new Set(), pauseUntil: 0 };
+  const match = { hold: 0, last: 0, matched: new Set(), pauseUntil: 0, at: null, prev: null, holdDevs: [] };
   function markMatchedPills() {
     document.querySelectorAll('.pill').forEach((p, i) => p.classList.toggle('matched', match.matched.has(i)));
   }
@@ -2189,191 +2428,904 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     frame(f) {
       const dt = match.last ? Math.min(0.1, f.t - match.last) : 0;
       match.last = f.t;
-      const target = state.home + SCALE[state.matchIdx];
+      const target = curMatchMidi();
+      const need = lv().hold, tol = lv().tol;
       if (f.t < match.pauseUntil) return;
       if (f.blocked) {
+        trackFrame(match.at, 0, false, dt);
         const msg = droneVoice && !Mic.headphones ? 'Turn off "Keep the note sounding" or tick "I\'m wearing headphones" so the mic can hear you.' : '';
-        tunerMi.render({ target, blocked: true, hold: match.hold / 3, msg });
+        tunerMi.render({ target, blocked: true, hold: match.hold / need, msg });
         return;
       }
       if (f.midi == null) {
+        trackFrame(match.at, 0, false, dt);
         match.hold = Math.max(0, match.hold - dt * 0.5);
-        tunerMi.render({ target, dev: null, hold: match.hold / 3 });
+        tunerMi.render({ target, dev: null, hold: match.hold / need });
         return;
       }
       const { dev, oct } = foldTo(f.midi, target);
-      if (Math.abs(dev) <= 25) match.hold += dt;
+      trackFrame(match.at, dev, true, dt);
+      if (Math.abs(dev) <= tol) { match.hold += dt; match.holdDevs.push(dev); }
       else match.hold = Math.max(0, match.hold - dt * 1.5);
-      if (match.hold >= 3) {
+      if (match.hold >= need) {
+        const mean = match.holdDevs.reduce((a, b) => a + b, 0) / Math.max(1, match.holdDevs.length);
+        finishAttempt(match.at, target, true, match.prev, match.holdDevs);
+        match.prev = target;
+        match.at = makeAttempt();
+        match.holdDevs = [];
         match.hold = 0;
         match.matched.add(state.matchIdx);
         markMatchedPills();
-        const all = match.matched.size === 5;
-        tunerMi.render({ target, dev, oct, hold: 1, msg: all ? '✓ All five matched. Great ear!' : '✓ Matched! Next note coming up.' });
+        const total = matchNotes().length;
+        const all = match.matched.size >= total;
+        tunerMi.render({ target, dev: mean, oct, sung: f.midi, hold: 1, reveal: true, msg: all ? '✓ All ' + total + ' matched. Great ear!' : '✓ Matched (' + signedC(mean) + '). Next note coming up.' });
         if (all) {
           match.pauseUntil = Infinity;
+          if (!P().flags.matchAll) { P().flags.matchAll = todayKey(); saveSettings(); }
           setStep('mi', true);
+          logStrong();
+          renderRoadmap();
           setTimeout(() => { if (Mic.consumer === matchConsumer) setConsumer(null); }, 2500);
         } else {
           match.pauseUntil = f.t + 1.2;
           setTimeout(() => {
             if (Mic.consumer !== matchConsumer) return;
-            let n = (state.matchIdx + 1) % 5;
-            while (match.matched.has(n)) n = (n + 1) % 5;
+            let n = (state.matchIdx + 1) % total;
+            while (match.matched.has(n)) n = (n + 1) % total;
             pickMatch(n);
           }, 1000);
         }
         return;
       }
-      tunerMi.render({ target, dev, oct, sung: f.midi, hold: match.hold / 3 });
+      tunerMi.render({ target, dev, oct, sung: f.midi, hold: match.hold / need });
     },
     onStop() {
       tunerMi.show(false);
       micLabel($('#match-check'), 'Check me with the mic');
       match.hold = 0;
       match.last = 0;
+      renderCoach();
     },
   };
   async function matchCheckToggle() {
     if (Mic.consumer === matchConsumer) { setConsumer(null); return; }
-    if (!(await micStart())) { tunerMi.show(true); tunerMi.render({ target: state.home + SCALE[state.matchIdx], dev: null, msg: MIC_FAIL }); return; }
-    if (match.matched.size === 5) { match.matched.clear(); markMatchedPills(); }
-    match.hold = 0;
-    match.last = 0;
-    match.pauseUntil = 0;
+    if (!(await micStart())) { tunerMi.show(true); tunerMi.render({ target: curMatchMidi(), dev: null, msg: MIC_FAIL }); return; }
+    if (match.matched.size >= matchNotes().length) { match.matched.clear(); markMatchedPills(); }
+    Object.assign(match, { hold: 0, last: 0, pauseUntil: 0, at: makeAttempt(), prev: null, holdDevs: [] });
     setConsumer(matchConsumer);
     tunerMi.show(true);
     $('#match-check').textContent = 'Stop checking';
     pickMatch(state.matchIdx);
   }
 
-  // ---------- fa · sing the scale back, one note at a time ----------
-  const tunerFa = makeTuner($('#tuner-fa'));
-  const SCALE_HOLD = 0.8; // seconds on pitch to land a note
-  const run = { idx: 0, hold: 0, devs: [], el: 0, last: 0, results: [], voiced: 0, on: 0, miss: 0, voicedSec: 0, pauseUntil: 0 };
-  function markPattern() {
-    const singing = Mic.consumer === scaleConsumer;
-    document.querySelectorAll('#scale-pattern .pc').forEach((sp, i) => {
-      sp.classList.remove('cur', 'r-on', 'r-close', 'r-miss');
-      if (i < run.results.length) sp.classList.add('r-' + run.results[i]);
-      else if (singing && i === run.idx) sp.classList.add('cur');
-    });
+  // ---------- coach: plan, levels, weak spots, range fit, roadmap ----------
+  const P = () => state.profile;
+  const lv = () => LEVELS[P().level];
+  const VOWELS = { ah: 'ahhh', ee: 'eee', oo: 'ooo', oh: 'ohhh', eh: 'ehhh' };
+  function vowelKey() {
+    const v = P().vowel;
+    if (VOWELS[v]) return v;
+    const order = ['ah', 'ee', 'oo', 'oh', 'eh'];
+    return order[((dayNum(todayKey()) % order.length) + order.length) % order.length];
   }
-  // Play only the note you're on, then listen.
-  function playScaleTarget() {
-    if (run.idx >= PATTERN.length) return;
-    playNote(scaleKey() + PATTERN[run.idx], 1.3);
-    run.el = 0;
-    const chip = document.querySelectorAll('#scale-pattern .pc')[run.idx];
-    if (chip) {
-      chip.classList.add('lit');
-      seqTimers.push(setTimeout(() => chip.classList.remove('lit'), 1300));
+  const vowelWord = () => '"' + VOWELS[vowelKey()] + '"';
+  const signedC = v => (v > 0.5 ? '+' : v < -0.5 ? '−' : '±') + Math.abs(Math.round(v)) + '¢';
+  const flatSharp = v => Math.abs(Math.round(v)) + '¢ ' + (v < 0 ? 'flat' : 'sharp');
+
+  // ----- range fit -----
+  const rangeTop = () => (state.voice ? state.voice.high : null);
+  const rangeLow = () => (state.voice ? state.voice.low : null);
+  function matchNotes() {
+    const top = rangeTop();
+    let degs = lv().match.filter(d => top == null || state.home + d <= top - 1);
+    if (degs.length < 3) degs = lv().match.slice(0, 5);
+    return degs.map(d => ({ deg: d, midi: state.home + d, syl: sylOf(d) }));
+  }
+  function curMatchMidi() {
+    const ns = matchNotes();
+    return ns[Math.min(state.matchIdx, ns.length - 1)].midi;
+  }
+  function warmPoints() {
+    const h = state.home;
+    let top = h + lv().glide;
+    const t = rangeTop();
+    if (t != null) top = Math.min(top, t - 1);
+    top = Math.max(top, h + 3);
+    const up = top - h >= 10 ? 2.2 : 1.8;
+    return [[h, 0], [top, up], [h, up * 2]];
+  }
+  function coolPoints() {
+    const h = state.home;
+    let a = h + 5, b = h - 5;
+    const t = rangeTop(), l = rangeLow();
+    if (t != null) a = Math.min(a, t - 3);
+    if (l != null) b = Math.max(b, l);
+    if (a - b < 4) b = a - 4;
+    return [[a, 0], [b, 3.2]];
+  }
+  // Highest key this pattern can start on without passing your comfortable top.
+  function scaleCap() {
+    const t = rangeTop();
+    return t == null ? null : t - 1 - Math.max(...curPattern().notes);
+  }
+  function clampScaleKey() {
+    const cap = scaleCap();
+    if (cap != null && scaleKey() > cap) state.scaleShift = Math.max(cap - state.home, -12);
+  }
+
+  // ----- levels & patterns -----
+  function curPatternId() {
+    const ids = lv().pats;
+    return ids.includes(P().pattern) ? P().pattern : ids[ids.length - 1];
+  }
+  const curPattern = () => PATTERNS[curPatternId()];
+  function strongDays() { return [...new Set(P().strong)]; }
+  function logStrong() {
+    const k = todayKey();
+    if (!P().strong.includes(k)) {
+      P().strong.push(k);
+      P().strong = P().strong.slice(-20);
+      saveSettings();
     }
+    renderCoach();
   }
-  const scaleConsumer = {
-    frame(f) {
-      const dt = run.last ? Math.min(0.1, f.t - run.last) : 0;
-      run.last = f.t;
-      if (run.idx >= PATTERN.length || f.t < run.pauseUntil) return;
-      const target = scaleKey() + PATTERN[run.idx];
-      const syl = PATTERN_SYL[run.idx];
-      if (f.blocked) {
-        tunerFa.render({ target, blocked: true, hold: run.hold / SCALE_HOLD, msg: 'Listen to ' + syl + ', then sing it on "ahhh".' });
-        return;
+  function levelUp() {
+    if (P().level >= 5) return;
+    P().level++;
+    P().strong = [];
+    P().pattern = null;
+    P().levelSince = todayKey();
+    state.scaleShift = 0;
+    match.matched.clear();
+    saveSettings();
+    renderAll();
+    const fb = $('#lvl-note');
+    fb.textContent = 'Welcome to Level ' + P().level + ': ' + lv().name + '. ' + LEVEL_UNLOCKS[P().level];
+  }
+
+  // ----- per-note stats and habits -----
+  function makeAttempt() {
+    return { devs: [], gap: 1, onset: null, onsets: 0, scoops: 0 };
+  }
+  // dev = cents from the target (octave-folded); voiced = a pitch was heard this frame
+  function trackFrame(at, dev, voiced, dt) {
+    if (!at) return;
+    if (!voiced) { at.gap += dt; return; }
+    if (at.gap >= 0.15) at.onset = [];
+    at.gap = 0;
+    if (at.onset) {
+      at.onset.push(dev);
+      if (at.onset.length >= 8) {
+        const o = at.onset;
+        const first = (o[0] + o[1] + o[2]) / 3, last = (o[5] + o[6] + o[7]) / 3;
+        at.onsets++;
+        if (first < -70 && Math.abs(last) < 60 && last - first > 60) at.scoops++;
+        at.onset = null;
       }
-      run.el += dt;
-      if (f.midi != null) {
-        const { dev, oct } = foldTo(f.midi, target);
-        const a = Math.abs(dev);
-        // For the progress log, score each moment against the nearest scale note,
-        // so lingering on the last note while moving to the next isn't counted as a miss.
-        let near = Infinity;
-        for (const st of SCALE) near = Math.min(near, Math.abs(foldTo(f.midi, scaleKey() + st).dev));
-        run.voiced++;
-        run.voicedSec += dt;
-        run.miss += Math.min(near, 200);
-        if (near <= 25) run.on++;
-        if (a <= 50) { run.hold += dt; run.devs.push(a); }
-        else run.hold = Math.max(0, run.hold - dt);
-        if (run.hold >= SCALE_HOLD) {
-          const avg = run.devs.reduce((s, v) => s + v, 0) / run.devs.length;
-          const result = avg <= 25 ? 'on' : 'close';
-          tunerFa.render({ target, dev, oct, sung: f.midi, hold: 1, msg: result === 'on' ? '✓ On pitch' : '~ Close enough. Next note.' });
-          nextScaleNote(result);
+    }
+    if (Math.abs(dev) <= 150) at.devs.push(dev);
+  }
+  function bumpHabit(key, hit) {
+    const h = P().habits;
+    const k = h[key] || (h[key] = { n: 0, hits: 0 });
+    k.n = Math.round((k.n * 0.96 + 1) * 100) / 100;
+    k.hits = Math.round((k.hits * 0.96 + (hit ? 1 : 0)) * 100) / 100;
+  }
+  const habitRate = key => { const k = P().habits[key]; return k && k.n >= 4 ? k.hits / k.n : null; };
+  function finishAttempt(at, midi, ok, prevMidi, holdDevs) {
+    const out = { mean: null, wobble: false, scoops: at ? at.scoops : 0, onsets: at ? at.onsets : 0, dir: null };
+    if (!at) return out;
+    for (let i = 0; i < at.onsets; i++) bumpHabit('scoop', i < at.scoops);
+    if (holdDevs && holdDevs.length >= 8) {
+      const m = holdDevs.reduce((a, b) => a + b, 0) / holdDevs.length;
+      const sd = Math.sqrt(holdDevs.reduce((a, b) => a + (b - m) * (b - m), 0) / holdDevs.length);
+      out.wobble = sd > 22;
+      bumpHabit('wobble', out.wobble);
+    }
+    const devs = at.devs;
+    if (devs.length >= 4) {
+      const mean = devs.reduce((a, b) => a + b, 0) / devs.length;
+      const meanAbs = devs.reduce((a, b) => a + Math.abs(b), 0) / devs.length;
+      out.mean = mean;
+      const key = String(Math.round(midi));
+      const s = P().notes[key] || (P().notes[key] = { n: 0, s: 0, a: 0, ok: 0 });
+      const al = s.n < 5 ? 1 / (s.n + 1) : 0.25;
+      s.s = Math.round((s.s + (mean - s.s) * al) * 10) / 10;
+      s.a = Math.round((s.a + (meanAbs - s.a) * al) * 10) / 10;
+      s.n++;
+      if (ok) s.ok++;
+      if (prevMidi != null && Math.round(prevMidi) !== Math.round(midi)) {
+        out.dir = midi > prevMidi ? 'up' : 'down';
+        const d = P().dir[out.dir];
+        const a2 = d.n < 5 ? 1 / (d.n + 1) : 0.2;
+        d.s = Math.round((d.s + (mean - d.s) * a2) * 10) / 10;
+        d.n++;
+      }
+    }
+    saveSettings();
+    return out;
+  }
+  function weakNotes(max) {
+    const tol = lv().tol;
+    return Object.entries(P().notes)
+      .map(([k, s]) => ({ midi: Number(k), s }))
+      .filter(x => x.s.n >= 3 && x.s.a > tol * 0.8)
+      .sort((a, b) => b.s.a - a.s.a)
+      .slice(0, max || 3);
+  }
+  // Coach tips from what happened in one run of an exercise.
+  function runTips(t) {
+    const tips = [];
+    if (t.onsets >= 3 && t.scoops / t.onsets >= 0.4) tips.push('You scooped up into ' + t.scoops + ' of ' + t.onsets + ' notes. Hear the note in your head first, then start it right on pitch.');
+    if (t.rise.length >= 2) {
+      const m = t.rise.reduce((a, b) => a + b, 0) / t.rise.length;
+      if (m <= -18) tips.push('You went flat on the way up (' + flatSharp(m) + ' on average). Aim a little higher as you climb; it\'s the most common miss.');
+    }
+    if (t.fall.length >= 2) {
+      const m = t.fall.reduce((a, b) => a + b, 0) / t.fall.length;
+      if (m >= 18) tips.push('You drifted sharp coming down (' + flatSharp(m) + '). Relax and let falling notes settle instead of reaching for them.');
+    }
+    if (t.wobbles >= 2) tips.push('A few held notes wobbled. Steady airflow fixes this; the hiss rounds in do train exactly that.');
+    if (t.topMiss) tips.push('The top note was the hardest. Keep it light and a little softer; pushing volume makes high notes go flat.');
+    return tips.slice(0, 2);
+  }
+
+  // ----- generic "play a note, wait for the singer" drill -----
+  function makeDrill(o) {
+    const r = { idx: 0, hold: 0, devs: [], holdDevs: [], el: 0, last: 0, results: [], voiced: 0, on: 0, miss: 0, voicedSec: 0, pauseUntil: 0, at: null, prev: null, tips: null };
+    const chipsAll = () => o.chips().querySelectorAll('.pc');
+    const tolOf = () => (o.tol ? o.tol() : lv().tol);
+    function mark() {
+      const singing = Mic.consumer === consumer;
+      chipsAll().forEach((c, i) => {
+        c.classList.remove('cur', 'r-on', 'r-close', 'r-miss');
+        if (i < r.results.length) c.classList.add('r-' + r.results[i]);
+        else if (singing && i === r.idx) c.classList.add('cur');
+      });
+    }
+    function playTarget() {
+      const n = o.notes()[r.idx];
+      if (!n) return;
+      playNote(n.midi, 1.3);
+      r.el = 0;
+      r.hold = 0;
+      const c = chipsAll()[r.idx];
+      if (c) { c.classList.add('lit'); seqTimers.push(setTimeout(() => c.classList.remove('lit'), 1300)); }
+    }
+    const consumer = {
+      frame(f) {
+        const dt = r.last ? Math.min(0.1, f.t - r.last) : 0;
+        r.last = f.t;
+        const notes = o.notes();
+        if (r.idx >= notes.length || f.t < r.pauseUntil) return;
+        const target = notes[r.idx].midi, label = notes[r.idx].label;
+        const tol = tolOf();
+        if (f.blocked) {
+          trackFrame(r.at, 0, false, dt);
+          o.tuner.render({ target, tol, blocked: true, hold: r.hold / o.hold(), msg: 'Listen to ' + label + ', then sing it on ' + vowelWord() + '.' });
           return;
         }
-        tunerFa.render({ target, dev, oct, sung: f.midi, hold: run.hold / SCALE_HOLD });
+        r.el += dt;
+        if (f.midi != null) {
+          const { dev, oct } = foldTo(f.midi, target);
+          const a = Math.abs(dev);
+          trackFrame(r.at, dev, true, dt);
+          let near = Infinity;
+          for (const n of notes) near = Math.min(near, Math.abs(foldTo(f.midi, n.midi).dev));
+          r.voiced++;
+          r.voicedSec += dt;
+          r.miss += Math.min(near, 200);
+          if (near <= 25) r.on++;
+          if (a <= tol * 2) { r.hold += dt; r.devs.push(a); r.holdDevs.push(dev); }
+          else r.hold = Math.max(0, r.hold - dt);
+          if (r.hold >= o.hold()) {
+            const avg = r.devs.reduce((s, v) => s + v, 0) / r.devs.length;
+            const mean = r.holdDevs.reduce((s, v) => s + v, 0) / r.holdDevs.length;
+            const result = avg <= tol ? 'on' : 'close';
+            o.tuner.render({ target, tol, dev: mean, oct, sung: f.midi, hold: 1, reveal: true, msg: (result === 'on' ? '✓ On pitch' : '~ Close') + ' (' + signedC(mean) + ')' + (o.perNote ? '. Next note.' : '') });
+            next(result, target);
+            return;
+          }
+          o.tuner.render({ target, tol, dev, oct, sung: f.midi, hold: r.hold / o.hold() });
+        } else {
+          trackFrame(r.at, 0, false, dt);
+          r.hold = Math.max(0, r.hold - dt * 0.5);
+          o.tuner.render({ target, tol, dev: null, hold: r.hold / o.hold(), msg: 'Sing ' + label + ' on ' + vowelWord() + ' and hold it.' });
+        }
+        if (r.el > o.timeout) {
+          o.tuner.render({ target, tol, dev: null, hold: 0, reveal: true, msg: '✗ Moving on. Tap that note later to practice it on its own.' });
+          next('miss', target);
+        }
+      },
+      onStop() {
+        o.tuner.show(false);
+        micLabel(o.btn, o.btnLabel);
+        if (o.replayBtn) o.replayBtn.hidden = true;
+        mark();
+      },
+    };
+    function next(result, target) {
+      const att = finishAttempt(r.at, target, result !== 'miss', r.prev, r.holdDevs);
+      r.tips.onsets += att.onsets;
+      r.tips.scoops += att.scoops;
+      if (att.wobble) r.tips.wobbles++;
+      if (att.mean != null && att.dir) r.tips[att.dir === 'up' ? 'rise' : 'fall'].push(att.mean);
+      const notes = o.notes();
+      const top = Math.max(...notes.map(n => n.midi));
+      if (result === 'miss' && target === top) r.tips.topMiss = true;
+      r.prev = target;
+      r.results.push(result);
+      r.idx++;
+      r.hold = 0;
+      r.devs = [];
+      r.holdDevs = [];
+      r.el = 0;
+      r.at = makeAttempt();
+      if (r.idx >= notes.length) { finish(); return; }
+      mark();
+      if (o.perNote) {
+        r.pauseUntil = AC.currentTime + 0.7;
+        setTimeout(() => { if (Mic.consumer === consumer) playTarget(); }, 700);
       } else {
-        run.hold = Math.max(0, run.hold - dt * 0.5);
-        tunerFa.render({ target, dev: null, hold: run.hold / SCALE_HOLD, msg: 'Sing ' + syl + ' (' + noteName(target) + ') on "ahhh" and hold it.' });
+        r.pauseUntil = AC.currentTime + 0.05;
       }
-      if (run.el > 10) {
-        tunerFa.render({ target, dev: null, hold: 0, msg: '✗ Moving on. Tap that note later to practice it on its own.' });
-        nextScaleNote('miss');
+    }
+    function finish() {
+      const n = r.results.length;
+      const res = {
+        n,
+        on: r.results.filter(x => x === 'on').length,
+        close: r.results.filter(x => x === 'close').length,
+        onPct: r.voiced ? Math.round((100 * r.on) / r.voiced) : null,
+        avgMiss: r.voiced ? Math.round(r.miss / r.voiced) : null,
+        voicedSec: r.voicedSec,
+        tips: runTips(r.tips),
+      };
+      setConsumer(null);
+      o.onFinish(res);
+    }
+    async function toggle() {
+      if (Mic.consumer === consumer) { setConsumer(null); return; }
+      if (!(await micStart())) { o.fb.className = 'feedback bad'; o.fb.textContent = MIC_FAIL; return; }
+      stopAll();
+      Object.assign(r, { idx: 0, hold: 0, devs: [], holdDevs: [], el: 0, last: 0, results: [], voiced: 0, on: 0, miss: 0, voicedSec: 0, pauseUntil: 0, at: makeAttempt(), prev: null, tips: { onsets: 0, scoops: 0, wobbles: 0, rise: [], fall: [], topMiss: false } });
+      o.fb.textContent = '';
+      setConsumer(consumer);
+      o.tuner.show(true);
+      o.btn.textContent = 'Stop';
+      if (o.replayBtn) o.replayBtn.hidden = !o.perNote;
+      mark();
+      if (o.intro) {
+        const wait = o.intro();
+        r.pauseUntil = AC.currentTime + wait;
+      } else if (o.perNote) {
+        playTarget();
       }
+    }
+    return {
+      toggle,
+      mark,
+      replay() { if (Mic.consumer === consumer) playTarget(); },
+      isActive: () => Mic.consumer === consumer,
+      idx: () => r.idx,
+    };
+  }
+  function drillFeedback(fb, head, res, kindOk) {
+    fb.className = 'feedback ' + kindOk;
+    fb.textContent = head;
+    res.tips.forEach(t => {
+      const p = document.createElement('span');
+      p.className = 'tip';
+      p.textContent = 'Coach: ' + t;
+      fb.appendChild(p);
+    });
+  }
+
+  // ----- fa · scales & arpeggios -----
+  const tunerFa = makeTuner($('#tuner-fa'));
+  const faDrill = makeDrill({
+    tuner: tunerFa,
+    chips: () => $('#scale-pattern'),
+    notes: () => curPattern().notes.map(s => ({ midi: scaleKey() + s, label: sylOf(s) + ' (' + noteName(scaleKey() + s) + ')' })),
+    perNote: true,
+    hold: () => lv().land,
+    timeout: 10,
+    btn: $('#scale-sing'),
+    btnLabel: 'Sing it back',
+    replayBtn: $('#scale-replay'),
+    fb: $('#scale-fb'),
+    onFinish(res) {
+      const strong = res.on >= Math.ceil(res.n * 0.75);
+      const head = res.on + ' of ' + res.n + ' notes on pitch' + (res.close ? ', ' + res.close + ' close' : '') + '. ' +
+        (strong ? 'Strong round. Try it a half step higher.' : res.on >= res.n / 2 ? 'Getting there. Run it again in the same key.' : 'Tap each note to hear it, then try the round again.');
+      drillFeedback($('#scale-fb'), head, res, strong ? 'ok' : res.on >= res.n / 2 ? 'meh' : 'bad');
+      const k = todayKey();
+      const d = dayOf(k);
+      const pct = Math.round((100 * res.on) / res.n);
+      if (d.scalePct == null || pct > d.scalePct) { d.scalePct = pct; saveDay(k); renderTrends(); }
+      if (res.onPct != null) recordTake({ voicedSec: res.voicedSec, onPct: res.onPct, avgMiss: res.avgMiss });
+      if (strong) logStrong();
+      renderCoach();
+      renderRoadmap();
+    },
+  });
+
+  // ----- agility run (Level 4+) -----
+  const tunerAg = makeTuner($('#tuner-agility'));
+  const AGILITY = [0, 2, 4, 5, 7, 5, 4, 2, 0];
+  const agilityNotes = () => AGILITY.map(s => ({ midi: state.home + s, label: sylOf(s) }));
+  const agilityDrill = makeDrill({
+    tuner: tunerAg,
+    chips: () => $('#agility-chips'),
+    notes: agilityNotes,
+    perNote: false,
+    hold: () => 0.25,
+    tol: () => Math.max(35, lv().tol * 1.6),
+    timeout: 4,
+    btn: $('#agility-sing'),
+    btnLabel: 'Sing the run',
+    fb: $('#agility-fb'),
+    intro() { playAgility(); return 0.32 * AGILITY.length + 0.2; },
+    onFinish(res) {
+      const hit = res.on + res.close;
+      const ok = hit >= Math.ceil(res.n * 0.8);
+      drillFeedback($('#agility-fb'), hit + ' of ' + res.n + ' notes touched. ' + (ok ? 'Quick and clean. Try it faster in your head next time.' : 'Keep it light and small; agility comes from less effort, not more.'), res, ok ? 'ok' : 'meh');
+      if (ok) logStrong();
+    },
+  });
+  function playAgility() {
+    const chips = document.querySelectorAll('#agility-chips .pc');
+    playSeq(agilityNotes().map(n => n.midi), 0.32, i => chips.forEach((c, j) => c.classList.toggle('lit', j === i)));
+  }
+  function renderAgilityChips() {
+    const host = $('#agility-chips');
+    host.innerHTML = '';
+    agilityNotes().forEach(n => {
+      const b = el('button', 'pc', n.label + ' ' + noteName(n.midi));
+      b.type = 'button';
+      b.addEventListener('click', () => playNote(n.midi, 1));
+      host.appendChild(b);
+    });
+  }
+
+  // ----- focus drill on your weakest notes -----
+  const tunerFocus = makeTuner($('#tuner-focus'));
+  let focusList = [];
+  const focusDrill = makeDrill({
+    tuner: tunerFocus,
+    chips: () => $('#focus-chips'),
+    notes: () => focusList,
+    perNote: true,
+    hold: () => Math.max(1, lv().land + 0.4),
+    timeout: 10,
+    btn: $('#focus-start'),
+    btnLabel: 'Drill my weak notes',
+    fb: $('#focus-fb'),
+    onFinish(res) {
+      const ok = res.on >= Math.ceil(res.n * 0.6);
+      drillFeedback($('#focus-fb'), res.on + ' of ' + res.n + ' landed on pitch. ' + (ok ? 'Those notes are getting stronger.' : 'Keep drilling these. Weak notes usually come around in a week or two.'), res, ok ? 'ok' : 'meh');
+      renderCoach();
+    },
+  });
+  function buildFocus() {
+    const weak = weakNotes(3);
+    focusList = [];
+    for (let pass = 0; pass < 2; pass++) weak.forEach(w => focusList.push({ midi: w.midi, label: noteName(w.midi) }));
+    const host = $('#focus-chips');
+    host.innerHTML = '';
+    focusList.forEach((n, i) => {
+      const b = el('button', 'pc', n.label);
+      b.type = 'button';
+      b.addEventListener('click', () => {
+        if (focusDrill.isActive() && i === focusDrill.idx()) { focusDrill.replay(); return; }
+        playNote(n.midi, 1.2);
+      });
+      host.appendChild(b);
+    });
+    return weak;
+  }
+  async function focusToggle() {
+    if (!focusDrill.isActive()) {
+      buildFocus();
+      if (!focusList.length) return;
+      $('#focus-drill').hidden = false;
+    }
+    focusDrill.toggle();
+  }
+
+  // ----- la · hold & swell (messa di voce, Level 3+) -----
+  const swell = { phase: 'idle', t0: 0, base: null, frames: [], target: 0, last: 0 };
+  const SWELL_DUR = 8, SWELL_RISE = 12;
+  const swellMidi = () => {
+    let m = state.home + 4;
+    const t = rangeTop();
+    if (t != null) m = Math.min(m, t - 3);
+    return m;
+  };
+  const swellTarget = t => (swell.base == null ? null : swell.base + SWELL_RISE * Math.sin(Math.PI * Math.max(0, Math.min(1, t / SWELL_DUR))));
+  function drawSwell() {
+    const cv = $('#swell-cv');
+    const W = cv.clientWidth, H = cv.clientHeight || 150;
+    if (!W) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 3);
+    if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+    const g = cv.getContext('2d');
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.clearRect(0, 0, W, H);
+    const L = 40, R = 12, T = 12, B = 18;
+    const x = t => L + (t / SWELL_DUR) * (W - L - R);
+    const y = v => T + (1 - (v + 4) / (SWELL_RISE + 10)) * (H - T - B); // relative dB, -4 .. +18
+    const col = { muted: css('--muted'), hair: css('--hair'), accent: css('--accent'), target: css('--target'), good: css('--good'), warn: css('--warn'), ink: css('--ink'), ink2: css('--ink-2') };
+    g.font = '500 10px ' + css('--font-mono');
+    g.fillStyle = col.muted;
+    g.textAlign = 'right';
+    g.textBaseline = 'middle';
+    [['soft', 0], ['loud', SWELL_RISE]].forEach(([lab, v]) => {
+      g.strokeStyle = col.hair;
+      g.beginPath(); g.moveTo(L, Math.round(y(v)) + 0.5); g.lineTo(W - R, Math.round(y(v)) + 0.5); g.stroke();
+      g.fillText(lab, L - 6, y(v));
+    });
+    const steps = 60;
+    g.fillStyle = col.target;
+    g.beginPath();
+    for (let i = 0; i <= steps; i++) { const t = (SWELL_DUR * i) / steps; g.lineTo(x(t), y(SWELL_RISE * Math.sin((Math.PI * t) / SWELL_DUR) + 3)); }
+    for (let i = steps; i >= 0; i--) { const t = (SWELL_DUR * i) / steps; g.lineTo(x(t), y(SWELL_RISE * Math.sin((Math.PI * t) / SWELL_DUR) - 3)); }
+    g.closePath();
+    g.fill();
+    g.strokeStyle = col.accent;
+    g.lineWidth = 2;
+    g.setLineDash([6, 5]);
+    g.beginPath();
+    for (let i = 0; i <= steps; i++) { const t = (SWELL_DUR * i) / steps; const Y = y(SWELL_RISE * Math.sin((Math.PI * t) / SWELL_DUR)); if (i) g.lineTo(x(t), Y); else g.moveTo(x(t), Y); }
+    g.stroke();
+    g.setLineDash([]);
+    if (swell.base != null) {
+      g.lineWidth = 3;
+      g.lineCap = 'round';
+      for (let i = 1; i < swell.frames.length; i++) {
+        const a = swell.frames[i - 1], b = swell.frames[i];
+        if (a.db == null || b.db == null) continue;
+        g.strokeStyle = b.ok ? col.good : col.warn;
+        g.beginPath(); g.moveTo(x(a.t), y(a.db - swell.base)); g.lineTo(x(b.t), y(b.db - swell.base)); g.stroke();
+      }
+    }
+    if (swell.phase === 'count') {
+      g.fillStyle = col.ink;
+      g.textAlign = 'center';
+      g.font = '600 14px ' + css('--font-body');
+      g.fillText('Listen, then start soft on ' + noteName(swellMidi()), (L + W - R) / 2, H / 2);
+    }
+  }
+  const swellConsumer = {
+    frame(f) {
+      if (swell.phase === 'count') {
+        if (f.t >= swell.t0) { swell.phase = 'run'; swell.frames = []; swell.base = null; }
+        else { drawSwell(); return; }
+      }
+      if (swell.phase !== 'run') return;
+      const t = f.t - swell.t0;
+      if (t > SWELL_DUR + 0.2) { finishSwell(); return; }
+      const voiced = f.midi != null && !f.blocked;
+      const pitch = voiced ? foldTo(f.midi, swellMidi()).dev : null;
+      if (swell.base == null && t >= 1) {
+        const early = swell.frames.filter(p => p.db != null && p.t >= 0.25).map(p => p.db);
+        swell.base = early.length ? median(early) : f.db;
+      }
+      const tgt = swellTarget(t);
+      const okLoud = tgt == null || (voiced && Math.abs(f.db - tgt) <= 4);
+      const okPitch = pitch != null && Math.abs(pitch) <= lv().tol * 2;
+      swell.frames.push({ t, db: voiced ? f.db : null, pitch, ok: okLoud && okPitch });
+      drawSwell();
+      const hint = $('#swell-note');
+      if (!voiced) hint.textContent = 'Sing ' + noteName(swellMidi()) + ' on ' + vowelWord() + '…';
+      else if (t < SWELL_DUR / 2) hint.textContent = 'Swell louder… keep the pitch still (' + signedC(pitch) + ')';
+      else hint.textContent = 'Now fade back to soft… still on pitch (' + signedC(pitch) + ')';
     },
     onStop() {
-      tunerFa.show(false);
-      micLabel($('#scale-sing'), 'Sing it back');
-      markPattern();
+      if (swell.phase !== 'done') swell.phase = 'idle';
+      micLabel($('#swell-btn'), 'Start a swell');
     },
   };
-  function nextScaleNote(result) {
-    run.results.push(result);
-    run.idx++;
-    run.hold = 0;
-    run.devs = [];
-    run.el = 0;
-    if (run.idx >= PATTERN.length) { finishScale(); return; }
-    markPattern();
-    run.pauseUntil = AC.currentTime + 0.7;
-    setTimeout(() => { if (Mic.consumer === scaleConsumer) playScaleTarget(); }, 700);
-  }
-  function finishScale() {
-    const on = run.results.filter(r => r === 'on').length;
-    const close = run.results.filter(r => r === 'close').length;
-    const fb = $('#scale-fb');
-    fb.className = 'feedback ' + (on >= 7 ? 'ok' : on >= 4 ? 'meh' : 'bad');
-    fb.textContent = on + ' of 9 notes on pitch' + (close ? ', ' + close + ' close' : '') + '. ' +
-      (on >= 7 ? 'Strong round. Try it a half step higher.' : on >= 4 ? 'Getting there. Run it again in the same key.' : 'Tap each note to hear it, then try the round again.');
+  function finishSwell() {
+    swell.phase = 'done';
+    setConsumer(null);
+    const fr = swell.frames.filter(p => p.t >= 1 && p.db != null && swell.base != null);
+    const fb = $('#swell-fb');
+    $('#swell-note').textContent = '';
+    if (fr.length < 60) {
+      fb.className = 'feedback bad';
+      fb.textContent = 'I barely heard you. Hold one steady note for the full 8 seconds, starting soft.';
+      return;
+    }
+    const shape = Math.round((100 * fr.filter(p => Math.abs(p.db - swellTarget(p.t)) <= 4).length) / fr.length);
+    const steady = Math.round((100 * fr.filter(p => p.pitch != null && Math.abs(p.pitch) <= lv().tol * 2).length) / fr.length);
+    const peak = Math.max(...fr.map(p => p.db)) - swell.base;
+    const loud = fr.filter(p => p.db - swell.base >= SWELL_RISE * 0.6 && p.pitch != null).map(p => p.pitch);
+    const soft = fr.filter(p => p.db - swell.base < SWELL_RISE * 0.3 && p.pitch != null).map(p => p.pitch);
+    const score = Math.round((shape + steady) / 2);
+    const tips = [];
+    if (peak < 6) tips.push('Make the swell bigger: get clearly louder in the middle, then fade.');
+    if (loud.length >= 10 && soft.length >= 10) {
+      const drift = median(loud) - median(soft);
+      if (drift >= 20) tips.push('You went sharp as you got louder. Add volume with breath, not by squeezing the throat.');
+      else if (drift <= -20) tips.push('You went flat as you got louder. Keep the note bright and lifted as it grows.');
+    }
+    if (steady < 60 && !tips.length) tips.push('The pitch moved around. Pick a softer peak so you can keep the note still.');
+    drillFeedback(fb, 'Swell ' + shape + '% on the curve, pitch steady ' + steady + '% of the time. ', { tips }, score >= 70 ? 'ok' : score >= 45 ? 'meh' : 'bad');
     const k = todayKey();
     const d = dayOf(k);
-    if (d.scaleNotes == null || on > d.scaleNotes) { d.scaleNotes = on; saveDay(k); renderTrends(); }
-    if (run.voiced) recordTake({ voicedSec: run.voicedSec, onPct: Math.round((100 * run.on) / run.voiced), avgMiss: Math.round(run.miss / run.voiced) });
-    setConsumer(null);
+    if (d.swell == null || score > d.swell) { d.swell = score; saveDay(k); renderTrends(); }
+    if (score >= 70) logStrong();
+    renderRoadmap();
   }
-  async function scaleSingToggle() {
-    if (Mic.consumer === scaleConsumer) { setConsumer(null); return; }
-    const fb = $('#scale-fb');
+  async function swellToggle() {
+    if (Mic.consumer === swellConsumer) { setConsumer(null); return; }
+    const fb = $('#swell-fb');
     if (!(await micStart())) { fb.className = 'feedback bad'; fb.textContent = MIC_FAIL; return; }
     stopAll();
-    Object.assign(run, { idx: 0, hold: 0, devs: [], el: 0, last: 0, results: [], voiced: 0, on: 0, miss: 0, voicedSec: 0, pauseUntil: 0 });
     fb.textContent = '';
-    setConsumer(scaleConsumer);
-    tunerFa.show(true);
-    $('#scale-sing').textContent = 'Stop';
-    markPattern();
-    playScaleTarget();
+    playNote(swellMidi(), 1.4);
+    swell.phase = 'count';
+    swell.t0 = AC.currentTime + 1.7;
+    swell.frames = [];
+    swell.base = null;
+    $('#swell-cv').hidden = false;
+    $('#swell-btn').textContent = 'Stop';
+    setConsumer(swellConsumer);
+    drawSwell();
+  }
+
+  // ----- plan, coach, bonus and roadmap rendering -----
+  const DURS = {
+    5: { do: '1 min', re: '1 min', mi: '1 min', fa: '1½ min', sol: '½ min' },
+    11: { do: '2 min', re: '2 min', mi: '3 min', fa: '3 min', sol: '1 min' },
+    20: { do: '3 min', re: '3 min', mi: '4 min', fa: '5 min', sol: '2 min' },
+  };
+  const REPS = { 5: { do: 2, re: 3, sol: 2 }, 11: { do: 3, re: 5, sol: 3 }, 20: { do: 4, re: 8, sol: 4 } };
+  const repTotal = step => (REPS[P().length] || REPS[11])[step];
+  const WARM = {
+    trill: { title: 'Warm up: lip trills', how: 'Close your lips loosely and blow so they flutter like a motorboat, then add your voice and slide up and back down with the tone. If trills won\'t happen yet, hum instead.' },
+    straw: { title: 'Warm up: straw', how: 'Seal your lips around a narrow straw (a coffee stirrer works best) and hum through it, sliding up and back down with the tone. You should feel an easy buzz and no strain.' },
+    hum: { title: 'Warm up: hums', how: 'Hum with your lips closed and teeth apart, sliding up and back down with the tone. Feel the buzz on your lips and nose, and keep it easy.' },
+  };
+  const GOALS = {
+    fun: { name: 'Just for fun', tip: 'After the routine, sing one song you love. That\'s where everything you practiced sticks.' },
+    pop: { name: 'Pop', tip: 'Pop lives in a light, speech-like mix. Keep slides through your break light instead of pushing chest voice up.' },
+    rnb: { name: 'R&B / soul', tip: 'R&B runs are built on clean agility. Nail notes slowly first; speed comes after accuracy.' },
+    rock: { name: 'Rock', tip: 'Rock power comes from breath support, not a squeezed throat. Never push volume to reach high notes.' },
+    theater: { name: 'Musical theater', tip: 'Theater needs clear vowels on long notes. Rotate vowels (ah, ee, oo) and use Hold & swell once it unlocks.' },
+    choir: { name: 'Choir / classical', tip: 'Choirs need steady pitch on long notes and even tone through the break. Hold & swell is your signature drill.' },
+  };
+  const LEVEL_UNLOCKS = {
+    2: 'Arpeggios (1-3-5-3-1) and a full octave of notes to match are unlocked.',
+    3: 'Octave arpeggios, octave warm-up slides, and Hold & swell are unlocked.',
+    4: 'Agility runs are unlocked and the pitch target tightens to ±20¢.',
+    5: 'The 9-note scale is unlocked and the target tightens to ±15¢. Try ear-training mode.',
+  };
+  function renderPlan() {
+    const p = P();
+    const setRadio = (name, val) => document.querySelectorAll('input[name="' + name + '"]').forEach(i => { i.checked = i.value === String(val); });
+    setRadio('p-length', p.length);
+    setRadio('p-warm', p.warm);
+    setRadio('p-vowel', p.vowel);
+    $('#p-goal').value = p.goal;
+    $('#p-level').value = String(p.level);
+    $('#p-blind').checked = !!p.blind;
+    document.querySelectorAll('.p-step').forEach(c => { c.checked = !p.skip[c.dataset.step]; });
+    const vw = { ah: '"ah"', ee: '"ee"', oo: '"oo"', mix: 'rotating vowels' }[p.vowel] || '"ah"';
+    $('#plan-sum').textContent = p.length + ' min · ' + WARM[p.warm].title.replace('Warm up: ', '') + ' · ' + vw + ' · ' + GOALS[p.goal].name;
+    // apply to the routine
+    const d = DURS[p.length] || DURS[11];
+    document.querySelectorAll('.rung').forEach(r => {
+      const s = r.dataset.step;
+      r.querySelector('.dur').textContent = d[s];
+      r.hidden = !!p.skip[s];
+    });
+    $('#re-title').textContent = WARM[p.warm].title;
+    const brk = state.voice && state.voice.brk;
+    $('#re-how').textContent = WARM[p.warm].how + ' ' + repTotal('re') + ' slides.' +
+      (lv().glide >= 12 ? ' The slides now span an octave' + (brk ? ', passing your break near ' + noteName(brk) + ': let your voice lighten as you cross it instead of pushing' : '') + '.' : '');
+    document.querySelectorAll('.vw').forEach(e => { e.textContent = vowelWord(); });
+    $('#do-rounds').textContent = repTotal('do');
+    $('#sol-rounds').textContent = repTotal('sol');
+    const total = 5 - Object.keys(p.skip).filter(k => p.skip[k]).length;
+    $('#lede-min').textContent = p.length;
+    $('#lede-steps').textContent = total;
+  }
+  function renderLevelUI() {
+    const p = P();
+    $('#lvl-num').textContent = 'Level ' + p.level;
+    $('#lvl-name').textContent = lv().name;
+    const days = strongDays().length;
+    const ready = p.level < 5 && days >= 3;
+    $('#lvl-fill').style.width = p.level >= 5 ? '100%' : Math.min(100, (days / 3) * 100) + '%';
+    $('#lvl-up').hidden = !ready;
+    if (ready) $('#lvl-up').textContent = 'Level up to ' + (p.level + 1) + ': ' + LEVELS[p.level + 1].name;
+    if (!$('#lvl-note').dataset.sticky) {
+      $('#lvl-note').textContent = p.level >= 5
+        ? 'Top level. Keep your streak and polish everything at ±15¢.'
+        : ready ? 'You\'ve earned it. ' + LEVEL_UNLOCKS[p.level + 1]
+          : days + ' of 3 strong sessions (on different days) toward Level ' + (p.level + 1) + '. A strong session is landing 75% of a sing-back or matching every note. Target now: ±' + lv().tol + '¢.';
+    }
+  }
+  function practicedStreakEndingYesterday() {
+    const now = new Date();
+    let n = 0;
+    for (let i = 1; i <= 7; i++) {
+      if (stepsDone(dkey(new Date(now.getFullYear(), now.getMonth(), now.getDate() - i))) >= 1) n++;
+      else break;
+    }
+    return n;
+  }
+  function renderCoach() {
+    renderLevelUI();
+    const items = [];
+    const add = (html, kind) => items.push({ html, kind: kind || '' });
+    const p = P();
+    if (practicedStreakEndingYesterday() >= 6 && stepsDone(todayKey()) === 0) add('Rest day recommended. You\'ve practiced 6 days straight, and pros take at least one day off a week. A few gentle hums are plenty today.', 'rest');
+    if (Mic.available && !state.voice) add('Take the voice type test below (about 2 minutes). Then every slide, scale, and note fits your range.');
+    const weak = weakNotes(3);
+    if (weak.length) add('Weakest notes right now: ' + weak.map(w => noteName(w.midi) + ' (' + flatSharp(w.s.s) + ' on average)').join(', ') + '. Drill them with the button below.');
+    const up = p.dir.up, down = p.dir.down;
+    if (up.n >= 4 && up.s <= -15) add('You tend to go flat on rising notes (' + flatSharp(up.s) + '). Aim a little higher as you climb; it\'s the most common miss for every singer.');
+    if (down.n >= 4 && down.s >= 15) add('You drift sharp on falling notes (' + flatSharp(down.s) + '). Let descending notes settle instead of reaching for them.');
+    const sc = habitRate('scoop');
+    if (sc != null && sc >= 0.35) add('You often scoop up into notes (' + Math.round(sc * 100) + '% of starts). Hear the note in your head first, then begin it right on pitch with breath and tone together.');
+    const wb = habitRate('wobble');
+    if (wb != null && wb >= 0.35) add('Your held notes wobble (' + Math.round(wb * 100) + '% of holds). Extra hiss rounds build the steady airflow that fixes it.');
+    METRICS.forEach(m => {
+      if (m.mic && !Mic.available) return;
+      const fit = fitTrend(metricPoints(m.key));
+      if (fit && verdict(m, fit) === 'down') add(m.name + ' dipped lately. ' + (m.key === 'hiss' || m.key === 'steady' ? 'Add an extra breath round today.' : 'Slow down and give that exercise a few extra minutes today.'));
+    });
+    if (items.length < 2) {
+      const lvTips = {
+        1: 'Today: tap Check me with the mic in mi and match every note. Small, accurate wins build your ear fastest.',
+        2: 'Today: try the arpeggio in fa. Leaping between notes trains your ear harder than stepping.',
+        3: 'Today: octave slides and Hold & swell. Keep everything light as you cross your break.',
+        4: 'Today: agility runs. Stay light and small; speed comes from less effort.',
+        5: 'Today: switch on ear-training mode and see how accurate you are without the needle.',
+      };
+      add(Mic.available ? lvTips[p.level] : 'Today: run the routine, then upload a quick voice memo of the fa pattern to see how close you were. Live mic coaching works in the GitHub version.');
+    }
+    const list = $('#focus-list');
+    list.innerHTML = '';
+    items.slice(0, 3).forEach(it => list.appendChild(el('li', it.kind, it.html)));
+    $('#focus-start').hidden = !(Mic.available && weak.length);
+    $('#goal-tip').textContent = (p.goal === 'fun' ? 'Coach\'s note: ' : 'For ' + GOALS[p.goal].name + ': ') + GOALS[p.goal].tip;
+  }
+  function renderBonus() {
+    const b = lv().bonus;
+    const show = Mic.available && b.length > 0;
+    $('#bonus').hidden = !show;
+    $('#swell-card').hidden = !b.includes('swell');
+    $('#agility-card').hidden = !b.includes('agility');
+    $('#swell-how-note').textContent = noteName(swellMidi());
+    renderAgilityChips();
+  }
+  function renderPatternChips() {
+    const host = $('#pat-chips');
+    host.innerHTML = '';
+    Object.entries(PATTERNS).forEach(([id, pt]) => {
+      const unlocked = lv().pats.includes(id);
+      const minLv = LEVELS.findIndex(L => L && L.pats.includes(id));
+      if (!unlocked && minLv <= P().level) return; // retired at this level
+      const b = el('button', 'chip', unlocked ? pt.label : pt.label + ' · Level ' + minLv);
+      b.type = 'button';
+      b.disabled = !unlocked;
+      b.setAttribute('aria-pressed', String(id === curPatternId()));
+      b.addEventListener('click', () => {
+        P().pattern = id;
+        saveSettings();
+        clampScaleKey();
+        renderScale();
+        renderPatternChips();
+      });
+      host.appendChild(b);
+    });
+  }
+  function renderRangeNote() {
+    const cap = scaleCap();
+    const el2 = $('#fa-range');
+    if (cap == null) { el2.textContent = ''; return; }
+    el2.textContent = scaleKey() >= cap
+      ? 'This is the top key that fits your tested range (' + noteName(rangeLow()) + '–' + noteName(rangeTop()) + '). Stay here today; your range grows with practice.'
+      : 'Fits your range up to a start note of ' + noteName(cap) + '.';
+  }
+
+  // ----- roadmap -----
+  function practiceDays() { return Object.keys(state.days).filter(k => stepsDone(k) >= 1).length; }
+  function bestOf(key, days) {
+    const since = days ? dkey(new Date(Date.now() - days * 86400000)) : '';
+    const vals = metricPoints(key).filter(p => p.k >= since).map(p => p.v);
+    return vals.length ? Math.max(...vals) : null;
+  }
+  function latestOf(key) { const pts = metricPoints(key); return pts.length ? pts[pts.length - 1].v : null; }
+  function rangeGain() {
+    const pts = metricPoints('range');
+    return pts.length >= 2 ? pts[pts.length - 1].v - pts[0].v : null;
+  }
+  const goal = (label, done, progress) => ({ label, done: !!done, progress: done ? '' : progress || '' });
+  function roadmap() {
+    const hiss = bestHissAllTime();
+    const lvl = P().level;
+    const miss = latestOf('avgMiss');
+    const on = bestOf('onTarget', 30);
+    const sp = bestOf('scalePct');
+    const rg = rangeGain();
+    const st = bestOf('steady');
+    return [
+      { at: 1, when: 'Day 1', title: 'First session', expect: 'Everything feels new. Tones can be hard to match and lip trills may sputter. That\'s normal and it fades fast.',
+        goals: [goal('Finish your first routine', practiceDays() >= 1), goal('Take the voice type test', !!state.voice, Mic.available ? '' : 'needs the GitHub version')] },
+      { at: 7, when: 'Week 1', title: 'Getting your bearings', expect: 'Singing starts to feel easier before it sounds different. Most early pitch gains show up in the first few weeks.',
+        goals: [goal('Hold a steady hiss for 15 seconds', hiss >= 15, hiss ? hiss.toFixed(1) + ' / 15 s' : ''), goal('Match every note in mi with the mic', P().flags.matchAll)] },
+      { at: 14, when: 'Week 2', title: 'Hearing the target', expect: 'You start noticing when you\'re off before the screen tells you. Scooped and flat starts get rarer.',
+        goals: [goal('Land 2 of every 3 notes in a sing-back', sp != null && sp >= 67, sp != null ? sp + '% / 67%' : ''), goal('Reach Level 2', lvl >= 2, 'Level ' + lvl)] },
+      { at: 24, when: 'Month 1', title: 'Steadier pitch, better breath', expect: 'Breath lasts longer and pitch feels steadier in your comfortable range. Warm-ups become routine.',
+        goals: [goal('60% of a take on pitch', on != null && on >= 60, on != null ? on + '% / 60%' : ''), goal('Average miss under 30¢', miss != null && miss < 30, miss != null ? Math.round(miss) + '¢ now' : ''), goal('Hiss for 20 seconds', hiss >= 20, hiss ? hiss.toFixed(1) + ' / 20 s' : '')] },
+      { at: 70, when: 'Month 3', title: 'Wider, more even range', expect: 'Your comfortable range widens (a few half steps is typical) and your low and high notes start to sound like the same voice.',
+        goals: [goal('Range up 2 half steps since your first test', rg != null && rg >= 2, rg != null ? '+' + rg + ' so far' : 'retest monthly'), goal('Average miss under 20¢', miss != null && miss < 20, miss != null ? Math.round(miss) + '¢ now' : ''), goal('Reach Level 3', lvl >= 3, 'Level ' + lvl)] },
+      { at: 140, when: 'Month 6', title: 'Whole songs with control', expect: 'Full songs with less strain, longer phrases on one breath, and phrasing you choose on purpose. Many singers feel their voice "fill in" around here.',
+        goals: [goal('75% of a take on pitch', on != null && on >= 75, on != null ? on + '% / 75%' : ''), goal('Hiss steadiness 80%', st != null && st >= 80, st != null ? st + '% / 80%' : ''), goal('Reach Level 4', lvl >= 4, 'Level ' + lvl)] },
+      { at: 280, when: 'Year 1', title: 'Your own sound', expect: 'Real stylistic control, stamina for a full song or set, and confidence singing for people. Blending registers keeps improving for years after this.',
+        goals: [goal('Average miss under 15¢', miss != null && miss < 15, miss != null ? Math.round(miss) + '¢ now' : ''), goal('Range up 4 half steps', rg != null && rg >= 4, rg != null ? '+' + rg + ' so far' : ''), goal('Reach Level 5', lvl >= 5, 'Level ' + lvl)] },
+    ];
+  }
+  function renderRoadmap() {
+    const n = practiceDays();
+    const list = $('#road-list');
+    list.innerHTML = '';
+    const ms = roadmap();
+    let hereIdx = ms.findIndex(m => n < m.at);
+    if (hereIdx < 0) hereIdx = ms.length;
+    $('#road-pos').textContent = n ? 'Practice day ' + n : 'Not started yet';
+    ms.forEach((m, i) => {
+      const reached = n >= m.at;
+      const doneGoals = m.goals.filter(g => g.done).length;
+      const li = el('li', 'mile' + (reached ? ' reached' : '') + (i === hereIdx ? ' next' : ''));
+      const head = el('div', 'mile-head');
+      head.appendChild(el('span', 'mile-dot'));
+      const t = el('div', 'mile-title');
+      t.appendChild(el('span', 'mile-when', m.when + (m.at > 1 ? ' · about ' + m.at + ' practice days' : '')));
+      t.appendChild(el('strong', '', m.title));
+      head.appendChild(t);
+      head.appendChild(el('span', 'mile-count', doneGoals + '/' + m.goals.length));
+      li.appendChild(head);
+      li.appendChild(el('p', 'mile-expect', m.expect));
+      const ul = el('ul', 'mile-goals');
+      m.goals.forEach(g => {
+        const gi = el('li', g.done ? 'done' : '');
+        gi.appendChild(el('span', 'g-mark', g.done ? '✓' : '○'));
+        gi.appendChild(el('span', '', g.label));
+        if (g.progress) gi.appendChild(el('span', 'g-prog', g.progress));
+        ul.appendChild(gi);
+      });
+      li.appendChild(ul);
+      if (i === hereIdx) li.appendChild(el('p', 'mile-here', n ? 'You\'re working toward this one. ' + (m.at - n) + ' practice day' + (m.at - n === 1 ? '' : 's') + ' to go.' : 'Start here.'));
+      list.appendChild(li);
+    });
   }
 
   // ---------- voice type test ----------
   const VOICE_TYPES = [
-    { name: 'Bass', low: 40, high: 64 },
-    { name: 'Baritone', low: 43, high: 67 },
-    { name: 'Tenor', low: 48, high: 72 },
-    { name: 'Alto', low: 53, high: 77 },
-    { name: 'Mezzo-soprano', low: 57, high: 81 },
-    { name: 'Soprano', low: 60, high: 84 },
+    // flip: where untrained voices of this type usually break (Miller's passaggi:
+    // the upper one for men, the lower one for women)
+    { name: 'Bass', plural: 'basses', low: 40, high: 64, flip: 61.5 },
+    { name: 'Baritone', plural: 'baritones', low: 43, high: 67, flip: 63.5 },
+    { name: 'Tenor', plural: 'tenors', low: 48, high: 72, flip: 67 },
+    { name: 'Alto', plural: 'altos', low: 53, high: 77, flip: 68.5 },
+    { name: 'Mezzo-soprano', plural: 'mezzo-sopranos', low: 57, high: 81, flip: 64 },
+    { name: 'Soprano', plural: 'sopranos', low: 60, high: 84, flip: 63 },
   ];
   // Beginners' comfortable tops sit a few notes under the textbook range, and lows are more telling.
-  function classifyVoice(low, high) {
+  function classifyVoice(low, high, brk) {
     const scored = VOICE_TYPES
-      .map(t => ({ t, s: 0.7 * Math.abs(low - t.low) + 0.3 * Math.abs(high - (t.high - 3)) }))
+      .map(t => ({ t, s: 0.7 * Math.abs(low - t.low) + 0.3 * Math.abs(high - (t.high - 3)) + (brk != null ? 0.5 * Math.abs(brk - t.flip) : 0) }))
       .sort((a, b) => a.s - b.s);
     return { best: scored[0].t, near: scored[1].s - scored[0].s < 1.5 ? scored[1].t : null };
   }
   const VT_LO = 38, VT_HI = 86;
-  const vt = { stage: 'idle', win: [], low: null, high: null };
+  const vt = { stage: 'idle', win: [], low: null, high: null, brk: null, lastVoiced: null, brkTested: false };
   function drawVtLive(cur) {
     const cv = $('#vt-cv');
     const W = cv.clientWidth, H = cv.clientHeight || 96;
@@ -2406,6 +3358,10 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     }
     g.fillRect(Math.round(x(40)), yb + 9, 1, 4);
     g.fillText('E2', x(40), yb + 18);
+    if (vt.brk != null) {
+      g.fillStyle = css('--bad');
+      g.fillRect(Math.round(x(vt.brk)) - 1, yb - 14, 3, 28);
+    }
     if (cur != null) {
       const cm = Math.max(VT_LO, Math.min(VT_HI, cur));
       g.fillStyle = css('--accent');
@@ -2419,6 +3375,21 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   const vtConsumer = {
     frame(f) {
       if (f.blocked) return;
+      if (vt.stage === 'break') {
+        const m = f.midi;
+        const prev = vt.lastVoiced;
+        if (m != null) {
+          // a flip: the pitch jumps 2+ half steps within a few frames while sliding up
+          if (vt.brk == null && prev && f.t - prev.t <= 0.15 && m - prev.m >= 2 && m - prev.m <= 9 && prev.m > (vt.low != null ? vt.low + 4 : 0)) {
+            vt.brk = Math.round(prev.m);
+          }
+          vt.lastVoiced = { t: f.t, m };
+        }
+        $('#vt-now').textContent = m != null ? noteName(Math.round(m)) : '–';
+        $('#vt-sofar').textContent = vt.brk != null ? 'Break found near ' + noteName(vt.brk) + ' (the red line)' : 'No break yet. Keep sliding up slowly.';
+        drawVtLive(m);
+        return;
+      }
       vt.win.push({ t: f.t, m: f.midi });
       while (vt.win.length && f.t - vt.win[0].t > 0.45) vt.win.shift();
       const ms = vt.win.map(p => p.m);
@@ -2449,11 +3420,12 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       return;
     }
     stopAll();
-    Object.assign(vt, { stage: 'low', win: [], low: null, high: null });
+    Object.assign(vt, { stage: 'low', win: [], low: null, high: null, brk: null, lastVoiced: null, brkTested: false });
+    $('#vt-skip').hidden = true;
     $('#vt-live').hidden = false;
     $('#vt-start').hidden = true;
     $('#vt-result').hidden = true;
-    $('#vt-step').textContent = 'Step 1 of 2 · Lowest note';
+    $('#vt-step').textContent = 'Step 1 of 3 · Lowest note';
     $('#vt-instr').textContent = 'Hum or sing "ah" at a comfortable middle pitch, then slide down slowly. Stop at the lowest note that still sounds clear, without croaking or growling, and hold it for a second.';
     $('#vt-next').textContent = "That's my lowest";
     $('#vt-next').disabled = true;
@@ -2466,17 +3438,29 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     if (vt.stage === 'low') {
       vt.stage = 'high';
       vt.win = [];
-      $('#vt-step').textContent = 'Step 2 of 2 · Highest note';
+      $('#vt-step').textContent = 'Step 2 of 3 · Highest note';
       $('#vt-instr').textContent = "Now start in the middle and slide up slowly. Stop at the highest note you can sing comfortably, before it strains, cracks, or flips into a thin airy voice, and hold it for a second.";
       $('#vt-next').textContent = "That's my highest";
       $('#vt-next').disabled = true;
       $('#vt-sofar').textContent = 'Highest clear note so far: –';
     } else if (vt.stage === 'high') {
+      vt.stage = 'break';
+      vt.lastVoiced = null;
+      vt.brkTested = true;
+      $('#vt-step').textContent = 'Step 3 of 3 · Find your break (optional)';
+      $('#vt-instr').textContent = 'Slide slowly on "ooo" from your lowest note all the way up, without pushing. If your voice flips or cracks somewhere, let it happen: that spot is your break, and the app marks it.';
+      $('#vt-next').textContent = 'Done sliding';
+      $('#vt-next').disabled = false;
+      $('#vt-skip').hidden = false;
+      $('#vt-sofar').textContent = 'No break yet. Keep sliding up slowly.';
+      drawVtLive(null);
+    } else if (vt.stage === 'break') {
       finishVt();
     }
   }
   function cancelVt() {
     vt.stage = 'idle';
+    $('#vt-skip').hidden = true;
     $('#vt-live').hidden = true;
     $('#vt-start').hidden = false;
     $('#vt-result').hidden = false;
@@ -2487,6 +3471,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     vt.stage = 'done';
     setConsumer(null);
     $('#vt-live').hidden = true;
+    $('#vt-skip').hidden = true;
     $('#vt-start').hidden = false;
     if (high - low < 3) {
       const host = $('#vt-result');
@@ -2494,8 +3479,17 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       host.innerHTML = '<p class="status err">Your lowest and highest came out almost the same. Try again, and slide further down and further up.</p>';
       return;
     }
-    const { best, near } = classifyVoice(low, high);
-    state.voice = { low, high, type: best.name, near: near ? near.name : null, date: todayKey() };
+    const brk = vt.brkTested ? vt.brk : (state.voice && state.voice.brk != null ? state.voice.brk : null);
+    const { best, near } = classifyVoice(low, high, brk);
+    state.voice = { low, high, type: best.name, near: near ? near.name : null, brk, brkTested: vt.brkTested || !!(state.voice && state.voice.brkTested), date: todayKey() };
+    clampScaleKey();
+    renderPlan();
+    renderScale();
+    renderPatternChips();
+    renderRangeNote();
+    renderBonus();
+    renderCoach();
+    renderRoadmap();
     saveSettings();
     const d = dayOf(todayKey());
     d.range = { low, high };
@@ -2519,6 +3513,13 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     sub.textContent = 'Most likely voice type' + (v.near ? ', close to ' + v.near.toLowerCase() : '') + '. Your range: ' + noteName(v.low) + ' to ' + noteName(v.high) + ' (' + (v.high - v.low) + ' half steps), tested ' + fmtDate(v.date) + '.';
     head.appendChild(type);
     head.appendChild(sub);
+    const T = VOICE_TYPES.find(t => t.name === v.type);
+    if (v.brk != null && T) {
+      const lo = Math.floor(T.flip), hi = Math.ceil(T.flip);
+      head.appendChild(el('p', 'small', 'Your voice flipped near ' + noteName(v.brk) + '. In ' + T.plural + ' that usually happens around ' + noteName(lo) + (hi !== lo ? '–' + noteName(hi) : '') + '. Where your break sits is one of the main ways teachers tell voice types apart.'));
+    } else if (v.brkTested) {
+      head.appendChild(el('p', 'small', 'No clear break showed up in your slide. Either your registers already blend smoothly, or try the slide a little louder next time.'));
+    }
     host.appendChild(head);
     host.appendChild(voiceChart(v));
     const sugg = Math.max(HOME_MIN, Math.min(HOME_MAX, v.low + 4));
@@ -2603,9 +3604,9 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     if (state.reps[step] === total) setStep(step, true);
   }
   function renderAllReps() {
-    renderReps('do', 3, $('#hiss-reps'));
-    renderReps('re', 5, $('#siren-reps'));
-    renderReps('sol', 3, $('#cool-reps'));
+    renderReps('do', repTotal('do'), $('#hiss-reps'));
+    renderReps('re', repTotal('re'), $('#siren-reps'));
+    renderReps('sol', repTotal('sol'), $('#cool-reps'));
   }
   function setStep(step, on) {
     const k = todayKey();
@@ -2617,21 +3618,25 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     renderRungs();
     renderStats();
     renderCal();
+    renderRoadmap();
   }
+  const activeSteps = () => STEPS.filter(s => !P().skip[s]);
   function renderRungs() {
     const d = peekDay(todayKey());
     let count = 0;
+    const act = activeSteps();
     document.querySelectorAll('.rung').forEach(r => {
       const s = r.dataset.step;
       const on = !!(d && d.steps && d.steps[s]);
-      if (on) count++;
+      if (on && act.includes(s)) count++;
       r.classList.toggle('done', on);
       const b = r.querySelector('.done-btn');
       b.textContent = on ? 'Done · tap to undo' : 'Mark done';
       b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
-    $('#routine-progress').textContent = count === 5 ? 'All 5 done. Nice work.' : count + ' of 5 done';
-    $('#routine-bar').style.width = (count / 5) * 100 + '%';
+    const n = act.length;
+    $('#routine-progress').textContent = count >= n ? 'All ' + n + ' done. Nice work.' : count + ' of ' + n + ' done';
+    $('#routine-bar').style.width = (n ? (count / n) * 100 : 0) + '%';
   }
 
   // ---------- notes UI ----------
@@ -2640,23 +3645,27 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     document.querySelectorAll('.chip[data-home]').forEach(c => c.setAttribute('aria-pressed', String(Number(c.dataset.home) === state.home)));
     const pills = $('#match-pills');
     pills.innerHTML = '';
-    SCALE.forEach((s, i) => {
+    const mn = matchNotes();
+    if (state.matchIdx >= mn.length) state.matchIdx = 0;
+    pills.style.gridTemplateColumns = 'repeat(' + (mn.length > 5 ? 4 : mn.length) + ', minmax(0, 1fr))';
+    mn.forEach((n, i) => {
       const b = document.createElement('button');
       b.className = 'pill';
       b.setAttribute('aria-pressed', String(i === state.matchIdx));
-      b.innerHTML = '<span class="s">' + SYL[i] + '</span><span class="n">' + noteName(state.home + s) + '</span>';
-      b.setAttribute('aria-label', 'Play ' + SYL[i] + ', ' + noteName(state.home + s));
+      b.innerHTML = '<span class="s">' + n.syl + '</span><span class="n">' + noteName(n.midi) + '</span>';
+      b.setAttribute('aria-label', 'Play ' + n.syl + ', ' + noteName(n.midi));
       b.addEventListener('click', () => pickMatch(i));
       pills.appendChild(b);
     });
+    $('#mi-hold-label').textContent = 'Keep the needle in the green (±' + lv().tol + '¢) for ' + lv().hold + ' seconds to match the note.';
     markMatchedPills();
     renderScale();
   }
   function pickMatch(i) {
-    if (i !== state.matchIdx) match.hold = 0;
+    if (i !== state.matchIdx) { match.hold = 0; match.holdDevs = []; match.at = makeAttempt(); }
     state.matchIdx = i;
     document.querySelectorAll('.pill').forEach((p, j) => { p.setAttribute('aria-pressed', String(j === i)); p.classList.remove('sounding'); });
-    const midi = state.home + SCALE[i];
+    const midi = curMatchMidi();
     if ($('#drone-toggle').checked) startDrone(midi);
     else playNote(midi, 1.8);
     const pill = document.querySelectorAll('.pill')[i];
@@ -2666,23 +3675,24 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   function renderScale() {
     const key = scaleKey();
     $('#scale-note').textContent = noteName(key);
-    const el = $('#scale-pattern');
-    el.innerHTML = '';
-    PATTERN.forEach((s, i) => {
+    const host = $('#scale-pattern');
+    host.innerHTML = '';
+    curPattern().notes.forEach((s, i) => {
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'pc';
-      b.textContent = PATTERN_SYL[i] + ' ' + noteName(key + s);
-      b.setAttribute('aria-label', 'Hear ' + PATTERN_SYL[i] + ', ' + noteName(key + s));
+      b.textContent = sylOf(s) + ' ' + noteName(key + s);
+      b.setAttribute('aria-label', 'Hear ' + sylOf(s) + ', ' + noteName(key + s));
       b.addEventListener('click', () => {
-        if (Mic.consumer === scaleConsumer && i === run.idx) { run.hold = 0; playScaleTarget(); return; }
+        if (faDrill.isActive() && i === faDrill.idx()) { faDrill.replay(); return; }
         playNote(scaleKey() + s, 1.2);
         b.classList.add('lit');
         seqTimers.push(setTimeout(() => b.classList.remove('lit'), 1200));
       });
-      el.appendChild(b);
+      host.appendChild(b);
     });
-    markPattern();
+    faDrill.mark();
+    renderRangeNote();
   }
   function changeHome(v) {
     const nv = Math.max(HOME_MIN, Math.min(HOME_MAX, v));
@@ -2690,15 +3700,18 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     state.home = nv;
     state.scaleShift = 0;
     match.matched.clear();
+    clampScaleKey();
     saveSettings();
     renderHome();
     renderVoice();
+    renderPlan();
+    renderBonus();
     if (view.kind === 'example') setTake(exampleTake(scaleKey()), 'example');
     else rescore();
   }
 
   // ---------- stats, calendar, trends ----------
-  function practiced(k) { return stepsDone(k) >= 3; }
+  function practiced(k) { return stepsDone(k) >= Math.min(3, activeSteps().length); }
   function renderStats() {
     const now = new Date();
     const back = n => dkey(new Date(now.getFullYear(), now.getMonth(), now.getDate() - n));
@@ -2760,16 +3773,18 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   const METRICS = [
     { key: 'avgMiss', name: 'Pitch accuracy', chart: 'Average miss in cents (lower is better)', unit: '¢', better: 'down', thr: 5, how: 'upload a take or sing the scale back' },
     { key: 'onTarget', name: 'Time on pitch', chart: 'Time within 25¢ of the note (%)', unit: '%', better: 'up', thr: 5, max: 100, how: 'upload a take or sing the scale back' },
-    { key: 'scaleNotes', name: 'Scale sing-back', chart: 'Scale notes on pitch (out of 9)', unit: '/9', better: 'up', thr: 1, max: 9, how: 'use "Sing it back" in fa', mic: true },
+    { key: 'scalePct', name: 'Sing-back', chart: 'Sing-back notes landed on pitch (%)', unit: '%', better: 'up', thr: 8, max: 100, how: 'use "Sing it back" in fa', mic: true },
     { key: 'follow', name: 'Slides', chart: 'How closely you follow a slide (%)', unit: '%', better: 'up', thr: 5, max: 100, how: 'use "Sing a slide" in re or sol', mic: true },
     { key: 'hiss', name: 'Breath length', chart: 'Longest hiss (seconds)', unit: ' s', better: 'up', thr: 1.5, how: 'finish a breath round in do' },
     { key: 'steady', name: 'Breath control', chart: 'Hiss steadiness (%)', unit: '%', better: 'up', thr: 5, max: 100, how: 'do a breath round with the mic on', mic: true },
+    { key: 'swell', name: 'Hold & swell', chart: 'Hold & swell control (%)', unit: '%', better: 'up', thr: 5, max: 100, how: 'unlocks at Level 3', mic: true },
     { key: 'range', name: 'Range', chart: 'Lowest to highest note (half steps)', unit: ' half steps', short: '', better: 'up', thr: 1, how: 'take the voice type test', mic: true },
   ];
   function metricValue(d, key) {
     if (!d) return null;
     if (key === 'range') return d.range && typeof d.range.low === 'number' ? d.range.high - d.range.low : null;
     if (key === 'hiss') return d.hiss > 0 ? d.hiss : null;
+    if (key === 'scalePct' && d.scalePct == null && typeof d.scaleNotes === 'number') return Math.round((d.scaleNotes / 9) * 100);
     const v = d[key];
     return typeof v === 'number' ? v : null;
   }
@@ -2908,7 +3923,13 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     $('#charts-h').hidden = !tracked;
   }
   function renderAll() {
+    clampScaleKey();
+    renderPlan();
     renderHome();
+    renderPatternChips();
+    renderBonus();
+    renderCoach();
+    renderRoadmap();
     renderRungs();
     renderAllReps();
     renderBreathMeta();
@@ -2928,14 +3949,12 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   }));
   $('#hiss-btn').addEventListener('click', hissClick);
   $('#siren-btn').addEventListener('click', () => {
-    const h = state.home;
-    glide([[h, 0], [h + 7, 1.8], [h, 3.6]]);
-    if (!Mic.available) addRep('re', 5);
+    glide(warmPoints());
+    if (!Mic.available) addRep('re', repTotal('re'));
   });
   $('#cool-btn').addEventListener('click', () => {
-    const h = state.home;
-    glide([[h + 5, 0], [h - 5, 3.2]], 0.12);
-    if (!Mic.available) addRep('sol', 3);
+    glide(coolPoints(), 0.12);
+    if (!Mic.available) addRep('sol', repTotal('sol'));
   });
   $('#drone-toggle').addEventListener('change', e => {
     if (e.target.checked) pickMatch(state.matchIdx);
@@ -2944,18 +3963,20 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   $('#scale-play').addEventListener('click', () => {
     const key = scaleKey();
     const spans = document.querySelectorAll('#scale-pattern .pc');
-    playSeq(PATTERN.map(s => key + s), 0.9, i => {
+    playSeq(curPattern().notes.map(s => key + s), 0.9, i => {
       spans.forEach((sp, j) => sp.classList.toggle('lit', j === i));
     });
   });
   $('#scale-up').addEventListener('click', () => {
-    if (state.home + state.scaleShift >= HOME_MAX + 7) return;
+    const cap = scaleCap();
+    if (state.home + state.scaleShift >= HOME_MAX + 7 || (cap != null && scaleKey() >= cap)) { renderRangeNote(); return; }
     state.scaleShift++;
     renderScale();
     rescore();
   });
   $('#scale-down').addEventListener('click', () => {
-    if (state.home + state.scaleShift <= HOME_MIN - 3) return;
+    const lo = rangeLow();
+    if (state.home + state.scaleShift <= HOME_MIN - 3 || (lo != null && scaleKey() <= lo)) return;
     state.scaleShift--;
     renderScale();
     rescore();
@@ -3005,8 +4026,16 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     $('#siren-sing').addEventListener('click', sirenSlide.toggle);
     $('#cool-sing').addEventListener('click', coolSlide.toggle);
     $('#match-check').addEventListener('click', matchCheckToggle);
-    $('#scale-sing').addEventListener('click', scaleSingToggle);
-    $('#scale-replay').addEventListener('click', () => { if (Mic.consumer === scaleConsumer) { run.hold = 0; playScaleTarget(); } });
+    $('#scale-sing').addEventListener('click', faDrill.toggle);
+    $('#scale-replay').addEventListener('click', faDrill.replay);
+    $('#focus-start').addEventListener('click', focusToggle);
+    $('#swell-btn').addEventListener('click', swellToggle);
+    $('#agility-play').addEventListener('click', playAgility);
+    $('#agility-sing').addEventListener('click', agilityDrill.toggle);
+    micLabel($('#swell-btn'), 'Start a swell');
+    micLabel($('#agility-sing'), 'Sing the run');
+    micLabel($('#focus-start'), 'Drill my weak notes');
+    $('#vt-skip').addEventListener('click', () => { vt.brkTested = false; vt.brk = null; finishVt(); });
     $('#fa-mic-how').hidden = false;
     $('#vt-start').addEventListener('click', startVt);
     $('#vt-next').addEventListener('click', vtNext);
@@ -3024,18 +4053,34 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     });
   }
 
+  // plan controls
+  const onPlan = fn => e => { fn(e); saveSettings(); renderAll(); };
+  document.querySelectorAll('input[name="p-length"]').forEach(i => i.addEventListener('change', onPlan(e => { P().length = Number(e.target.value); })));
+  document.querySelectorAll('input[name="p-warm"]').forEach(i => i.addEventListener('change', onPlan(e => { P().warm = e.target.value; })));
+  document.querySelectorAll('input[name="p-vowel"]').forEach(i => i.addEventListener('change', onPlan(e => { P().vowel = e.target.value; })));
+  $('#p-goal').addEventListener('change', onPlan(e => { P().goal = e.target.value; }));
+  $('#p-level').addEventListener('change', onPlan(e => { P().level = Number(e.target.value); P().strong = []; P().pattern = null; match.matched.clear(); }));
+  $('#p-blind').addEventListener('change', onPlan(e => { P().blind = e.target.checked; }));
+  document.querySelectorAll('.p-step').forEach(c => c.addEventListener('change', onPlan(e => {
+    const st = e.target.dataset.step;
+    if (e.target.checked) delete P().skip[st];
+    else if (activeSteps().length > 1) P().skip[st] = true;
+    else e.target.checked = true;
+  })));
+  $('#lvl-up').addEventListener('click', levelUp);
+
   // redraw on resize and theme change
   let rt = 0;
   const redraw = () => {
     cancelAnimationFrame(rt);
-    rt = requestAnimationFrame(() => { drawGraph(); renderTrends(); sirenSlide.redraw(); coolSlide.redraw(); renderVoice(); });
+    rt = requestAnimationFrame(() => { drawGraph(); renderTrends(); sirenSlide.redraw(); coolSlide.redraw(); renderVoice(); if (!$('#swell-cv').hidden) drawSwell(); });
   };
   if (window.ResizeObserver) new ResizeObserver(redraw).observe(gw);
   else window.addEventListener('resize', redraw);
   const mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
   if (mq) { if (mq.addEventListener) mq.addEventListener('change', redraw); else if (mq.addListener) mq.addListener(redraw); }
   new MutationObserver(redraw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) { renderStats(); renderCal(); renderRungs(); } });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) { renderStats(); renderCal(); renderRungs(); renderCoach(); renderRoadmap(); } });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(redraw);
 
   // boot
