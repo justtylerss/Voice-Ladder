@@ -37,6 +37,8 @@
   --bad: #d03b3b;
   --bad-text: #a92626;
   --target: rgba(52, 69, 201, 0.10);
+  --good-soft: rgba(12, 163, 12, 0.18);
+  --warn-soft: rgba(250, 178, 25, 0.22);
   --inhale: #9aa6ee;
   --font-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
   --font-body: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
@@ -114,7 +116,7 @@ body {
   margin: 0 auto;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
-  padding-block: 24px 56px;
+  padding-block: 24px 96px;
   display: grid;
   gap: 28px;
 }
@@ -398,6 +400,109 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
 .trend .read { font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); min-height: 1.5em; margin-top: 4px; }
 .empty { font-size: 13px; color: var(--muted); padding: 30px 0; text-align: center; border: 1px dashed var(--line); border-radius: 10px; }
 
+/* ---------- mic feedback ---------- */
+.ico { width: 18px; height: 18px; flex: none; }
+.mic-row { display: grid; gap: 10px; padding-top: 14px; border-top: 1px solid var(--line); }
+.mic-row h3 { font-size: 16px; font-weight: 680; }
+.level { position: relative; height: 10px; border-radius: 99px; background: var(--hair); overflow: hidden; }
+.level .fill { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--accent); border-radius: 99px; transition: width .06s linear; }
+.level .fill.good { background: var(--good); }
+.level .fill.warn { background: var(--warn); }
+.level .band { position: absolute; top: 0; bottom: 0; background: var(--good-soft); border-left: 2px solid var(--good); border-right: 2px solid var(--good); }
+.hiss-level { height: 16px; }
+.feedback { font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.feedback:empty { display: none; }
+.feedback.ok { color: var(--good-text); }
+.feedback.meh { color: var(--warn-text); }
+.feedback.bad { color: var(--bad-text); }
+.tuner {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+}
+.tuner-top { display: flex; align-items: baseline; gap: 4px 12px; flex-wrap: wrap; }
+.tuner-note { font-family: var(--font-display); font-size: 36px; font-weight: 780; line-height: 1; letter-spacing: -0.02em; min-width: 2.6ch; }
+.tuner-cents { font-family: var(--font-mono); font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.tuner-hint { font-size: 14px; color: var(--ink-2); flex-basis: 100%; min-height: 1.5em; }
+.tuner-bar { position: relative; height: 36px; border-radius: 10px; background: var(--hair); overflow: hidden; }
+.tuner-bar .z-close { position: absolute; top: 0; bottom: 0; left: 20%; right: 20%; background: var(--warn-soft); }
+.tuner-bar .z-on { position: absolute; top: 0; bottom: 0; left: 37.5%; right: 37.5%; background: var(--good-soft); }
+.tuner-bar .center { position: absolute; top: 5px; bottom: 5px; left: 50%; width: 2px; margin-left: -1px; background: var(--good); }
+.tuner-bar .needle {
+  position: absolute; top: 3px; bottom: 3px; left: 50%;
+  width: 8px; margin-left: -4px; border-radius: 4px;
+  background: var(--ink);
+  opacity: 0;
+  transition: opacity .15s;
+}
+.tuner-bar .needle.on { opacity: 1; }
+.tuner-scale { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+.hold { height: 8px; border-radius: 99px; background: var(--hair); overflow: hidden; }
+.hold span { display: block; height: 100%; width: 0; background: var(--good); border-radius: 99px; }
+.hold-label { font-size: 13px; color: var(--muted); }
+.slide-cv { display: block; width: 100%; height: 150px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
+.pill.matched { border-color: var(--good); }
+.pill.matched .n::after { content: " ✓"; color: var(--good-text); font-weight: 700; }
+.pattern span.cur { background: var(--accent-soft); color: var(--accent-text); box-shadow: 0 0 0 2px var(--accent) inset; }
+.pattern span.r-on { background: var(--good-soft); color: var(--good-text); box-shadow: 0 0 0 1.5px var(--good) inset; }
+.pattern span.r-on::after { content: " ✓"; }
+.pattern span.r-close { background: var(--warn-soft); color: var(--warn-text); box-shadow: 0 0 0 1.5px var(--warn) inset; }
+.pattern span.r-close::after { content: " ~"; }
+.pattern span.r-miss { background: transparent; color: var(--bad-text); box-shadow: 0 0 0 1.5px var(--bad) inset; }
+.pattern span.r-miss::after { content: " ✗"; }
+.mic-chip {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 6px 6px 14px;
+  border-radius: 99px;
+  background: var(--ink);
+  color: var(--bg);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  max-width: calc(100% - 32px);
+}
+.mic-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--bad); flex: none; }
+.mic-chip .level { width: 64px; height: 6px; background: var(--ink-2); flex: none; }
+.mic-chip .level .fill { background: var(--bg); }
+.mic-chip button { min-height: 34px; padding: 0 12px; font-size: 13px; background: transparent; color: var(--bg); border-color: var(--ink-2); }
+
+/* ---------- progress ---------- */
+.prog-head { font-size: 16px; color: var(--ink-2); margin-top: 8px; max-width: 36em; }
+.prog-list { display: grid; margin-top: 10px; }
+.prog-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 0; border-top: 1px solid var(--line); }
+.prog-row:last-of-type { border-bottom: 1px solid var(--line); }
+.pr-main { min-width: 0; }
+.pr-name { font-weight: 650; }
+.pr-detail { font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.pr-missing { margin-top: 10px; }
+.vchip { flex: none; font-size: 12px; font-weight: 650; padding: 4px 10px; border-radius: 99px; white-space: nowrap; }
+.vchip.v-up { background: var(--good-soft); color: var(--good-text); }
+.vchip.v-down { background: var(--warn-soft); color: var(--warn-text); }
+.vchip.v-flat { background: var(--hair); color: var(--ink-2); }
+.vchip.v-early { border: 1px dashed var(--line); color: var(--muted); }
+.sub-h { font-size: 17px; font-weight: 680; margin-top: 22px; }
+
+/* ---------- voice type test ---------- */
+.vt-step { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent-text); }
+.vt-cv { display: block; width: 100%; height: 96px; margin-top: 10px; }
+.vt-read { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
+.vt-result { display: grid; gap: 10px; }
+.vt-result:empty { display: none; }
+.vt-type { font-family: var(--font-display); font-size: 30px; font-weight: 760; letter-spacing: -0.02em; line-height: 1.05; }
+.vt-sub { color: var(--ink-2); font-size: 15px; }
+.vt-chart { width: 100%; display: block; }
+
 /* ---------- device sync ---------- */
 .sync {
   margin-top: 22px;
@@ -475,6 +580,42 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       <button class="chip" data-home="60" aria-pressed="false">Higher voice · C4</button>
       <button class="chip" id="home-play">Play my <em>do</em></button>
     </div>
+    <div class="mic-row" id="mic-row" hidden>
+      <div class="row" style="justify-content: space-between">
+        <div style="min-width: 0; flex: 1 1 200px">
+          <h3>Mic feedback</h3>
+          <p class="small">Each exercise listens and shows you live whether you're on pitch.</p>
+        </div>
+        <button class="primary" id="mic-toggle">Turn on mic</button>
+      </div>
+      <div class="level" aria-hidden="true"><span class="fill" id="mic-level"></span></div>
+      <label class="inline"><input type="checkbox" id="hp-toggle"> I'm wearing headphones (lets the mic listen while tones play)</label>
+      <p class="status" id="mic-status"></p>
+    </div>
+  </section>
+
+  <section class="home" id="voice-sec" aria-labelledby="voice-h" hidden>
+    <div class="sec-head">
+      <h2 id="voice-h">What's my voice type?</h2>
+    </div>
+    <p class="small">Two quick slides: first your lowest comfortable note, then your highest. Your range gets mapped against bass, baritone, tenor, alto, mezzo-soprano, and soprano.</p>
+    <div id="vt-live" hidden>
+      <p class="vt-step" id="vt-step">Step 1 of 2 · Lowest note</p>
+      <p class="small" id="vt-instr"></p>
+      <canvas class="vt-cv" id="vt-cv"></canvas>
+      <div class="vt-read">
+        <span class="tuner-note" id="vt-now">–</span>
+        <span class="small" id="vt-sofar">Lowest so far: –</span>
+      </div>
+      <div class="row" style="margin-top: 8px">
+        <button class="primary" id="vt-next">That's my lowest</button>
+        <button class="ghost" id="vt-cancel">Cancel</button>
+      </div>
+    </div>
+    <div id="vt-result" class="vt-result"></div>
+    <div class="row">
+      <button class="primary" id="vt-start">Start the range test</button>
+    </div>
   </section>
 
   <section aria-labelledby="routine-h">
@@ -496,6 +637,11 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
               <span class="breath-time" id="hiss-time">0.0 s</span>
             </div>
             <div class="meter" aria-hidden="true"><span class="fill" id="hiss-fill"></span><span class="best" id="hiss-best" hidden></span></div>
+            <div id="hiss-mic" hidden>
+              <p class="small" style="margin-bottom: 4px">Hiss loudness. Keep the bar inside the green lines.</p>
+              <div class="level hiss-level" aria-hidden="true"><span class="band" id="hiss-band" hidden></span><span class="fill" id="hiss-lvl"></span></div>
+            </div>
+            <p class="feedback" id="hiss-fb" role="status"></p>
             <div class="row">
               <button class="primary" id="hiss-btn">Start a round</button>
               <span class="reps" id="hiss-reps" aria-label="0 of 3 rounds"></span>
@@ -513,8 +659,11 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
           <p class="how">Do lip trills: close your lips loosely and blow so they flutter like a motorboat, then add your voice and slide up and back down with the tone. If trills won't happen yet, hum with your lips closed instead. Five slides.</p>
           <div class="row">
             <button class="primary" id="siren-btn">Play a slide</button>
+            <button id="siren-sing" hidden>Sing a slide</button>
             <span class="reps" id="siren-reps" aria-label="0 of 5 slides"></span>
           </div>
+          <canvas class="slide-cv" id="siren-cv" hidden></canvas>
+          <p class="feedback" id="siren-fb" role="status"></p>
           <button class="done-btn" data-done="re">Mark done</button>
         </div>
       </li>
@@ -526,6 +675,14 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
           <p class="how">Tap a note, listen, then sing it back on "ah" and hold it for three seconds. If it sounds wavy against the tone, slide slowly up or down until the waves smooth out. That smooth sound means you've matched it.</p>
           <div class="pills" id="match-pills" role="group" aria-label="Notes to match"></div>
           <label class="inline"><input type="checkbox" id="drone-toggle"> Keep the note sounding while I sing</label>
+          <button id="match-check" hidden style="justify-self: start">Check me with the mic</button>
+          <div class="tuner" id="tuner-mi" hidden>
+            <div class="tuner-top"><span class="tuner-note">–</span><span class="tuner-cents">Sing "ah"</span><span class="tuner-hint"></span></div>
+            <div class="tuner-bar" aria-hidden="true"><span class="z-close"></span><span class="z-on"></span><span class="center"></span><span class="needle"></span></div>
+            <div class="tuner-scale" aria-hidden="true"><span>♭ flat</span><span>on pitch</span><span>sharp ♯</span></div>
+            <div class="hold" aria-hidden="true"><span></span></div>
+            <p class="hold-label">Keep the needle in the green for 3 seconds to match the note.</p>
+          </div>
           <button class="done-btn" data-done="mi">Mark done</button>
         </div>
       </li>
@@ -544,6 +701,15 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
               <button id="scale-up" aria-label="Move the scale up a half step">+</button>
             </div>
           </div>
+          <button id="scale-sing" hidden style="justify-self: start">Sing it back</button>
+          <div class="tuner" id="tuner-fa" hidden>
+            <div class="tuner-top"><span class="tuner-note">–</span><span class="tuner-cents">Sing "ah"</span><span class="tuner-hint"></span></div>
+            <div class="tuner-bar" aria-hidden="true"><span class="z-close"></span><span class="z-on"></span><span class="center"></span><span class="needle"></span></div>
+            <div class="tuner-scale" aria-hidden="true"><span>♭ flat</span><span>on pitch</span><span>sharp ♯</span></div>
+            <div class="hold" aria-hidden="true"><span></span></div>
+            <p class="hold-label">Land each note and hold it briefly. The pattern above lights up as you go.</p>
+          </div>
+          <p class="feedback" id="scale-fb" role="status"></p>
           <button class="done-btn" data-done="fa">Mark done</button>
         </div>
       </li>
@@ -555,8 +721,11 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
           <p class="how">Hum quietly with your lips closed and slide down from the middle of your range to your lowest easy note. Keep it soft and lazy. Three slides, then you're done for today.</p>
           <div class="row">
             <button class="primary" id="cool-btn">Play a slide down</button>
+            <button id="cool-sing" hidden>Sing a slide down</button>
             <span class="reps" id="cool-reps" aria-label="0 of 3 slides"></span>
           </div>
+          <canvas class="slide-cv" id="cool-cv" hidden></canvas>
+          <p class="feedback" id="cool-fb" role="status"></p>
           <button class="done-btn" data-done="sol">Mark done</button>
         </div>
       </li>
@@ -611,9 +780,13 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
 
   <section aria-labelledby="log-h">
     <div class="sec-head">
-      <h2 id="log-h">Your last 4 weeks</h2>
+      <h2 id="log-h">Your progress</h2>
       <p class="small" id="sync-state">Saved on this device</p>
     </div>
+    <p class="prog-head" id="prog-head"></p>
+    <div class="prog-list" id="prog-list"></div>
+
+    <h3 class="sub-h">Last 4 weeks</h3>
     <div class="cal" id="cal"></div>
     <div class="cal-legend" aria-hidden="true">
       Steps done:
@@ -623,18 +796,9 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       <i style="background: var(--heat-3)"></i>all 5
     </div>
     <p class="small muted" style="margin-top:6px">A day counts toward your streak once you finish 3 or more steps.</p>
-    <div class="trends">
-      <figure class="trend">
-        <figcaption>Longest hiss each day (seconds)</figcaption>
-        <div id="tr-hiss"></div>
-        <p class="read" id="tr-hiss-read"></p>
-      </figure>
-      <figure class="trend">
-        <figcaption>On target in your best take (%)</figcaption>
-        <div id="tr-acc"></div>
-        <p class="read" id="tr-acc-read"></p>
-      </figure>
-    </div>
+
+    <h3 class="sub-h" id="charts-h" hidden>Over time</h3>
+    <div class="trends" id="trends"></div>
 
     <div class="sync" id="sync-panel" hidden>
       <h3>Sync your phone and computer</h3>
@@ -669,6 +833,12 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     </ul>
   </section>
   <p class="foot" id="foot">Your log stays private to you.</p>
+</div>
+<div class="mic-chip" id="mic-chip" hidden>
+  <span class="dot" aria-hidden="true"></span>
+  <span>Mic on</span>
+  <span class="level" aria-hidden="true"><span class="fill" id="chip-level"></span></span>
+  <button id="chip-off">Turn off</button>
 </div>
 
 <script>
@@ -707,6 +877,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     matchIdx: 0,
     reps: { do: 0, re: 0, sol: 0 },
     compare: 'scale',
+    voice: null,
   };
   const peekDay = k => state.days[k] || null;
   const dayOf = k => state.days[k] || (state.days[k] = { date: k, steps: {}, hiss: 0, onTarget: null, avgMiss: null, updated: 0 });
@@ -723,12 +894,13 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
         if (o.days && typeof o.days === 'object') state.days = o.days;
         if (typeof o.home === 'number') state.home = o.home;
         state.settingsUpdated = o.settingsUpdated || 0;
+        if (o.voice && typeof o.voice === 'object') state.voice = o.voice;
       }
     } catch (e) { /* storage unavailable */ }
   }
   function lsSave() {
     try {
-      localStorage.setItem(LS_KEY, JSON.stringify({ days: state.days, home: state.home, settingsUpdated: state.settingsUpdated }));
+      localStorage.setItem(LS_KEY, JSON.stringify({ days: state.days, home: state.home, settingsUpdated: state.settingsUpdated, voice: state.voice }));
     } catch (e) { /* storage unavailable */ }
   }
 
@@ -766,7 +938,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   function saveSettings() {
     state.settingsUpdated = Date.now();
     lsSave();
-    queueWrite('settings', () => ({ home: state.home, updated: state.settingsUpdated }));
+    queueWrite('settings', () => ({ home: state.home, voice: state.voice, updated: state.settingsUpdated }));
     ghSchedule();
   }
 
@@ -796,7 +968,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     if (!res.ok) { const err = new Error('GitHub ' + res.status); err.status = res.status; throw err; }
     return res.status === 204 ? null : res.json();
   }
-  const payload = () => ({ v: 1, home: state.home, settingsUpdated: state.settingsUpdated, days: state.days });
+  const payload = () => ({ v: 1, home: state.home, voice: state.voice, settingsUpdated: state.settingsUpdated, days: state.days });
   function mergeIn(o) {
     let changedLocal = false, localNewer = false;
     const days = (o && o.days && typeof o.days === 'object') ? o.days : {};
@@ -807,7 +979,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       else if (l && lu > ru) localNewer = true;
     });
     const rs = o && typeof o.home === 'number' ? (o.settingsUpdated || 0) : -1;
-    if (rs > state.settingsUpdated) { state.home = o.home; state.settingsUpdated = rs; changedLocal = true; }
+    if (rs > state.settingsUpdated) { state.home = o.home; state.voice = o.voice || null; state.settingsUpdated = rs; changedLocal = true; }
     else if (state.settingsUpdated > rs && state.settingsUpdated > 0) localNewer = true;
     return { changedLocal, localNewer };
   }
@@ -934,6 +1106,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       let pushSettings = false;
       if (serverSettings && typeof serverSettings.home === 'number' && (serverSettings.updated || 0) >= state.settingsUpdated) {
         state.home = serverSettings.home;
+        state.voice = serverSettings.voice || state.voice;
         state.settingsUpdated = serverSettings.updated || 0;
       } else if (state.settingsUpdated) pushSettings = true;
       remote.col = col;
@@ -941,7 +1114,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       setSync('account');
       renderAll();
       push.forEach(k => queueWrite('day-' + k, () => state.days[k]));
-      if (pushSettings) queueWrite('settings', () => ({ home: state.home, updated: state.settingsUpdated }));
+      if (pushSettings) queueWrite('settings', () => ({ home: state.home, voice: state.voice, updated: state.settingsUpdated }));
     } catch (e) {
       setSync('device');
     }
@@ -952,6 +1125,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   const active = new Set();
   let seqTimers = [];
   let droneVoice = null;
+  let audioBusyUntil = 0; // the mic ignores what it hears while our own tones play (unless headphones)
   function ac() {
     if (!AC) {
       const C = window.AudioContext || window.webkitAudioContext;
@@ -993,6 +1167,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     g.linearRampToValueAtTime(0, t0 + dur);
     v.o1.start(t0); v.o2.start(t0);
     v.o1.stop(t0 + dur + 0.05); v.o2.stop(t0 + dur + 0.05);
+    audioBusyUntil = Math.max(audioBusyUntil, t0 + dur);
   }
   function stopAll() {
     seqTimers.forEach(clearTimeout);
@@ -1010,6 +1185,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     });
     active.clear();
     droneVoice = null;
+    audioBusyUntil = now;
   }
   function playNote(midi, dur = 1.6, peak = 0.2) {
     const c = ac(); if (!c) return;
@@ -1026,11 +1202,11 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     });
     seqTimers.push(setTimeout(() => onStep && onStep(-1), (0.05 + midis.length * step) * 1000));
   }
-  function glide(points, peak = 0.17) {
+  function glide(points, peak = 0.17, delay = 0.03) {
     // points: [[midi, seconds], ...]
     const c = ac(); if (!c) return;
     stopAll();
-    const t0 = c.currentTime + 0.03;
+    const t0 = c.currentTime + delay;
     const v = makeVoice(c, hz(points[0][0]));
     const total = points[points.length - 1][1];
     points.forEach(([m, t], i) => {
@@ -1049,6 +1225,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     v.g.gain.linearRampToValueAtTime(0.15, t0 + 0.25);
     v.o1.start(t0); v.o2.start(t0);
     droneVoice = v;
+    audioBusyUntil = Infinity;
   }
 
   // ---------- pitch detection (YIN) ----------
@@ -1467,67 +1644,204 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     }
   }
 
-  // ---------- live mic (works when self-hosted) ----------
-  let live = null;
-  async function startLive() {
-    const st = $('#take-status');
-    st.classList.remove('err');
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      st.classList.add('err');
-      st.textContent = "This browser can't open the mic here. Upload a take instead.";
-      return;
-    }
+  // ---------- mic engine (self-hosted copy only; the Claude viewer blocks the mic) ----------
+  const MIC_ICON = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 14a3 3 0 0 0 3-3V5a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3zm6-3a6 6 0 0 1-12 0H4a8 8 0 0 0 7 7.93V22h2v-3.07A8 8 0 0 0 20 11h-2z"/></svg>';
+  function micLabel(el, text) {
+    el.innerHTML = MIC_ICON + '<span></span>';
+    el.lastChild.textContent = text;
+  }
+  const HP_KEY = 'voice-ladder-hp';
+  const Mic = { available: false, on: false, stream: null, src: null, an: null, buf: null, raf: 0, consumer: null, hist: [], headphones: false };
+  try { Mic.headphones = localStorage.getItem(HP_KEY) === '1'; } catch (e) {}
+  const median = arr => {
+    if (!arr.length) return null;
+    const s = arr.slice().sort((a, b) => a - b);
+    return s[Math.floor(s.length / 2)];
+  };
+  const MIC_FAIL = "Couldn't turn on the mic. Allow microphone access for this site in your browser settings, then try again.";
+  function setMicStatus(text, isErr) {
+    const el = $('#mic-status');
+    el.textContent = text || '';
+    el.classList.toggle('err', !!isErr);
+  }
+  function renderMicUI() {
+    $('#mic-toggle').textContent = Mic.on ? 'Turn off mic' : 'Turn on mic';
+    $('#mic-chip').hidden = !Mic.on;
+    if (!Mic.on) $('#mic-level').style.width = '0';
+  }
+  async function micStart() {
+    if (Mic.on) return true;
+    if (!Mic.available) return false;
     const c = ac();
+    if (!c) return false;
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
-      const src = c.createMediaStreamSource(stream);
-      const an = c.createAnalyser();
-      an.fftSize = 4096;
-      src.connect(an);
-      live = { stream, an, src, buf: new Float32Array(an.fftSize), t0: performance.now(), last: -1, raw: [], hold: 0, holdTarget: null, raf: 0 };
-      const take = { m: [], hop: 0.02, t0: 0, dur: 0 };
-      view.hoverIdx = -1;
-      setTake(take, 'live');
-      $('#live-read').hidden = false;
-      $('#live-btn').textContent = 'Stop mic';
-      st.textContent = 'Listening. Sing "ah" on any note from the scale.';
-      live.raf = requestAnimationFrame(liveLoop);
+      Mic.stream = stream;
+      Mic.src = c.createMediaStreamSource(stream);
+      Mic.an = c.createAnalyser();
+      Mic.an.fftSize = 2048;
+      Mic.src.connect(Mic.an);
+      Mic.buf = new Float32Array(Mic.an.fftSize);
+      Mic.hist = [];
+      Mic.on = true;
+      setMicStatus('');
+      renderMicUI();
+      Mic.raf = requestAnimationFrame(micLoop);
+      return true;
     } catch (e) {
-      st.classList.add('err');
-      st.textContent = 'The mic was blocked. Allow microphone access for this page, or upload a take instead.';
+      setMicStatus(MIC_FAIL, true);
+      return false;
     }
   }
-  function liveLoop(ts) {
-    if (!live) return;
-    const t = (ts - live.t0) / 1000;
-    if (t - live.last >= 0.02) {
+  function micStop() {
+    if (!Mic.on) return;
+    cancelAnimationFrame(Mic.raf);
+    try { Mic.src.disconnect(); } catch (e) {}
+    Mic.stream.getTracks().forEach(t => t.stop());
+    Mic.on = false;
+    setConsumer(null);
+    renderMicUI();
+  }
+  function setConsumer(c) {
+    const prev = Mic.consumer;
+    Mic.consumer = c;
+    if (prev && prev !== c && prev.onStop) prev.onStop();
+  }
+  function micLoop() {
+    if (!Mic.on) return;
+    const f = micFrame();
+    const pct = Math.max(0, Math.min(1, (f.db + 60) / 50)) * 100 + '%';
+    $('#mic-level').style.width = pct;
+    $('#chip-level').style.width = pct;
+    if (Mic.consumer) Mic.consumer.frame(f);
+    Mic.raf = requestAnimationFrame(micLoop);
+  }
+  function micFrame() {
+    const buf = Mic.buf;
+    Mic.an.getFloatTimeDomainData(buf);
+    let s = 0, sd = 0;
+    for (let i = 0; i < buf.length; i++) {
+      const x = buf[i];
+      s += x * x;
+      if (i) { const d = x - buf[i - 1]; sd += d * d; }
+    }
+    const rms = Math.sqrt(s / buf.length);
+    const rmsD = Math.sqrt(sd / (buf.length - 1));
+    const ratio = rms > 1e-6 ? rmsD / rms : 0; // high for "sss" noise, low for a sung tone
+    const now = AC.currentTime;
+    const blocked = !Mic.headphones && now < audioBusyUntil + 0.12;
+    let raw = null;
+    if (!blocked && rms > 0.005 && ratio < 0.9) {
+      const d = decimate(buf, AC.sampleRate, 16000);
+      const fq = yin(d.data, d.sr, 65, 1050, 0.18);
+      if (fq) raw = toMidi(fq);
+    }
+    Mic.hist.push(raw);
+    if (Mic.hist.length > 5) Mic.hist.shift();
+    const w = Mic.hist.filter(v => v != null).sort((a, b) => a - b);
+    const midi = raw != null && w.length >= 3 ? w[Math.floor(w.length / 2)] : null;
+    return { t: now, rms, db: 20 * Math.log10(rms + 1e-9), hissDb: 20 * Math.log10(rmsD + 1e-9), ratio, midi, blocked };
+  }
+  // Distance to the target, ignoring which octave you sang it in.
+  function foldTo(m, target) {
+    const d = m - target;
+    const k = Math.round(d / 12);
+    return { dev: (d - 12 * k) * 100, oct: k };
+  }
+
+  // ---------- tuner bar ----------
+  function makeTuner(root) {
+    const q = s => root.querySelector(s);
+    const els = { note: q('.tuner-note'), cents: q('.tuner-cents'), hint: q('.tuner-hint'), needle: q('.needle'), hold: q('.hold span') };
+    let pos = 50;
+    return {
+      show(on) { root.hidden = !on; },
+      render(o) {
+        els.note.textContent = noteName(o.target);
+        els.hold.style.width = Math.round(Math.max(0, Math.min(1, o.hold || 0)) * 100) + '%';
+        if (o.blocked || o.dev == null) {
+          els.needle.classList.remove('on');
+          els.note.style.color = '';
+          els.cents.textContent = o.blocked ? 'Listening after the tone…' : 'Sing "ah"';
+          els.hint.textContent = o.msg || (o.blocked ? '' : 'Waiting to hear you…');
+          return;
+        }
+        const a = Math.abs(o.dev);
+        const goal = 50 + Math.max(-100, Math.min(100, o.dev)) / 2;
+        pos += (goal - pos) * 0.35;
+        els.needle.style.left = pos + '%';
+        els.needle.classList.add('on');
+        const dv = Math.round(o.dev);
+        els.cents.textContent = a > 100 && o.sung != null
+          ? 'You: ' + noteName(Math.round(o.sung))
+          : (dv > 0 ? '+' : dv < 0 ? '−' : '±') + Math.abs(dv) + '¢';
+        els.note.style.color = a <= 25 ? css('--good-text') : a <= 60 ? css('--warn-text') : css('--bad-text');
+        let h = o.msg;
+        if (!h) {
+          h = a <= 25 ? 'On pitch. Hold it.' : o.dev < 0 ? (a > 100 ? '↑ Go higher' : '↑ A little higher') : (a > 100 ? '↓ Go lower' : '↓ A little lower');
+          if (o.oct) h += " (You're an octave " + (o.oct < 0 ? 'lower' : 'higher') + ', which counts.)';
+        }
+        els.hint.textContent = h;
+      },
+    };
+  }
+
+  // ---------- "See your pitch" live graph ----------
+  let live = null;
+  const liveConsumer = {
+    frame(f) {
+      const t = f.t - live.t0;
+      if (t - live.last < 0.02) return;
       live.last = t;
-      live.an.getFloatTimeDomainData(live.buf);
-      const { data, sr } = decimate(live.buf, AC.sampleRate, 16000);
-      let s = 0;
-      for (let i = 0; i < data.length; i++) s += data[i] * data[i];
-      const rms = Math.sqrt(s / data.length);
-      let midi = null;
-      if (rms > 0.008) { const f = yin(data, sr, 65, 1050, 0.18); if (f) midi = toMidi(f); }
-      live.raw.push(midi);
       const take = view.take;
-      const k = live.raw.length - 1;
-      // causal median of last five frames
-      const w = live.raw.slice(-5).filter(v => v != null).sort((a, b) => a - b);
-      take.m.push(midi != null && w.length >= 3 ? w[Math.floor(w.length / 2)] : null);
+      take.m.push(f.blocked ? null : f.midi);
       take.hop = Math.max(0.01, t / take.m.length);
       take.dur = t;
       view.score = scoreTake(take, state.compare, scaleKey());
       updateLiveRead();
       drawGraph();
+    },
+    onStop() { finishLive(); },
+  };
+  async function startLive() {
+    const st = $('#take-status');
+    st.classList.remove('err');
+    if (!(await micStart())) {
+      st.classList.add('err');
+      st.textContent = MIC_FAIL;
+      return;
     }
-    live.raf = requestAnimationFrame(liveLoop);
+    stopAll();
+    live = { t0: AC.currentTime, last: -1, hold: 0, holdTarget: null };
+    view.hoverIdx = -1;
+    setTake({ m: [], hop: 0.02, t0: 0, dur: 0 }, 'live');
+    $('#live-read').hidden = false;
+    $('#live-btn').textContent = 'Stop listening';
+    st.textContent = 'Listening. Sing "ah" on any note from the scale.';
+    setConsumer(liveConsumer);
+  }
+  function stopLive() {
+    if (Mic.consumer === liveConsumer) setConsumer(null);
+  }
+  function finishLive() {
+    live = null;
+    $('#live-read').hidden = true;
+    micLabel($('#live-btn'), 'Live mic');
+    const take = view.take;
+    if (take && view.kind === 'live') {
+      view.kind = 'file';
+      view.label = 'Mic take · ' + take.dur.toFixed(0) + ' s';
+      rescore();
+      recordTake(view.score);
+      $('#take-status').textContent = 'Stopped listening. Tap the graph to inspect any moment.';
+    }
   }
   function updateLiveRead() {
     const sc = view.score;
     const c = sc.cls[sc.cls.length - 1];
     if (!c) {
       $('#live-note').textContent = '–';
+      $('#live-note').style.color = '';
       $('#live-cents').textContent = 'Sing "ah"';
       $('#live-dir').textContent = 'Use headphones so the app only hears you.';
       live.hold = 0;
@@ -1545,55 +1859,95 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       ? 'On pitch · holding ' + live.hold.toFixed(1) + ' s'
       : dv < 0 ? '↑ A little higher' : '↓ A little lower';
   }
-  function stopLive() {
-    if (!live) return;
-    cancelAnimationFrame(live.raf);
-    try { live.src.disconnect(); } catch (e) {}
-    live.stream.getTracks().forEach(t => t.stop());
-    live = null;
-    $('#live-read').hidden = true;
-    $('#live-btn').textContent = 'Live mic';
-    const take = view.take;
-    if (take && view.kind === 'live') {
-      view.kind = 'file';
-      view.label = 'Mic take · ' + take.dur.toFixed(0) + ' s';
-      rescore();
-      recordTake(view.score);
-      $('#take-status').textContent = 'Mic stopped. Tap the graph to inspect any moment.';
-    }
-  }
 
-  // ---------- breath timer ----------
-  const hiss = { phase: 'idle', t0: 0, raf: 0 };
+  // ---------- do · breath timer (+ hiss meter with the mic) ----------
+  const hiss = { phase: 'idle', t0: 0, raf: 0, mic: false, floor: [], started: false, startT: 0, lastT: 0, outStart: 0, levels: [], warned: false };
   function bestHissAllTime() {
     let b = 0;
     Object.values(state.days).forEach(d => { if (d && d.hiss > b) b = d.hiss; });
     return b;
   }
+  function hissFb(kind, text) {
+    const el = $('#hiss-fb');
+    el.className = 'feedback' + (kind ? ' ' + kind : '');
+    el.textContent = text || '';
+  }
+  const hissPct = v => Math.max(0, Math.min(100, ((v + 75) / 60) * 100));
+  const breathConsumer = {
+    frame(f) {
+      if (hiss.phase === 'in') { hiss.floor.push(f.hissDb); return; }
+      if (hiss.phase !== 'out') return;
+      const floor = median(hiss.floor);
+      const thr = Math.max((floor == null ? -75 : floor) + 10, -62);
+      const hissing = f.hissDb > thr && f.ratio > 0.45;
+      if (hissing) {
+        if (!hiss.started) { hiss.started = true; hiss.startT = f.t; hissFb('', ''); }
+        hiss.lastT = f.t;
+        hiss.levels.push(f.hissDb);
+      }
+      const lvl = $('#hiss-lvl'), band = $('#hiss-band');
+      lvl.style.width = hissPct(f.hissDb) + '%';
+      if (hiss.levels.length >= 15) {
+        const med = median(hiss.levels);
+        band.hidden = false;
+        band.style.left = hissPct(med - 3) + '%';
+        band.style.width = (hissPct(med + 3) - hissPct(med - 3)) + '%';
+        lvl.className = 'fill ' + (hissing && Math.abs(f.hissDb - med) <= 3 ? 'good' : 'warn');
+      } else lvl.className = 'fill';
+      if (hiss.started && f.t - hiss.lastT > 0.7) { finishHiss(hiss.lastT - hiss.startT); return; }
+      if (!hiss.started && !hiss.warned && f.t - hiss.outStart > 4) {
+        hiss.warned = true;
+        hissFb('meh', 'I can\'t hear your hiss yet. Hold the phone closer and make a clear "sss".');
+      }
+    },
+    onStop() { $('#hiss-mic').hidden = true; },
+  };
   function hissFrame() {
     const now = performance.now();
     const el = (now - hiss.t0) / 1000;
     const best = bestHissAllTime();
     const max = Math.max(30, best * 1.25);
+    const fill = $('#hiss-fill');
     if (hiss.phase === 'in') {
       const left = Math.max(0, 4 - el);
-      $('#hiss-phase').textContent = 'Breathe in… ' + Math.ceil(left || 0.0001);
+      $('#hiss-phase').textContent = 'Breathe in… ' + Math.max(1, Math.ceil(left));
       $('#hiss-time').textContent = left.toFixed(1) + ' s';
-      const f = $('#hiss-fill');
-      f.classList.add('inhale');
-      f.style.width = Math.min(100, (el / 4) * 100) + '%';
-      if (el >= 4) { hiss.phase = 'out'; hiss.t0 = now; $('#hiss-btn').textContent = 'Stop'; }
+      fill.classList.add('inhale');
+      fill.style.width = Math.min(100, (el / 4) * 100) + '%';
+      if (el >= 4) {
+        hiss.phase = 'out';
+        hiss.t0 = now;
+        hiss.outStart = AC ? AC.currentTime : 0;
+        $('#hiss-btn').textContent = 'Stop';
+      }
     } else if (hiss.phase === 'out') {
-      $('#hiss-phase').textContent = 'Hiss "sss" steadily';
-      $('#hiss-time').textContent = el.toFixed(1) + ' s';
-      const f = $('#hiss-fill');
-      f.classList.remove('inhale');
-      f.style.width = Math.min(100, (el / max) * 100) + '%';
+      let secs = el;
+      if (hiss.mic) {
+        secs = hiss.started ? AC.currentTime - hiss.startT : 0;
+        $('#hiss-phase').textContent = hiss.started ? 'Hissing… keep it even' : 'Start your "sss" now';
+      } else {
+        $('#hiss-phase').textContent = 'Hiss "sss" steadily';
+      }
+      $('#hiss-time').textContent = secs.toFixed(1) + ' s';
+      fill.classList.remove('inhale');
+      fill.style.width = Math.min(100, (secs / max) * 100) + '%';
     }
     if (hiss.phase === 'in' || hiss.phase === 'out') hiss.raf = requestAnimationFrame(hissFrame);
   }
-  function hissClick() {
+  async function hissClick() {
     if (hiss.phase === 'idle') {
+      hiss.phase = 'starting';
+      if (Mic.available) await micStart();
+      hiss.mic = Mic.on;
+      Object.assign(hiss, { floor: [], started: false, startT: 0, lastT: 0, levels: [], warned: false });
+      hissFb('', '');
+      if (hiss.mic) {
+        stopAll();
+        setConsumer(breathConsumer);
+        $('#hiss-mic').hidden = false;
+        $('#hiss-band').hidden = true;
+        $('#hiss-lvl').style.width = '0';
+      }
       hiss.phase = 'in';
       hiss.t0 = performance.now();
       $('#hiss-btn').textContent = 'Cancel';
@@ -1601,30 +1955,47 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     } else if (hiss.phase === 'in') {
       cancelAnimationFrame(hiss.raf);
       hiss.phase = 'idle';
+      if (Mic.consumer === breathConsumer) setConsumer(null);
       $('#hiss-btn').textContent = 'Start a round';
-      $('#hiss-phase').textContent = 'Tap start when you\'re ready';
+      $('#hiss-phase').textContent = "Tap start when you're ready";
       $('#hiss-time').textContent = '0.0 s';
       $('#hiss-fill').style.width = '0%';
     } else if (hiss.phase === 'out') {
-      cancelAnimationFrame(hiss.raf);
-      const secs = Math.round(((performance.now() - hiss.t0) / 1000) * 10) / 10;
-      hiss.phase = 'idle';
-      $('#hiss-btn').textContent = 'Start another round';
-      const prevBest = bestHissAllTime();
-      $('#hiss-time').textContent = secs.toFixed(1) + ' s';
-      if (secs >= 2) {
-        const k = todayKey();
-        const d = dayOf(k);
-        if (secs > (d.hiss || 0)) d.hiss = secs;
-        saveDay(k);
-        $('#hiss-phase').textContent = secs > prevBest && prevBest > 0 ? 'New personal best' : 'Round logged';
-        addRep('do', 3);
-        renderStats();
-        renderTrends();
-        renderBreathMeta();
-      } else {
-        $('#hiss-phase').textContent = 'Too short to count. Try a full breath.';
+      const secs = hiss.mic ? (hiss.started ? hiss.lastT - hiss.startT : 0) : (performance.now() - hiss.t0) / 1000;
+      finishHiss(secs);
+    }
+  }
+  function finishHiss(rawSecs) {
+    if (hiss.phase !== 'out') return;
+    cancelAnimationFrame(hiss.raf);
+    const secs = Math.round(rawSecs * 10) / 10;
+    let steady = null;
+    if (hiss.mic && hiss.levels.length >= 15) {
+      const med = median(hiss.levels);
+      steady = Math.round((100 * hiss.levels.filter(v => Math.abs(v - med) <= 3).length) / hiss.levels.length);
+    }
+    hiss.phase = 'idle';
+    if (Mic.consumer === breathConsumer) setConsumer(null);
+    $('#hiss-btn').textContent = 'Start another round';
+    $('#hiss-time').textContent = secs.toFixed(1) + ' s';
+    const prevBest = bestHissAllTime();
+    if (secs >= 2) {
+      const k = todayKey();
+      const d = dayOf(k);
+      if (secs > (d.hiss || 0)) d.hiss = secs;
+      if (steady != null && steady > (d.steady || 0)) d.steady = steady;
+      saveDay(k);
+      $('#hiss-phase').textContent = secs > prevBest && prevBest > 0 ? 'New personal best' : 'Round logged';
+      if (steady != null) {
+        hissFb(steady >= 75 ? 'ok' : steady >= 55 ? 'meh' : 'bad',
+          'Steady ' + steady + '% of the time. ' + (steady >= 75 ? 'Nice, even airflow.' : steady >= 55 ? 'Pretty good. Keep the hiss the same loudness the whole way.' : 'Wobbly. Use a gentler hiss you can hold evenly.'));
       }
+      addRep('do', 3);
+      renderStats();
+      renderTrends();
+      renderBreathMeta();
+    } else {
+      $('#hiss-phase').textContent = 'Too short to count. Try a full breath.';
     }
   }
   function renderBreathMeta() {
@@ -1640,6 +2011,550 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     } else {
       mark.hidden = true;
     }
+  }
+
+  // ---------- re & sol · follow-the-slide ----------
+  function makeSlide(opts) {
+    const s = { phase: 'idle', t0: 0, trace: [], dbs: [], lastRel: null };
+    const pts = () => opts.points();
+    const dur = () => { const p = pts(); return p[p.length - 1][1]; };
+    const targetAt = t => {
+      const p = pts();
+      if (t <= p[0][1]) return p[0][0];
+      for (let i = 1; i < p.length; i++) {
+        if (t <= p[i][1]) {
+          const [m0, t0] = p[i - 1], [m1, t1] = p[i];
+          return m0 + ((m1 - m0) * (t - t0)) / (t1 - t0);
+        }
+      }
+      return p[p.length - 1][0];
+    };
+    function draw(rel) {
+      const cv = opts.cv;
+      const W = cv.clientWidth, H = cv.clientHeight || 150;
+      if (!W) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 3);
+      if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) {
+        cv.width = Math.round(W * dpr);
+        cv.height = Math.round(H * dpr);
+      }
+      const g = cv.getContext('2d');
+      g.setTransform(dpr, 0, 0, dpr, 0, 0);
+      g.clearRect(0, 0, W, H);
+      const D = dur();
+      const ms = pts().map(q => q[0]);
+      const lo = Math.min(...ms) - 2.5, hi = Math.max(...ms) + 2.5;
+      const L = 40, R = 12, T = 10, B = 10;
+      const x = t => L + (t / D) * (W - L - R);
+      const y = m => T + ((hi - m) / (hi - lo)) * (H - T - B);
+      const col = { muted: css('--muted'), hair: css('--hair'), accent: css('--accent'), target: css('--target'), good: css('--good'), warn: css('--warn'), ink: css('--ink'), ink2: css('--ink-2') };
+      g.font = '500 10px ' + css('--font-mono');
+      g.textAlign = 'right';
+      g.textBaseline = 'middle';
+      for (let m = Math.ceil(lo); m <= Math.floor(hi); m++) {
+        if (NOTE[((m % 12) + 12) % 12].length !== 1) continue;
+        g.strokeStyle = col.hair;
+        g.lineWidth = 1;
+        g.beginPath(); g.moveTo(L, Math.round(y(m)) + 0.5); g.lineTo(W - R, Math.round(y(m)) + 0.5); g.stroke();
+        g.fillStyle = col.muted;
+        g.fillText(noteName(m), L - 6, y(m));
+      }
+      const steps = 60;
+      g.fillStyle = col.target;
+      g.beginPath();
+      for (let i = 0; i <= steps; i++) { const t = (D * i) / steps; g.lineTo(x(t), y(targetAt(t) + 1)); }
+      for (let i = steps; i >= 0; i--) { const t = (D * i) / steps; g.lineTo(x(t), y(targetAt(t) - 1)); }
+      g.closePath();
+      g.fill();
+      g.strokeStyle = col.accent;
+      g.lineWidth = 2;
+      g.setLineDash([6, 5]);
+      g.beginPath();
+      for (let i = 0; i <= steps; i++) { const t = (D * i) / steps; if (i) g.lineTo(x(t), y(targetAt(t))); else g.moveTo(x(t), y(targetAt(t))); }
+      g.stroke();
+      g.setLineDash([]);
+      g.lineWidth = 3;
+      g.lineCap = 'round';
+      for (let i = 1; i < s.trace.length; i++) {
+        const a = s.trace[i - 1], b = s.trace[i];
+        if (a.m == null || b.m == null || Math.abs(a.m - b.m) > 1.5) continue;
+        g.strokeStyle = b.ok ? col.good : col.warn;
+        g.beginPath(); g.moveTo(x(a.t), y(a.m)); g.lineTo(x(b.t), y(b.m)); g.stroke();
+      }
+      if (rel != null && rel >= 0 && rel <= D) {
+        g.fillStyle = col.accent;
+        g.beginPath(); g.arc(x(rel), y(targetAt(rel)), 7, 0, Math.PI * 2); g.fill();
+      }
+      if (rel != null && rel < 0) {
+        g.fillStyle = col.ink;
+        g.textAlign = 'center';
+        g.font = '780 44px ' + css('--font-display');
+        g.fillText(String(Math.max(1, Math.ceil(-rel / 0.5))), (L + W - R) / 2, H / 2 - 8);
+        g.font = '500 12px ' + css('--font-body');
+        g.fillStyle = col.ink2;
+        g.fillText('Follow the dot with your voice', (L + W - R) / 2, H / 2 + 28);
+      }
+    }
+    function fb(kind, text) {
+      opts.fb.className = 'feedback' + (kind ? ' ' + kind : '');
+      opts.fb.textContent = text || '';
+    }
+    function finish() {
+      if (s.phase === 'done') return;
+      s.phase = 'done';
+      const voiced = s.trace.filter(p => p.m != null);
+      const okN = voiced.filter(p => p.ok).length;
+      const voicedPct = s.trace.length ? voiced.length / s.trace.length : 0;
+      const follow = voiced.length ? Math.round((100 * okN) / voiced.length) : 0;
+      if (voicedPct < 0.3) {
+        fb('bad', 'I barely heard you. Hold the phone closer or sing a little louder, then try again.');
+      } else {
+        let msg = 'You followed ' + follow + '% of the slide. ' + (follow >= 70 ? 'Smooth.' : follow >= 40 ? 'Close. Glide instead of stepping.' : 'Hear the slide again, then follow the dot.');
+        if (opts.soft) {
+          const med = median(s.dbs);
+          if (med != null && med > -20) msg += ' Try it softer; a cool-down should be quiet.';
+        }
+        fb(follow >= 70 ? 'ok' : follow >= 40 ? 'meh' : 'bad', msg);
+        const k = todayKey();
+        const d = dayOf(k);
+        if (d.follow == null || follow > d.follow) { d.follow = follow; saveDay(k); renderTrends(); }
+        addRep(opts.step, opts.total);
+      }
+      setConsumer(null);
+      draw(dur() + 1);
+    }
+    const consumer = {
+      frame(f) {
+        const rel = f.t - s.t0;
+        s.lastRel = rel;
+        if (rel < 0) { draw(rel); return; }
+        if (rel > dur() + 0.3) { finish(); return; }
+        s.phase = 'run';
+        let m = null, ok = false;
+        if (f.midi != null && !f.blocked) {
+          const tg = targetAt(rel);
+          m = f.midi - 12 * Math.round((f.midi - tg) / 12);
+          let best = Infinity;
+          for (let d = -0.4; d <= 0.4001; d += 0.05) best = Math.min(best, Math.abs(m - targetAt(Math.max(0, Math.min(dur(), rel + d)))));
+          ok = best <= 1;
+          s.dbs.push(f.db);
+        }
+        s.trace.push({ t: rel, m, ok });
+        draw(rel);
+      },
+      onStop() {
+        if (s.phase !== 'done') s.phase = 'idle';
+        micLabel(opts.btn, opts.label);
+      },
+    };
+    async function toggle() {
+      if (Mic.consumer === consumer) { setConsumer(null); return; }
+      if (!(await micStart())) { fb('bad', MIC_FAIL); return; }
+      stopAll();
+      s.trace = [];
+      s.dbs = [];
+      s.phase = 'count';
+      if (Mic.headphones) glide(pts(), opts.soft ? 0.12 : 0.15, 1.5);
+      s.t0 = AC.currentTime + 1.5;
+      opts.cv.hidden = false;
+      fb('', '');
+      opts.btn.textContent = 'Stop';
+      setConsumer(consumer);
+    }
+    return {
+      toggle,
+      redraw() { if (!opts.cv.hidden) draw(s.phase === 'done' || s.lastRel == null ? dur() + 1 : s.lastRel); },
+    };
+  }
+  const sirenSlide = makeSlide({
+    cv: $('#siren-cv'), fb: $('#siren-fb'), btn: $('#siren-sing'), label: 'Sing a slide', step: 're', total: 5,
+    points: () => [[state.home, 0], [state.home + 7, 1.8], [state.home, 3.6]],
+  });
+  const coolSlide = makeSlide({
+    cv: $('#cool-cv'), fb: $('#cool-fb'), btn: $('#cool-sing'), label: 'Sing a slide down', step: 'sol', total: 3, soft: true,
+    points: () => [[state.home + 5, 0], [state.home - 5, 3.2]],
+  });
+
+  // ---------- mi · match the note with a tuner ----------
+  const tunerMi = makeTuner($('#tuner-mi'));
+  const match = { hold: 0, last: 0, matched: new Set(), pauseUntil: 0 };
+  function markMatchedPills() {
+    document.querySelectorAll('.pill').forEach((p, i) => p.classList.toggle('matched', match.matched.has(i)));
+  }
+  const matchConsumer = {
+    frame(f) {
+      const dt = match.last ? Math.min(0.1, f.t - match.last) : 0;
+      match.last = f.t;
+      const target = state.home + SCALE[state.matchIdx];
+      if (f.t < match.pauseUntil) return;
+      if (f.blocked) {
+        const msg = droneVoice && !Mic.headphones ? 'Turn off "Keep the note sounding" or tick "I\'m wearing headphones" so the mic can hear you.' : '';
+        tunerMi.render({ target, blocked: true, hold: match.hold / 3, msg });
+        return;
+      }
+      if (f.midi == null) {
+        match.hold = Math.max(0, match.hold - dt * 0.5);
+        tunerMi.render({ target, dev: null, hold: match.hold / 3 });
+        return;
+      }
+      const { dev, oct } = foldTo(f.midi, target);
+      if (Math.abs(dev) <= 25) match.hold += dt;
+      else match.hold = Math.max(0, match.hold - dt * 1.5);
+      if (match.hold >= 3) {
+        match.hold = 0;
+        match.matched.add(state.matchIdx);
+        markMatchedPills();
+        const all = match.matched.size === 5;
+        tunerMi.render({ target, dev, oct, hold: 1, msg: all ? '✓ All five matched. Great ear!' : '✓ Matched! Next note coming up.' });
+        if (all) {
+          match.pauseUntil = Infinity;
+          setStep('mi', true);
+          setTimeout(() => { if (Mic.consumer === matchConsumer) setConsumer(null); }, 2500);
+        } else {
+          match.pauseUntil = f.t + 1.2;
+          setTimeout(() => {
+            if (Mic.consumer !== matchConsumer) return;
+            let n = (state.matchIdx + 1) % 5;
+            while (match.matched.has(n)) n = (n + 1) % 5;
+            pickMatch(n);
+          }, 1000);
+        }
+        return;
+      }
+      tunerMi.render({ target, dev, oct, sung: f.midi, hold: match.hold / 3 });
+    },
+    onStop() {
+      tunerMi.show(false);
+      micLabel($('#match-check'), 'Check me with the mic');
+      match.hold = 0;
+      match.last = 0;
+    },
+  };
+  async function matchCheckToggle() {
+    if (Mic.consumer === matchConsumer) { setConsumer(null); return; }
+    if (!(await micStart())) { tunerMi.show(true); tunerMi.render({ target: state.home + SCALE[state.matchIdx], dev: null, msg: MIC_FAIL }); return; }
+    if (match.matched.size === 5) { match.matched.clear(); markMatchedPills(); }
+    match.hold = 0;
+    match.last = 0;
+    match.pauseUntil = 0;
+    setConsumer(matchConsumer);
+    tunerMi.show(true);
+    $('#match-check').textContent = 'Stop checking';
+    pickMatch(state.matchIdx);
+  }
+
+  // ---------- fa · sing the scale back ----------
+  const tunerFa = makeTuner($('#tuner-fa'));
+  const run = { idx: 0, hold: 0, devs: [], el: 0, last: 0, results: [], voiced: 0, on: 0, miss: 0, voicedSec: 0 };
+  function markPattern() {
+    const singing = Mic.consumer === scaleConsumer;
+    document.querySelectorAll('#scale-pattern span').forEach((sp, i) => {
+      sp.classList.remove('cur', 'r-on', 'r-close', 'r-miss');
+      if (i < run.results.length) sp.classList.add('r-' + run.results[i]);
+      else if (singing && i === run.idx) sp.classList.add('cur');
+    });
+  }
+  const scaleConsumer = {
+    frame(f) {
+      const dt = run.last ? Math.min(0.1, f.t - run.last) : 0;
+      run.last = f.t;
+      if (run.idx >= PATTERN.length) return;
+      const target = scaleKey() + PATTERN[run.idx];
+      if (f.blocked) { tunerFa.render({ target, blocked: true, hold: run.hold / 0.4 }); return; }
+      run.el += dt;
+      if (f.midi != null) {
+        const { dev, oct } = foldTo(f.midi, target);
+        const a = Math.abs(dev);
+        // For the progress log, score each moment against the nearest scale note,
+        // so lingering on the last note while moving to the next isn't counted as a miss.
+        let near = Infinity;
+        for (const st of SCALE) near = Math.min(near, Math.abs(foldTo(f.midi, scaleKey() + st).dev));
+        run.voiced++;
+        run.voicedSec += dt;
+        run.miss += Math.min(near, 200);
+        if (near <= 25) run.on++;
+        if (a <= 50) { run.hold += dt; run.devs.push(a); }
+        else run.hold = Math.max(0, run.hold - dt);
+        tunerFa.render({ target, dev, oct, sung: f.midi, hold: run.hold / 0.4 });
+      } else {
+        run.hold = Math.max(0, run.hold - dt * 0.5);
+        tunerFa.render({ target, dev: null, hold: run.hold / 0.4, msg: 'Sing ' + PATTERN_SYL[run.idx] + ' (' + noteName(target) + ')' });
+      }
+      if (run.hold >= 0.4) {
+        const avg = run.devs.reduce((s, v) => s + v, 0) / run.devs.length;
+        nextScaleNote(avg <= 25 ? 'on' : 'close');
+      } else if (run.el > 6) {
+        nextScaleNote('miss');
+      }
+    },
+    onStop() {
+      tunerFa.show(false);
+      micLabel($('#scale-sing'), 'Sing it back');
+      markPattern();
+    },
+  };
+  function nextScaleNote(result) {
+    run.results.push(result);
+    run.idx++;
+    run.hold = 0;
+    run.devs = [];
+    run.el = 0;
+    if (run.idx >= PATTERN.length) { finishScale(); return; }
+    markPattern();
+  }
+  function finishScale() {
+    const on = run.results.filter(r => r === 'on').length;
+    const close = run.results.filter(r => r === 'close').length;
+    const fb = $('#scale-fb');
+    fb.className = 'feedback ' + (on >= 7 ? 'ok' : on >= 4 ? 'meh' : 'bad');
+    fb.textContent = on + ' of 9 notes on pitch' + (close ? ', ' + close + ' close' : '') + '. ' +
+      (on >= 7 ? 'Strong round. Try it a half step higher.' : on >= 4 ? 'Getting there. Run it again in the same key.' : 'Play the pattern again and sing slower, one note at a time.');
+    const k = todayKey();
+    const d = dayOf(k);
+    if (d.scaleNotes == null || on > d.scaleNotes) { d.scaleNotes = on; saveDay(k); renderTrends(); }
+    if (run.voiced) recordTake({ voicedSec: run.voicedSec, onPct: Math.round((100 * run.on) / run.voiced), avgMiss: Math.round(run.miss / run.voiced) });
+    setConsumer(null);
+  }
+  async function scaleSingToggle() {
+    if (Mic.consumer === scaleConsumer) { setConsumer(null); return; }
+    const fb = $('#scale-fb');
+    if (!(await micStart())) { fb.className = 'feedback bad'; fb.textContent = MIC_FAIL; return; }
+    stopAll();
+    Object.assign(run, { idx: 0, hold: 0, devs: [], el: 0, last: 0, results: [], voiced: 0, on: 0, miss: 0, voicedSec: 0 });
+    fb.textContent = '';
+    setConsumer(scaleConsumer);
+    tunerFa.show(true);
+    $('#scale-sing').textContent = 'Stop';
+    markPattern();
+  }
+
+  // ---------- voice type test ----------
+  const VOICE_TYPES = [
+    { name: 'Bass', low: 40, high: 64 },
+    { name: 'Baritone', low: 43, high: 67 },
+    { name: 'Tenor', low: 48, high: 72 },
+    { name: 'Alto', low: 53, high: 77 },
+    { name: 'Mezzo-soprano', low: 57, high: 81 },
+    { name: 'Soprano', low: 60, high: 84 },
+  ];
+  // Beginners' comfortable tops sit a few notes under the textbook range, and lows are more telling.
+  function classifyVoice(low, high) {
+    const scored = VOICE_TYPES
+      .map(t => ({ t, s: 0.7 * Math.abs(low - t.low) + 0.3 * Math.abs(high - (t.high - 3)) }))
+      .sort((a, b) => a.s - b.s);
+    return { best: scored[0].t, near: scored[1].s - scored[0].s < 1.5 ? scored[1].t : null };
+  }
+  const VT_LO = 38, VT_HI = 86;
+  const vt = { stage: 'idle', win: [], low: null, high: null };
+  function drawVtLive(cur) {
+    const cv = $('#vt-cv');
+    const W = cv.clientWidth, H = cv.clientHeight || 96;
+    if (!W) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 3);
+    if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+    const g = cv.getContext('2d');
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.clearRect(0, 0, W, H);
+    const L = 12, R = 12;
+    const x = m => L + ((m - VT_LO) / (VT_HI - VT_LO)) * (W - L - R);
+    const yb = 38;
+    g.fillStyle = css('--hair');
+    g.beginPath(); g.roundRect ? g.roundRect(L, yb - 7, W - L - R, 14, 7) : g.rect(L, yb - 7, W - L - R, 14); g.fill();
+    const lo = vt.low, hi = vt.high;
+    if (lo != null) {
+      const a = x(lo), b = x(hi != null ? hi : lo);
+      g.fillStyle = css('--accent');
+      g.globalAlpha = 0.35;
+      g.beginPath(); g.rect(Math.min(a, b) - 3, yb - 7, Math.abs(b - a) + 6, 14); g.fill();
+      g.globalAlpha = 1;
+    }
+    g.fillStyle = css('--muted');
+    g.font = '500 10px ' + css('--font-mono');
+    g.textAlign = 'center';
+    g.textBaseline = 'top';
+    for (let m = 48; m <= 84; m += 12) {
+      g.fillRect(Math.round(x(m)), yb + 9, 1, 6);
+      g.fillText(noteName(m), x(m), yb + 18);
+    }
+    g.fillRect(Math.round(x(40)), yb + 9, 1, 4);
+    g.fillText('E2', x(40), yb + 18);
+    if (cur != null) {
+      const cm = Math.max(VT_LO, Math.min(VT_HI, cur));
+      g.fillStyle = css('--accent');
+      g.beginPath(); g.arc(x(cm), yb, 9, 0, Math.PI * 2); g.fill();
+      g.fillStyle = css('--ink');
+      g.font = '600 12px ' + css('--font-mono');
+      g.textBaseline = 'bottom';
+      g.fillText(noteName(Math.round(cur)), x(cm), yb - 12);
+    }
+  }
+  const vtConsumer = {
+    frame(f) {
+      if (f.blocked) return;
+      vt.win.push({ t: f.t, m: f.midi });
+      while (vt.win.length && f.t - vt.win[0].t > 0.45) vt.win.shift();
+      const ms = vt.win.map(p => p.m);
+      if (ms.length >= 8 && ms.every(v => v != null)) {
+        const mn = Math.min(...ms), mx = Math.max(...ms);
+        if (mx - mn < 0.5) {
+          const med = median(ms);
+          if (vt.stage === 'low' && (vt.low == null || med < vt.low)) vt.low = med;
+          if (vt.stage === 'high' && (vt.high == null || med > vt.high)) vt.high = med;
+        }
+      }
+      $('#vt-now').textContent = f.midi != null ? noteName(Math.round(f.midi)) : '–';
+      const sofar = vt.stage === 'low' ? vt.low : vt.high;
+      $('#vt-sofar').textContent = (vt.stage === 'low' ? 'Lowest' : 'Highest') + ' clear note so far: ' + (sofar != null ? noteName(Math.round(sofar)) : '–');
+      $('#vt-next').disabled = sofar == null;
+      drawVtLive(f.midi);
+    },
+    onStop() {
+      if (vt.stage === 'low' || vt.stage === 'high') cancelVt();
+    },
+  };
+  async function startVt() {
+    if (!(await micStart())) {
+      const host = $('#vt-result');
+      host.hidden = false;
+      host.innerHTML = '<p class="status err"></p>';
+      host.firstChild.textContent = MIC_FAIL;
+      return;
+    }
+    stopAll();
+    Object.assign(vt, { stage: 'low', win: [], low: null, high: null });
+    $('#vt-live').hidden = false;
+    $('#vt-start').hidden = true;
+    $('#vt-result').hidden = true;
+    $('#vt-step').textContent = 'Step 1 of 2 · Lowest note';
+    $('#vt-instr').textContent = 'Hum or sing "ah" at a comfortable middle pitch, then slide down slowly. Stop at the lowest note that still sounds clear, without croaking or growling, and hold it for a second.';
+    $('#vt-next').textContent = "That's my lowest";
+    $('#vt-next').disabled = true;
+    $('#vt-now').textContent = '–';
+    $('#vt-sofar').textContent = 'Lowest clear note so far: –';
+    setConsumer(vtConsumer);
+    drawVtLive(null);
+  }
+  function vtNext() {
+    if (vt.stage === 'low') {
+      vt.stage = 'high';
+      vt.win = [];
+      $('#vt-step').textContent = 'Step 2 of 2 · Highest note';
+      $('#vt-instr').textContent = "Now start in the middle and slide up slowly. Stop at the highest note you can sing comfortably, before it strains, cracks, or flips into a thin airy voice, and hold it for a second.";
+      $('#vt-next').textContent = "That's my highest";
+      $('#vt-next').disabled = true;
+      $('#vt-sofar').textContent = 'Highest clear note so far: –';
+    } else if (vt.stage === 'high') {
+      finishVt();
+    }
+  }
+  function cancelVt() {
+    vt.stage = 'idle';
+    $('#vt-live').hidden = true;
+    $('#vt-start').hidden = false;
+    $('#vt-result').hidden = false;
+  }
+  function finishVt() {
+    const a = Math.round(vt.low), b = Math.round(vt.high);
+    const low = Math.min(a, b), high = Math.max(a, b);
+    vt.stage = 'done';
+    setConsumer(null);
+    $('#vt-live').hidden = true;
+    $('#vt-start').hidden = false;
+    if (high - low < 3) {
+      const host = $('#vt-result');
+      host.hidden = false;
+      host.innerHTML = '<p class="status err">Your lowest and highest came out almost the same. Try again, and slide further down and further up.</p>';
+      return;
+    }
+    const { best, near } = classifyVoice(low, high);
+    state.voice = { low, high, type: best.name, near: near ? near.name : null, date: todayKey() };
+    saveSettings();
+    const d = dayOf(todayKey());
+    d.range = { low, high };
+    saveDay(todayKey());
+    renderVoice();
+    renderTrends();
+  }
+  function renderVoice() {
+    const host = $('#vt-result');
+    const v = state.voice;
+    host.hidden = vt.stage === 'low' || vt.stage === 'high';
+    host.innerHTML = '';
+    if (Mic.available) micLabel($('#vt-start'), v ? 'Retake the range test' : 'Start the range test');
+    if (!v) return;
+    const head = document.createElement('div');
+    const type = document.createElement('div');
+    type.className = 'vt-type';
+    type.textContent = v.type;
+    const sub = document.createElement('p');
+    sub.className = 'vt-sub';
+    sub.textContent = 'Most likely voice type' + (v.near ? ', close to ' + v.near.toLowerCase() : '') + '. Your range: ' + noteName(v.low) + ' to ' + noteName(v.high) + ' (' + (v.high - v.low) + ' half steps), tested ' + fmtDate(v.date) + '.';
+    head.appendChild(type);
+    head.appendChild(sub);
+    host.appendChild(head);
+    host.appendChild(voiceChart(v));
+    const sugg = Math.max(HOME_MIN, Math.min(HOME_MAX, v.low + 4));
+    if (sugg !== state.home) {
+      const btn = document.createElement('button');
+      btn.className = 'chip';
+      btn.style.justifySelf = 'start';
+      btn.textContent = 'Use ' + noteName(sugg) + ' as my starting note';
+      btn.addEventListener('click', () => { changeHome(sugg); playNote(state.home, 1.4); });
+      host.appendChild(btn);
+    } else {
+      const p = document.createElement('p');
+      p.className = 'small';
+      p.textContent = 'Your starting note, ' + noteName(state.home) + ', already fits this range.';
+      host.appendChild(p);
+    }
+    const note = document.createElement('p');
+    note.className = 'small muted';
+    note.textContent = (v.high - v.low < 12 ? 'Your range is under an octave right now, which is normal for beginners. ' : '') +
+      'Treat this as a starting estimate. Range grows with practice, and voice type also depends on where your voice sounds best, so retest in a month or have a voice teacher confirm.';
+    host.appendChild(note);
+  }
+  function voiceChart(v) {
+    const NS = 'http://www.w3.org/2000/svg';
+    const best = v.type;
+    const W = Math.max(280, $('#voice-sec').clientWidth - 34 || 320);
+    const rowH = 24, labelW = 104, R = 14, top = 6;
+    const rows = [{ name: 'You', low: v.low, high: v.high, you: true }].concat(VOICE_TYPES);
+    const H = top + rows.length * rowH + 22;
+    const x = m => labelW + ((m - VT_LO) / (VT_HI - VT_LO)) * (W - labelW - R);
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('class', 'vt-chart');
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', 'Your range ' + noteName(v.low) + ' to ' + noteName(v.high) + ' compared with typical ranges for each voice type. Closest match: ' + best + '.');
+    const add = (tag, attrs, text) => {
+      const el = document.createElementNS(NS, tag);
+      Object.entries(attrs).forEach(([k, val]) => {
+        if (String(val).indexOf('var(') === 0) el.style.setProperty(k, val);
+        else el.setAttribute(k, val);
+      });
+      if (text != null) el.textContent = text;
+      svg.appendChild(el);
+      return el;
+    };
+    for (let m = 48; m <= 84; m += 12) {
+      add('line', { x1: x(m), x2: x(m), y1: top, y2: H - 18, stroke: 'var(--hair)', 'stroke-width': 1 });
+      add('text', { x: x(m), y: H - 4, 'text-anchor': 'middle', fill: 'var(--muted)', 'font-size': 10, 'font-family': 'var(--font-mono)' }, noteName(m));
+    }
+    rows.forEach((r, i) => {
+      const cy = top + i * rowH + rowH / 2;
+      const isBest = r.name === best;
+      add('text', { x: 0, y: cy + 4, fill: r.you || isBest ? 'var(--ink)' : 'var(--ink-2)', 'font-size': 12, 'font-weight': r.you || isBest ? 700 : 500, 'font-family': 'var(--font-body)' }, r.name + (isBest ? ' ✓' : ''));
+      const h = r.you ? 14 : 10;
+      add('rect', {
+        x: x(r.low), y: cy - h / 2, width: Math.max(4, x(r.high) - x(r.low)), height: h, rx: h / 2,
+        fill: r.you ? 'var(--accent)' : isBest ? 'var(--heat-2)' : 'var(--heat-1)',
+      });
+      if (r.you) {
+        add('text', { x: x(r.low) - 4, y: cy + 4, 'text-anchor': 'end', fill: 'var(--ink)', 'font-size': 10, 'font-weight': 600, 'font-family': 'var(--font-mono)' }, noteName(r.low));
+        add('text', { x: x(r.high) + 4, y: cy + 4, fill: 'var(--ink)', 'font-size': 10, 'font-weight': 600, 'font-family': 'var(--font-mono)' }, noteName(r.high));
+      }
+    });
+    return svg;
   }
 
   // ---------- reps & steps ----------
@@ -1706,9 +2621,11 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       b.addEventListener('click', () => pickMatch(i));
       pills.appendChild(b);
     });
+    markMatchedPills();
     renderScale();
   }
   function pickMatch(i) {
+    if (i !== state.matchIdx) match.hold = 0;
     state.matchIdx = i;
     document.querySelectorAll('.pill').forEach((p, j) => { p.setAttribute('aria-pressed', String(j === i)); p.classList.remove('sounding'); });
     const midi = state.home + SCALE[i];
@@ -1734,8 +2651,10 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     if (nv === state.home) return;
     state.home = nv;
     state.scaleShift = 0;
+    match.matched.clear();
     saveSettings();
     renderHome();
+    renderVoice();
     if (view.kind === 'example') setTake(exampleTake(scaleKey()), 'example');
     else rescore();
   }
@@ -1789,72 +2708,116 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     for (const m of [1, 2, 2.5, 5, 10]) if (m * p >= v) return m * p;
     return 10 * p;
   }
-  function renderTrend(hostId, readId, points, unit, fixedMax, emptyMsg) {
-    const host = $('#' + hostId);
-    const read = $('#' + readId);
-    host.innerHTML = '';
-    if (!points.length) {
-      const e = document.createElement('div');
-      e.className = 'empty';
-      e.textContent = emptyMsg;
-      host.appendChild(e);
-      read.textContent = '';
-      return;
-    }
-    const W = Math.max(200, host.clientWidth || 280), H = 96;
-    const L = 30, R = 34, T = 10, B = 18;
-    const max = fixedMax || niceMax(Math.max(...points.map(p => p.v)) * 1.1);
-    const x = i => points.length === 1 ? L + (W - L - R) / 2 : L + (i / (points.length - 1)) * (W - L - R);
-    const y = v => T + (1 - v / max) * (H - T - B);
+  const el = (tag, cls, text) => {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  };
+  const dayNum = k => {
+    const [y, m, d] = k.split('-').map(Number);
+    return Math.round(new Date(y, m - 1, d).getTime() / 86400000);
+  };
+  // What "getting better" means for each thing the app measures.
+  const METRICS = [
+    { key: 'avgMiss', name: 'Pitch accuracy', chart: 'Average miss in cents (lower is better)', unit: '¢', better: 'down', thr: 5, how: 'upload a take or sing the scale back' },
+    { key: 'onTarget', name: 'Time on pitch', chart: 'Time within 25¢ of the note (%)', unit: '%', better: 'up', thr: 5, max: 100, how: 'upload a take or sing the scale back' },
+    { key: 'scaleNotes', name: 'Scale sing-back', chart: 'Scale notes on pitch (out of 9)', unit: '/9', better: 'up', thr: 1, max: 9, how: 'use "Sing it back" in fa', mic: true },
+    { key: 'follow', name: 'Slides', chart: 'How closely you follow a slide (%)', unit: '%', better: 'up', thr: 5, max: 100, how: 'use "Sing a slide" in re or sol', mic: true },
+    { key: 'hiss', name: 'Breath length', chart: 'Longest hiss (seconds)', unit: ' s', better: 'up', thr: 1.5, how: 'finish a breath round in do' },
+    { key: 'steady', name: 'Breath control', chart: 'Hiss steadiness (%)', unit: '%', better: 'up', thr: 5, max: 100, how: 'do a breath round with the mic on', mic: true },
+    { key: 'range', name: 'Range', chart: 'Lowest to highest note (half steps)', unit: ' half steps', short: '', better: 'up', thr: 1, how: 'take the voice type test', mic: true },
+  ];
+  function metricValue(d, key) {
+    if (!d) return null;
+    if (key === 'range') return d.range && typeof d.range.low === 'number' ? d.range.high - d.range.low : null;
+    if (key === 'hiss') return d.hiss > 0 ? d.hiss : null;
+    const v = d[key];
+    return typeof v === 'number' ? v : null;
+  }
+  function metricPoints(key) {
+    return Object.keys(state.days).sort()
+      .map(k => ({ k, v: metricValue(state.days[k], key) }))
+      .filter(p => p.v != null)
+      .slice(-30);
+  }
+  // Least-squares line through the last 30 practice days.
+  function fitTrend(points) {
+    if (points.length < 3) return null;
+    const xs = points.map(p => dayNum(p.k)), ys = points.map(p => p.v);
+    const span = xs[xs.length - 1] - xs[0];
+    if (span < 2) return null;
+    const n = xs.length;
+    const mx = xs.reduce((a, b) => a + b, 0) / n, my = ys.reduce((a, b) => a + b, 0) / n;
+    let sxy = 0, sxx = 0;
+    for (let i = 0; i < n; i++) { sxy += (xs[i] - mx) * (ys[i] - my); sxx += (xs[i] - mx) * (xs[i] - mx); }
+    const slope = sxx ? sxy / sxx : 0;
+    const at = x => my + slope * (x - mx);
+    return { x0: xs[0], x1: xs[n - 1], y0: at(xs[0]), y1: at(xs[n - 1]), change: slope * span };
+  }
+  function verdict(m, fit) {
+    if (!fit) return 'early';
+    const c = m.better === 'up' ? fit.change : -fit.change;
+    return c >= m.thr ? 'up' : c <= -m.thr ? 'down' : 'flat';
+  }
+  const fmtV = (m, v, short) => (m.key === 'hiss' ? v.toFixed(1) : String(Math.round(v))) + (short && m.short != null ? m.short : m.unit);
+  function drawTrend(host, read, points, m, fit) {
+    const W = Math.max(200, host.clientWidth || 280), H = 104;
+    const L = 30, R = 40, T = 10, B = 18;
+    const vmax = Math.max(...points.map(p => p.v), fit ? Math.max(fit.y0, fit.y1) : 0);
+    const max = m.max || niceMax(vmax * 1.1);
+    const x0 = dayNum(points[0].k), x1 = dayNum(points[points.length - 1].k);
+    const x = k => (x1 === x0 ? L + (W - L - R) / 2 : L + ((dayNum(k) - x0) / (x1 - x0)) * (W - L - R));
+    const xd = n => (x1 === x0 ? L + (W - L - R) / 2 : L + ((n - x0) / (x1 - x0)) * (W - L - R));
+    const y = v => T + (1 - Math.max(0, Math.min(max, v)) / max) * (H - T - B);
     const NS = 'http://www.w3.org/2000/svg';
     const svg = document.createElementNS(NS, 'svg');
     svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
     svg.setAttribute('role', 'img');
-    svg.setAttribute('aria-label', points.map(p => fmtDate(p.k) + ' ' + p.v + unit).join(', '));
-    const add = (tag, attrs) => {
-      const el = document.createElementNS(NS, tag);
+    svg.setAttribute('aria-label', m.chart + ': ' + points.map(p => fmtDate(p.k) + ' ' + fmtV(m, p.v)).join(', '));
+    const add = (tag, attrs, text) => {
+      const e = document.createElementNS(NS, tag);
       Object.entries(attrs).forEach(([a, v]) => {
-        if (String(v).indexOf('var(') === 0) el.style.setProperty(a, v);
-        else el.setAttribute(a, v);
+        if (String(v).indexOf('var(') === 0) e.style.setProperty(a, v);
+        else e.setAttribute(a, v);
       });
-      svg.appendChild(el);
-      return el;
+      if (text != null) e.textContent = text;
+      svg.appendChild(e);
+      return e;
     };
     [0, max / 2, max].forEach(v => {
       add('line', { x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: 'var(--hair)', 'stroke-width': 1 });
-      const t = add('text', { x: L - 6, y: y(v) + 4, 'text-anchor': 'end', fill: 'var(--muted)', 'font-size': 10, 'font-family': 'var(--font-mono)' });
-      t.textContent = Math.round(v);
+      add('text', { x: L - 6, y: y(v) + 4, 'text-anchor': 'end', fill: 'var(--muted)', 'font-size': 10, 'font-family': 'var(--font-mono)' }, Math.round(v * 10) / 10);
     });
     if (points.length > 1) {
-      const d = points.map((p, i) => (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(p.v).toFixed(1)).join(' ');
-      add('path', { d: d + ' L' + x(points.length - 1).toFixed(1) + ' ' + y(0) + ' L' + x(0).toFixed(1) + ' ' + y(0) + ' Z', fill: 'var(--accent)', opacity: 0.12, stroke: 'none' });
+      const d = points.map((p, i) => (i ? 'L' : 'M') + x(p.k).toFixed(1) + ' ' + y(p.v).toFixed(1)).join(' ');
+      add('path', { d: d + ' L' + x(points[points.length - 1].k).toFixed(1) + ' ' + y(0) + ' L' + x(points[0].k).toFixed(1) + ' ' + y(0) + ' Z', fill: 'var(--accent)', opacity: 0.1, stroke: 'none' });
       add('path', { d, fill: 'none', stroke: 'var(--accent)', 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' });
+    }
+    if (fit) {
+      add('line', { x1: xd(fit.x0), x2: xd(fit.x1), y1: y(fit.y0), y2: y(fit.y1), stroke: 'var(--ink-2)', 'stroke-width': 1.5, 'stroke-dasharray': '5 4' });
     }
     points.forEach((p, i) => {
       const last = i === points.length - 1;
-      add('circle', { cx: x(i), cy: y(p.v), r: last ? 5 : 3.5, fill: 'var(--accent)', stroke: 'var(--bg)', 'stroke-width': 2 });
+      add('circle', { cx: x(p.k), cy: y(p.v), r: last ? 5 : 3.5, fill: 'var(--accent)', stroke: 'var(--bg)', 'stroke-width': 2 });
     });
     const lp = points[points.length - 1];
-    const lt = add('text', { x: x(points.length - 1) + 8, y: y(lp.v) + 4, fill: 'var(--ink)', 'font-size': 11, 'font-weight': 600, 'font-family': 'var(--font-mono)' });
-    lt.textContent = lp.v + unit;
-    const fl = add('text', { x: L, y: H - 3, fill: 'var(--muted)', 'font-size': 10, 'font-family': 'var(--font-mono)' });
-    fl.textContent = fmtDate(points[0].k);
-    if (points.length > 1) {
-      const fr = add('text', { x: W - R, y: H - 3, 'text-anchor': 'end', fill: 'var(--muted)', 'font-size': 10, 'font-family': 'var(--font-mono)' });
-      fr.textContent = fmtDate(lp.k);
-    }
+    add('text', { x: x(lp.k) + 8, y: y(lp.v) + 4, fill: 'var(--ink)', 'font-size': 11, 'font-weight': 600, 'font-family': 'var(--font-mono)' }, fmtV(m, lp.v, true));
+    add('text', { x: L, y: H - 3, fill: 'var(--muted)', 'font-size': 10, 'font-family': 'var(--font-mono)' }, fmtDate(points[0].k));
+    if (points.length > 1) add('text', { x: W - R, y: H - 3, 'text-anchor': 'end', fill: 'var(--muted)', 'font-size': 10, 'font-family': 'var(--font-mono)' }, fmtDate(lp.k));
     const cross = add('line', { x1: 0, x2: 0, y1: T, y2: H - B, stroke: 'var(--ink-2)', 'stroke-width': 1, 'stroke-dasharray': '3 3', visibility: 'hidden' });
     const hit = add('rect', { x: 0, y: 0, width: W, height: H, fill: 'transparent' });
-    const defaultRead = 'Latest: ' + fmtDate(lp.k) + ' · ' + lp.v + unit + (points.length > 1 ? ' · tap the chart for any day' : '');
+    const defaultRead = 'Latest: ' + fmtDate(lp.k) + ' · ' + fmtV(m, lp.v) + (fit ? ' · dashed line = your trend' : '');
     read.textContent = defaultRead;
     const onMove = ev => {
       const r = svg.getBoundingClientRect();
       const px = ((ev.clientX - r.left) / r.width) * W;
       let bi = 0, bd = Infinity;
-      points.forEach((p, i) => { const dd = Math.abs(x(i) - px); if (dd < bd) { bd = dd; bi = i; } });
-      cross.setAttribute('x1', x(bi)); cross.setAttribute('x2', x(bi));
+      points.forEach((p, i) => { const dd = Math.abs(x(p.k) - px); if (dd < bd) { bd = dd; bi = i; } });
+      cross.setAttribute('x1', x(points[bi].k));
+      cross.setAttribute('x2', x(points[bi].k));
       cross.setAttribute('visibility', 'visible');
-      read.textContent = fmtDate(points[bi].k) + ' · ' + points[bi].v + unit;
+      read.textContent = fmtDate(points[bi].k) + ' · ' + fmtV(m, points[bi].v);
     };
     hit.addEventListener('pointermove', onMove);
     hit.addEventListener('pointerdown', onMove);
@@ -1862,11 +2825,49 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     host.appendChild(svg);
   }
   function renderTrends() {
-    const keys = Object.keys(state.days).sort();
-    const hissPts = keys.filter(k => state.days[k] && state.days[k].hiss > 0).slice(-14).map(k => ({ k, v: state.days[k].hiss }));
-    const accPts = keys.filter(k => state.days[k] && state.days[k].onTarget != null).slice(-14).map(k => ({ k, v: state.days[k].onTarget }));
-    renderTrend('tr-hiss', 'tr-hiss-read', hissPts, ' s', 0, 'Finish a breath round in do to start this chart.');
-    renderTrend('tr-acc', 'tr-acc-read', accPts, '%', 100, 'Upload a take to start this chart.');
+    const list = $('#prog-list'), head = $('#prog-head'), trends = $('#trends');
+    list.innerHTML = '';
+    trends.innerHTML = '';
+    let tracked = 0, up = 0, down = 0;
+    const missing = [];
+    METRICS.forEach(m => {
+      if (m.mic && !Mic.available) return;
+      const pts = metricPoints(m.key);
+      if (!pts.length) { missing.push(m); return; }
+      tracked++;
+      const fit = fitTrend(pts);
+      const v = verdict(m, fit);
+      if (v === 'up') up++;
+      if (v === 'down') down++;
+      const row = el('div', 'prog-row');
+      const main = el('div', 'pr-main');
+      main.appendChild(el('div', 'pr-name', m.name));
+      const latest = pts[pts.length - 1];
+      const left = 3 - pts.length;
+      const detail = fit
+        ? 'Trend: ' + fmtV(m, fit.y0) + ' → ' + fmtV(m, fit.y1) + ' since ' + fmtDate(pts[0].k)
+        : 'Latest: ' + fmtV(m, latest.v) + '. ' + (left > 0 ? 'Practice ' + left + ' more day' + (left === 1 ? '' : 's') + ' to see a trend.' : 'A trend shows up after a few more days.');
+      main.appendChild(el('div', 'pr-detail', detail));
+      row.appendChild(main);
+      row.appendChild(el('span', 'vchip v-' + v, { up: '▲ Improving', down: '▼ Dipping', flat: '■ Holding steady', early: 'Just started' }[v]));
+      list.appendChild(row);
+      const fig = el('figure', 'trend');
+      fig.appendChild(el('figcaption', '', m.chart));
+      const host = el('div');
+      fig.appendChild(host);
+      const read = el('p', 'read');
+      fig.appendChild(read);
+      trends.appendChild(fig);
+      drawTrend(host, read, pts, m, fit);
+    });
+    const flat = tracked - up - down;
+    if (!tracked) head.textContent = "Nothing tracked yet. Do today's routine" + (Mic.available ? ' with the mic on' : '') + ' and your numbers start showing up here.';
+    else if (!up && !down) head.textContent = 'Tracking ' + tracked + ' area' + (tracked === 1 ? '' : 's') + '. Trends appear once you have a few days logged in each.';
+    else head.textContent = up + ' improving, ' + down + ' dipping, ' + flat + ' steady or too early to tell.' + (up > down ? ' You\'re getting better.' : '');
+    if (missing.length) {
+      list.appendChild(el('p', 'small muted pr-missing', 'Not tracked yet: ' + missing.map(m => m.name.toLowerCase() + ' (' + m.how + ')').join('; ') + '.'));
+    }
+    $('#charts-h').hidden = !tracked;
   }
   function renderAll() {
     renderHome();
@@ -1876,6 +2877,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     renderStats();
     renderCal();
     renderTrends();
+    renderVoice();
     if (view.kind === 'example') setTake(exampleTake(scaleKey()), 'example');
     else rescore();
   }
@@ -1890,12 +2892,12 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   $('#siren-btn').addEventListener('click', () => {
     const h = state.home;
     glide([[h, 0], [h + 7, 1.8], [h, 3.6]]);
-    addRep('re', 5);
+    if (!Mic.available) addRep('re', 5);
   });
   $('#cool-btn').addEventListener('click', () => {
     const h = state.home;
     glide([[h + 5, 0], [h - 5, 3.2]], 0.12);
-    addRep('sol', 3);
+    if (!Mic.available) addRep('sol', 3);
   });
   $('#drone-toggle').addEventListener('change', e => {
     if (e.target.checked) pickMatch(state.matchIdx);
@@ -1933,7 +2935,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     e.target.value = '';
   });
   $('#compare').addEventListener('change', e => { state.compare = e.target.value; rescore(); });
-  $('#live-btn').addEventListener('click', () => { if (live) stopLive(); else startLive(); });
+  $('#live-btn').addEventListener('click', () => { if (Mic.consumer === liveConsumer) stopLive(); else startLive(); });
   const gw = $('#graph-wrap');
   gw.addEventListener('pointermove', graphPointer);
   gw.addEventListener('pointerdown', graphPointer);
@@ -1942,9 +2944,34 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   // Live mic is only offered outside the Claude viewer, where the browser allows it.
   const inViewer = !!(window.claude && typeof window.claude.use === 'function');
   if (!inViewer && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    $('#live-btn').hidden = false;
-    $('#live-hint').textContent = 'Live mic: wear headphones, tap Live mic, and sing. The note readout tells you to go higher or lower.';
+    Mic.available = true;
+    $('#live-hint').textContent = 'Live mic: tap it and sing. The note readout tells you to go higher or lower.';
     $('#foot').textContent = 'Your log is saved in this browser.';
+    $('#mic-row').hidden = false;
+    $('#voice-sec').hidden = false;
+    [['#live-btn', 'Live mic'], ['#siren-sing', 'Sing a slide'], ['#cool-sing', 'Sing a slide down'], ['#match-check', 'Check me with the mic'], ['#scale-sing', 'Sing it back']].forEach(([sel, label]) => {
+      const el = $(sel);
+      micLabel(el, label);
+      el.hidden = false;
+    });
+    micLabel($('#vt-start'), state.voice ? 'Retake the range test' : 'Start the range test');
+    $('#siren-btn').textContent = 'Hear a slide';
+    $('#cool-btn').textContent = 'Hear a slide down';
+    $('#hp-toggle').checked = Mic.headphones;
+    $('#hp-toggle').addEventListener('change', e => {
+      Mic.headphones = e.target.checked;
+      try { localStorage.setItem(HP_KEY, Mic.headphones ? '1' : '0'); } catch (err) {}
+    });
+    $('#mic-toggle').addEventListener('click', () => { if (Mic.on) micStop(); else micStart(); });
+    $('#chip-off').addEventListener('click', micStop);
+    $('#siren-sing').addEventListener('click', sirenSlide.toggle);
+    $('#cool-sing').addEventListener('click', coolSlide.toggle);
+    $('#match-check').addEventListener('click', matchCheckToggle);
+    $('#scale-sing').addEventListener('click', scaleSingToggle);
+    $('#vt-start').addEventListener('click', startVt);
+    $('#vt-next').addEventListener('click', vtNext);
+    $('#vt-cancel').addEventListener('click', () => { if (Mic.consumer === vtConsumer) setConsumer(null); else cancelVt(); });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) micStop(); });
   }
   if (!inViewer) {
     $('#sync-panel').hidden = false;
@@ -1959,7 +2986,10 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
 
   // redraw on resize and theme change
   let rt = 0;
-  const redraw = () => { cancelAnimationFrame(rt); rt = requestAnimationFrame(() => { drawGraph(); renderTrends(); }); };
+  const redraw = () => {
+    cancelAnimationFrame(rt);
+    rt = requestAnimationFrame(() => { drawGraph(); renderTrends(); sirenSlide.redraw(); coolSlide.redraw(); renderVoice(); });
+  };
   if (window.ResizeObserver) new ResizeObserver(redraw).observe(gw);
   else window.addEventListener('resize', redraw);
   const mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
