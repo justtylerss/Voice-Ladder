@@ -304,16 +304,19 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
 
 /* scale pattern */
 .pattern { display: flex; flex-wrap: wrap; gap: 4px; }
-.pattern span {
+.pattern .pc {
   font-family: var(--font-mono);
   font-size: 13px;
-  padding: 3px 7px;
+  font-weight: 500;
+  min-height: 34px;
+  padding: 0 9px;
+  border: 0;
   border-radius: 8px;
   background: var(--hair);
   color: var(--ink-2);
   transition: background-color .12s, color .12s;
 }
-.pattern span.lit { background: var(--accent); color: var(--accent-ink); }
+.pattern .pc.lit { background: var(--accent); color: var(--accent-ink); }
 
 /* ---------- pitch check ---------- */
 .check {
@@ -446,13 +449,13 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
 .slide-cv { display: block; width: 100%; height: 150px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
 .pill.matched { border-color: var(--good); }
 .pill.matched .n::after { content: " ✓"; color: var(--good-text); font-weight: 700; }
-.pattern span.cur { background: var(--accent-soft); color: var(--accent-text); box-shadow: 0 0 0 2px var(--accent) inset; }
-.pattern span.r-on { background: var(--good-soft); color: var(--good-text); box-shadow: 0 0 0 1.5px var(--good) inset; }
-.pattern span.r-on::after { content: " ✓"; }
-.pattern span.r-close { background: var(--warn-soft); color: var(--warn-text); box-shadow: 0 0 0 1.5px var(--warn) inset; }
-.pattern span.r-close::after { content: " ~"; }
-.pattern span.r-miss { background: transparent; color: var(--bad-text); box-shadow: 0 0 0 1.5px var(--bad) inset; }
-.pattern span.r-miss::after { content: " ✗"; }
+.pattern .pc.cur { background: var(--accent-soft); color: var(--accent-text); box-shadow: 0 0 0 2px var(--accent) inset; }
+.pattern .pc.r-on { background: var(--good-soft); color: var(--good-text); box-shadow: 0 0 0 1.5px var(--good) inset; }
+.pattern .pc.r-on::after { content: " ✓"; }
+.pattern .pc.r-close { background: var(--warn-soft); color: var(--warn-text); box-shadow: 0 0 0 1.5px var(--warn) inset; }
+.pattern .pc.r-close::after { content: " ~"; }
+.pattern .pc.r-miss { background: transparent; color: var(--bad-text); box-shadow: 0 0 0 1.5px var(--bad) inset; }
+.pattern .pc.r-miss::after { content: " ✗"; }
 .mic-chip {
   position: fixed;
   left: 50%;
@@ -691,8 +694,8 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
         <div class="head-col" aria-hidden="true"><span class="notehead"></span><span class="syl">fa</span></div>
         <div class="rung-body">
           <div class="rung-top"><h3>Five-note scale</h3><span class="dur">3 min</span></div>
-          <p class="how">Play the pattern, then sing it back on "ah": do re mi fa sol fa mi re do. Move up a half step and repeat. Stop going higher as soon as your throat feels tight; that's today's top.</p>
-          <div class="pattern" id="scale-pattern" aria-hidden="true"></div>
+          <p class="how">Tap Play pattern to hear do re mi fa sol fa mi re do, or tap any note to hear just that one.<span id="fa-mic-how" hidden> Then tap Sing it back: the app plays one note at a time and waits for you to sing it on "ahhh" before moving on.</span> Move up a half step each round, and stop going higher as soon as your throat feels tight; that's today's top.</p>
+          <div class="pattern" id="scale-pattern" role="group" aria-label="Scale notes. Tap one to hear it."></div>
           <div class="row">
             <button class="primary" id="scale-play">Play pattern</button>
             <div class="stepper">
@@ -707,7 +710,8 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
             <div class="tuner-bar" aria-hidden="true"><span class="z-close"></span><span class="z-on"></span><span class="center"></span><span class="needle"></span></div>
             <div class="tuner-scale" aria-hidden="true"><span>♭ flat</span><span>on pitch</span><span>sharp ♯</span></div>
             <div class="hold" aria-hidden="true"><span></span></div>
-            <p class="hold-label">Land each note and hold it briefly. The pattern above lights up as you go.</p>
+            <p class="hold-label">Hold each note on "ahhh" until the green bar fills. The pattern above checks off as you go.</p>
+            <button id="scale-replay" style="justify-self: start">Hear this note again</button>
           </div>
           <p class="feedback" id="scale-fb" role="status"></p>
           <button class="done-btn" data-done="fa">Mark done</button>
@@ -1172,7 +1176,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   function stopAll() {
     seqTimers.forEach(clearTimeout);
     seqTimers = [];
-    document.querySelectorAll('.pattern span.lit, .pill.sounding').forEach(el => el.classList.remove('lit', 'sounding'));
+    document.querySelectorAll('.pattern .pc.lit, .pill.sounding').forEach(el => el.classList.remove('lit', 'sounding'));
     if (!AC) return;
     const now = AC.currentTime;
     active.forEach(v => {
@@ -2243,24 +2247,40 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     pickMatch(state.matchIdx);
   }
 
-  // ---------- fa · sing the scale back ----------
+  // ---------- fa · sing the scale back, one note at a time ----------
   const tunerFa = makeTuner($('#tuner-fa'));
-  const run = { idx: 0, hold: 0, devs: [], el: 0, last: 0, results: [], voiced: 0, on: 0, miss: 0, voicedSec: 0 };
+  const SCALE_HOLD = 0.8; // seconds on pitch to land a note
+  const run = { idx: 0, hold: 0, devs: [], el: 0, last: 0, results: [], voiced: 0, on: 0, miss: 0, voicedSec: 0, pauseUntil: 0 };
   function markPattern() {
     const singing = Mic.consumer === scaleConsumer;
-    document.querySelectorAll('#scale-pattern span').forEach((sp, i) => {
+    document.querySelectorAll('#scale-pattern .pc').forEach((sp, i) => {
       sp.classList.remove('cur', 'r-on', 'r-close', 'r-miss');
       if (i < run.results.length) sp.classList.add('r-' + run.results[i]);
       else if (singing && i === run.idx) sp.classList.add('cur');
     });
   }
+  // Play only the note you're on, then listen.
+  function playScaleTarget() {
+    if (run.idx >= PATTERN.length) return;
+    playNote(scaleKey() + PATTERN[run.idx], 1.3);
+    run.el = 0;
+    const chip = document.querySelectorAll('#scale-pattern .pc')[run.idx];
+    if (chip) {
+      chip.classList.add('lit');
+      seqTimers.push(setTimeout(() => chip.classList.remove('lit'), 1300));
+    }
+  }
   const scaleConsumer = {
     frame(f) {
       const dt = run.last ? Math.min(0.1, f.t - run.last) : 0;
       run.last = f.t;
-      if (run.idx >= PATTERN.length) return;
+      if (run.idx >= PATTERN.length || f.t < run.pauseUntil) return;
       const target = scaleKey() + PATTERN[run.idx];
-      if (f.blocked) { tunerFa.render({ target, blocked: true, hold: run.hold / 0.4 }); return; }
+      const syl = PATTERN_SYL[run.idx];
+      if (f.blocked) {
+        tunerFa.render({ target, blocked: true, hold: run.hold / SCALE_HOLD, msg: 'Listen to ' + syl + ', then sing it on "ahhh".' });
+        return;
+      }
       run.el += dt;
       if (f.midi != null) {
         const { dev, oct } = foldTo(f.midi, target);
@@ -2275,15 +2295,20 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
         if (near <= 25) run.on++;
         if (a <= 50) { run.hold += dt; run.devs.push(a); }
         else run.hold = Math.max(0, run.hold - dt);
-        tunerFa.render({ target, dev, oct, sung: f.midi, hold: run.hold / 0.4 });
+        if (run.hold >= SCALE_HOLD) {
+          const avg = run.devs.reduce((s, v) => s + v, 0) / run.devs.length;
+          const result = avg <= 25 ? 'on' : 'close';
+          tunerFa.render({ target, dev, oct, sung: f.midi, hold: 1, msg: result === 'on' ? '✓ On pitch' : '~ Close enough. Next note.' });
+          nextScaleNote(result);
+          return;
+        }
+        tunerFa.render({ target, dev, oct, sung: f.midi, hold: run.hold / SCALE_HOLD });
       } else {
         run.hold = Math.max(0, run.hold - dt * 0.5);
-        tunerFa.render({ target, dev: null, hold: run.hold / 0.4, msg: 'Sing ' + PATTERN_SYL[run.idx] + ' (' + noteName(target) + ')' });
+        tunerFa.render({ target, dev: null, hold: run.hold / SCALE_HOLD, msg: 'Sing ' + syl + ' (' + noteName(target) + ') on "ahhh" and hold it.' });
       }
-      if (run.hold >= 0.4) {
-        const avg = run.devs.reduce((s, v) => s + v, 0) / run.devs.length;
-        nextScaleNote(avg <= 25 ? 'on' : 'close');
-      } else if (run.el > 6) {
+      if (run.el > 10) {
+        tunerFa.render({ target, dev: null, hold: 0, msg: '✗ Moving on. Tap that note later to practice it on its own.' });
         nextScaleNote('miss');
       }
     },
@@ -2301,6 +2326,8 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     run.el = 0;
     if (run.idx >= PATTERN.length) { finishScale(); return; }
     markPattern();
+    run.pauseUntil = AC.currentTime + 0.7;
+    setTimeout(() => { if (Mic.consumer === scaleConsumer) playScaleTarget(); }, 700);
   }
   function finishScale() {
     const on = run.results.filter(r => r === 'on').length;
@@ -2308,7 +2335,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     const fb = $('#scale-fb');
     fb.className = 'feedback ' + (on >= 7 ? 'ok' : on >= 4 ? 'meh' : 'bad');
     fb.textContent = on + ' of 9 notes on pitch' + (close ? ', ' + close + ' close' : '') + '. ' +
-      (on >= 7 ? 'Strong round. Try it a half step higher.' : on >= 4 ? 'Getting there. Run it again in the same key.' : 'Play the pattern again and sing slower, one note at a time.');
+      (on >= 7 ? 'Strong round. Try it a half step higher.' : on >= 4 ? 'Getting there. Run it again in the same key.' : 'Tap each note to hear it, then try the round again.');
     const k = todayKey();
     const d = dayOf(k);
     if (d.scaleNotes == null || on > d.scaleNotes) { d.scaleNotes = on; saveDay(k); renderTrends(); }
@@ -2320,12 +2347,13 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     const fb = $('#scale-fb');
     if (!(await micStart())) { fb.className = 'feedback bad'; fb.textContent = MIC_FAIL; return; }
     stopAll();
-    Object.assign(run, { idx: 0, hold: 0, devs: [], el: 0, last: 0, results: [], voiced: 0, on: 0, miss: 0, voicedSec: 0 });
+    Object.assign(run, { idx: 0, hold: 0, devs: [], el: 0, last: 0, results: [], voiced: 0, on: 0, miss: 0, voicedSec: 0, pauseUntil: 0 });
     fb.textContent = '';
     setConsumer(scaleConsumer);
     tunerFa.show(true);
     $('#scale-sing').textContent = 'Stop';
     markPattern();
+    playScaleTarget();
   }
 
   // ---------- voice type test ----------
@@ -2641,10 +2669,20 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     const el = $('#scale-pattern');
     el.innerHTML = '';
     PATTERN.forEach((s, i) => {
-      const sp = document.createElement('span');
-      sp.textContent = PATTERN_SYL[i] + ' ' + noteName(key + s);
-      el.appendChild(sp);
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'pc';
+      b.textContent = PATTERN_SYL[i] + ' ' + noteName(key + s);
+      b.setAttribute('aria-label', 'Hear ' + PATTERN_SYL[i] + ', ' + noteName(key + s));
+      b.addEventListener('click', () => {
+        if (Mic.consumer === scaleConsumer && i === run.idx) { run.hold = 0; playScaleTarget(); return; }
+        playNote(scaleKey() + s, 1.2);
+        b.classList.add('lit');
+        seqTimers.push(setTimeout(() => b.classList.remove('lit'), 1200));
+      });
+      el.appendChild(b);
     });
+    markPattern();
   }
   function changeHome(v) {
     const nv = Math.max(HOME_MIN, Math.min(HOME_MAX, v));
@@ -2905,8 +2943,8 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   });
   $('#scale-play').addEventListener('click', () => {
     const key = scaleKey();
-    const spans = document.querySelectorAll('#scale-pattern span');
-    playSeq(PATTERN.map(s => key + s), 0.55, i => {
+    const spans = document.querySelectorAll('#scale-pattern .pc');
+    playSeq(PATTERN.map(s => key + s), 0.9, i => {
       spans.forEach((sp, j) => sp.classList.toggle('lit', j === i));
     });
   });
@@ -2968,6 +3006,8 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     $('#cool-sing').addEventListener('click', coolSlide.toggle);
     $('#match-check').addEventListener('click', matchCheckToggle);
     $('#scale-sing').addEventListener('click', scaleSingToggle);
+    $('#scale-replay').addEventListener('click', () => { if (Mic.consumer === scaleConsumer) { run.hold = 0; playScaleTarget(); } });
+    $('#fa-mic-how').hidden = false;
     $('#vt-start').addEventListener('click', startVt);
     $('#vt-next').addEventListener('click', vtNext);
     $('#vt-cancel').addEventListener('click', () => { if (Mic.consumer === vtConsumer) setConsumer(null); else cancelVt(); });
