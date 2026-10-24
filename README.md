@@ -21,7 +21,11 @@ A daily beginner singing routine that runs in the browser, about 11 minutes a da
 
 Pitch detection uses the YIN algorithm, running entirely in the browser. No audio leaves your device.
 
-Your practice log (streak, breath times, accuracy) is saved in your browser's local storage.
+## Saving and sync
+
+Your practice log (streak, breath times, accuracy) is saved in the browser's local storage. To share it across your phone and computer, connect each device under **Sync your phone and computer** with a GitHub token that has only `gist` scope. The app keeps the log in a private gist (`voice-ladder-log.json`) and merges by day, keeping whichever device's change is newest. It syncs when the app opens, after each change, and when you come back to the tab.
+
+The token is stored only in each device's local storage. You can revoke it anytime at github.com/settings/tokens.
 
 ## Files
 

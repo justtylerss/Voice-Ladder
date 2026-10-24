@@ -398,6 +398,37 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
 .trend .read { font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); min-height: 1.5em; margin-top: 4px; }
 .empty { font-size: 13px; color: var(--muted); padding: 30px 0; text-align: center; border: 1px dashed var(--line); border-radius: 10px; }
 
+/* ---------- device sync ---------- */
+.sync {
+  margin-top: 22px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+}
+.sync h3 { font-size: 18px; font-weight: 680; }
+.sync ol { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
+.sync a { color: var(--accent-text); font-weight: 600; }
+.sync input[type="password"] {
+  font: inherit;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  flex: 1 1 200px;
+  min-width: 0;
+  min-height: 44px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+  padding: 0 12px;
+}
+.sync input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.sync-status { font-size: 14px; color: var(--ink-2); }
+.sync-status.ok { color: var(--good-text); }
+.sync-status.err { color: var(--bad-text); }
+
 /* ---------- rules ---------- */
 .rules h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
 .rules ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; color: var(--ink-2); }
@@ -604,6 +635,27 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
         <p class="read" id="tr-acc-read"></p>
       </figure>
     </div>
+
+    <div class="sync" id="sync-panel" hidden>
+      <h3>Sync your phone and computer</h3>
+      <div id="sync-setup">
+        <p class="small">Your log is saved to a private gist on your GitHub account, and every device you connect shares it. Do this once on each device, using the same token.</p>
+        <ol class="small">
+          <li><a href="https://github.com/settings/tokens/new?scopes=gist&amp;description=Voice%20Ladder%20sync" target="_blank" rel="noopener">Create a GitHub token</a>. It opens pre-filled with gist access only. Pick an expiration you're comfortable with, tap Generate, and copy the token.</li>
+          <li>Paste it below and tap Connect. Keep it in your notes app so you can paste it on your other device.</li>
+        </ol>
+        <div class="row" style="margin-top:10px">
+          <label for="gh-token" class="sr-only">GitHub token</label>
+          <input type="password" id="gh-token" placeholder="ghp_…" autocomplete="off" autocapitalize="off" spellcheck="false">
+          <button class="primary" id="gh-connect">Connect</button>
+        </div>
+      </div>
+      <p class="sync-status" id="gh-status" role="status"></p>
+      <div class="row" id="sync-actions" hidden>
+        <button id="gh-sync-now">Sync now</button>
+        <button class="ghost" id="gh-disconnect">Disconnect this device</button>
+      </div>
+    </div>
   </section>
 
   <section class="rules" aria-labelledby="rules-h">
@@ -709,11 +761,150 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     dayOf(k).updated = Date.now();
     lsSave();
     queueWrite('day-' + k, () => state.days[k]);
+    ghSchedule();
   }
   function saveSettings() {
     state.settingsUpdated = Date.now();
     lsSave();
     queueWrite('settings', () => ({ home: state.home, updated: state.settingsUpdated }));
+    ghSchedule();
+  }
+
+  // ---------- device sync through a private GitHub gist (self-hosted copy only) ----------
+  const GH_KEY = 'voice-ladder-gh';
+  const GIST_FILE = 'voice-ladder-log.json';
+  const GH = { token: null, gistId: null, busy: false, again: false, timer: 0, lastSync: 0, retried: false };
+  function ghLoadCfg() {
+    try {
+      const o = JSON.parse(localStorage.getItem(GH_KEY) || 'null');
+      if (o && o.token) { GH.token = o.token; GH.gistId = o.gistId || null; }
+    } catch (e) {}
+  }
+  function ghSaveCfg() {
+    try {
+      if (GH.token) localStorage.setItem(GH_KEY, JSON.stringify({ token: GH.token, gistId: GH.gistId }));
+      else localStorage.removeItem(GH_KEY);
+    } catch (e) {}
+  }
+  async function gh(path, opts) {
+    opts = opts || {};
+    const method = opts.method || 'GET';
+    const url = 'https://api.github.com' + path + (method === 'GET' ? (path.indexOf('?') >= 0 ? '&' : '?') + '_=' + Date.now() : '');
+    const headers = { Accept: 'application/vnd.github+json', Authorization: 'Bearer ' + GH.token };
+    if (opts.body) headers['Content-Type'] = 'application/json';
+    const res = await fetch(url, { method, headers, body: opts.body ? JSON.stringify(opts.body) : undefined });
+    if (!res.ok) { const err = new Error('GitHub ' + res.status); err.status = res.status; throw err; }
+    return res.status === 204 ? null : res.json();
+  }
+  const payload = () => ({ v: 1, home: state.home, settingsUpdated: state.settingsUpdated, days: state.days });
+  function mergeIn(o) {
+    let changedLocal = false, localNewer = false;
+    const days = (o && o.days && typeof o.days === 'object') ? o.days : {};
+    new Set([...Object.keys(days), ...Object.keys(state.days)]).forEach(k => {
+      const r = days[k], l = state.days[k];
+      const ru = r ? (r.updated || 0) : -1, lu = l ? (l.updated || 0) : -1;
+      if (r && ru > lu) { state.days[k] = r; changedLocal = true; }
+      else if (l && lu > ru) localNewer = true;
+    });
+    const rs = o && typeof o.home === 'number' ? (o.settingsUpdated || 0) : -1;
+    if (rs > state.settingsUpdated) { state.home = o.home; state.settingsUpdated = rs; changedLocal = true; }
+    else if (state.settingsUpdated > rs && state.settingsUpdated > 0) localNewer = true;
+    return { changedLocal, localNewer };
+  }
+  async function ghFindOrCreate() {
+    const list = await gh('/gists?per_page=100');
+    const hit = Array.isArray(list) ? list.find(g => g.files && g.files[GIST_FILE]) : null;
+    if (hit) GH.gistId = hit.id;
+    else {
+      const g = await gh('/gists', { method: 'POST', body: { description: 'Voice Ladder practice log', public: false, files: { [GIST_FILE]: { content: JSON.stringify(payload()) } } } });
+      GH.gistId = g.id;
+    }
+    ghSaveCfg();
+  }
+  function setGhStatus(kind) {
+    const el = $('#gh-status');
+    el.classList.remove('ok', 'err');
+    const connected = !!GH.token;
+    $('#sync-setup').hidden = connected && kind !== 'auth';
+    $('#sync-actions').hidden = !connected || kind === 'auth';
+    if (kind === 'busy') el.textContent = 'Syncing with GitHub…';
+    else if (kind === 'ok') {
+      el.classList.add('ok');
+      el.textContent = '✓ Synced with GitHub at ' + new Date(GH.lastSync).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    } else if (kind === 'err') {
+      el.classList.add('err');
+      el.textContent = "Couldn't reach GitHub just now. Your log is still saved on this device and will sync next time.";
+    } else if (kind === 'auth') {
+      el.classList.add('err');
+      el.textContent = "GitHub didn't accept that token. It may have expired or be missing gist access. Paste a new one.";
+    } else el.textContent = '';
+    $('#sync-state').textContent = connected && kind !== 'auth' ? 'Syncing across your devices' : 'Saved on this device';
+    $('#foot').textContent = connected && kind !== 'auth'
+      ? 'Your log syncs through a private gist on your GitHub account.'
+      : 'Your log is saved in this browser.';
+  }
+  async function ghSync() {
+    if (!GH.token) return;
+    if (GH.busy) { GH.again = true; return; }
+    GH.busy = true;
+    setGhStatus('busy');
+    try {
+      if (!GH.gistId) await ghFindOrCreate();
+      const g = await gh('/gists/' + GH.gistId);
+      const f = g.files && g.files[GIST_FILE];
+      let content = f ? f.content : '';
+      if (f && f.truncated && f.raw_url) content = await (await fetch(f.raw_url)).text();
+      let remoteObj = {};
+      try { remoteObj = JSON.parse(content || '{}'); } catch (e) { remoteObj = {}; }
+      const { changedLocal, localNewer } = mergeIn(remoteObj);
+      if (changedLocal) { lsSave(); renderAll(); }
+      if (localNewer || !f) {
+        await gh('/gists/' + GH.gistId, { method: 'PATCH', body: { files: { [GIST_FILE]: { content: JSON.stringify(payload()) } } } });
+      }
+      GH.lastSync = Date.now();
+      GH.retried = false;
+      setGhStatus('ok');
+    } catch (e) {
+      if (e.status === 401) { setGhStatus('auth'); }
+      else if (e.status === 404 && !GH.retried) { GH.gistId = null; GH.retried = true; ghSaveCfg(); GH.again = true; }
+      else setGhStatus('err');
+    } finally {
+      GH.busy = false;
+      if (GH.again) { GH.again = false; ghSync(); }
+    }
+  }
+  function ghSchedule() {
+    if (!GH.token) return;
+    clearTimeout(GH.timer);
+    GH.timer = setTimeout(ghSync, 2500);
+  }
+  async function ghConnect() {
+    const input = $('#gh-token');
+    const token = input.value.trim();
+    if (!token) { input.focus(); return; }
+    GH.token = token;
+    GH.gistId = null;
+    setGhStatus('busy');
+    try {
+      await ghFindOrCreate();
+      input.value = '';
+      await ghSync();
+    } catch (e) {
+      GH.token = null;
+      GH.gistId = null;
+      ghSaveCfg();
+      if (e.status === 401 || e.status === 403 || e.status === 404) setGhStatus('auth');
+      else setGhStatus('err');
+      $('#sync-setup').hidden = false;
+      $('#sync-actions').hidden = true;
+    }
+  }
+  function ghDisconnect() {
+    clearTimeout(GH.timer);
+    GH.token = null;
+    GH.gistId = null;
+    ghSaveCfg();
+    setGhStatus('none');
   }
   async function initRemote() {
     const c = window.claude;
@@ -1755,6 +1946,16 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     $('#live-hint').textContent = 'Live mic: wear headphones, tap Live mic, and sing. The note readout tells you to go higher or lower.';
     $('#foot').textContent = 'Your log is saved in this browser.';
   }
+  if (!inViewer) {
+    $('#sync-panel').hidden = false;
+    $('#gh-connect').addEventListener('click', ghConnect);
+    $('#gh-token').addEventListener('keydown', e => { if (e.key === 'Enter') ghConnect(); });
+    $('#gh-sync-now').addEventListener('click', ghSync);
+    $('#gh-disconnect').addEventListener('click', ghDisconnect);
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && GH.token && Date.now() - GH.lastSync > 15000) ghSync();
+    });
+  }
 
   // redraw on resize and theme change
   let rt = 0;
@@ -1771,6 +1972,11 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   lsLoad();
   renderAll();
   initRemote();
+  if (!inViewer) {
+    ghLoadCfg();
+    setGhStatus(GH.token ? 'busy' : 'none');
+    if (GH.token) ghSync();
+  }
 })();
 </script>
 
