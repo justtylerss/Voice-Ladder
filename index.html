@@ -1,0 +1,1778 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+</head>
+<body>
+<title>Voice Ladder</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: one practice column. A five-rung solfège ladder (do → sol) climbs down the page,
+   then a staff-paper pitch graph and a four-week practice log. Note heads mark each rung:
+   hollow until done, filled when done. */
+:root {
+  --bg: #f2f3f8;
+  --card: #ffffff;
+  --ink: #141a2e;
+  --ink-2: #464d6a;
+  --muted: #6d7495;
+  --line: #d9dde9;
+  --hair: #e7e9f1;
+  --accent: #3445c9;
+  --accent-ink: #ffffff;
+  --accent-soft: #e4e8fc;
+  --accent-text: #2a39ad;
+  --heat-0: #e7e9f1;
+  --heat-1: #c3cbf5;
+  --heat-2: #8090ea;
+  --heat-3: #3445c9;
+  --good: #0ca30c;
+  --good-text: #006300;
+  --warn: #fab219;
+  --warn-text: #845500;
+  --bad: #d03b3b;
+  --bad-text: #a92626;
+  --target: rgba(52, 69, 201, 0.10);
+  --inhale: #9aa6ee;
+  --font-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --r: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1020;
+    --card: #161a2d;
+    --ink: #eceef8;
+    --ink-2: #b5bad2;
+    --muted: #8a90ad;
+    --line: #2a3049;
+    --hair: #1f2439;
+    --accent: #8e9cff;
+    --accent-ink: #0d1020;
+    --accent-soft: #232a55;
+    --accent-text: #aab4ff;
+    --heat-0: #1f2439;
+    --heat-1: #2d3775;
+    --heat-2: #4d5dc6;
+    --heat-3: #8e9cff;
+    --good: #2dbe2d;
+    --good-text: #55d655;
+    --warn: #fab219;
+    --warn-text: #fab219;
+    --bad: #ec6262;
+    --bad-text: #f28585;
+    --target: rgba(142, 156, 255, 0.13);
+    --inhale: #4b58a8;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1020;
+  --card: #161a2d;
+  --ink: #eceef8;
+  --ink-2: #b5bad2;
+  --muted: #8a90ad;
+  --line: #2a3049;
+  --hair: #1f2439;
+  --accent: #8e9cff;
+  --accent-ink: #0d1020;
+  --accent-soft: #232a55;
+  --accent-text: #aab4ff;
+  --heat-0: #1f2439;
+  --heat-1: #2d3775;
+  --heat-2: #4d5dc6;
+  --heat-3: #8e9cff;
+  --good: #2dbe2d;
+  --good-text: #55d655;
+  --warn: #fab219;
+  --warn-text: #fab219;
+  --bad: #ec6262;
+  --bad-text: #f28585;
+  --target: rgba(142, 156, 255, 0.13);
+  --inhale: #4b58a8;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+.wrap {
+  max-width: 620px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px 56px;
+  display: grid;
+  gap: 28px;
+}
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+p { margin: 0; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.small { font-size: 13px; color: var(--ink-2); }
+.muted { color: var(--muted); }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ---------- header ---------- */
+.top { display: grid; gap: 10px; }
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+h1 {
+  font-size: clamp(38px, 11vw, 54px);
+  font-weight: 780;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  font-variation-settings: "opsz" 96;
+}
+h1 .clef { color: var(--accent); }
+.lede { color: var(--ink-2); font-size: 16px; max-width: 34em; }
+.stats {
+  margin: 6px 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.stats > div { padding: 10px 0; min-width: 0; }
+.stats > div + div { padding-left: 14px; border-left: 1px solid var(--line); }
+.stats dt { font-size: 12px; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+.stats dd { margin: 2px 0 0; font-family: var(--font-display); font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.stats dd small { font-family: var(--font-body); font-size: 13px; font-weight: 500; color: var(--ink-2); margin-left: 2px; }
+
+/* ---------- controls ---------- */
+button, .btn {
+  font: inherit;
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  min-height: 44px;
+  padding: 0 18px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color .15s, border-color .15s, transform .1s;
+}
+button:active, .btn:active { transform: scale(0.97); }
+button:focus-visible, .btn:focus-visible, select:focus-visible, .sr-only:focus-visible + .btn {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.ghost { background: transparent; }
+.row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.stepper { display: inline-flex; align-items: center; gap: 4px; }
+.stepper button { width: 44px; padding: 0; font-size: 20px; line-height: 1; }
+.stepper output {
+  min-width: 56px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 17px;
+}
+select {
+  font: inherit;
+  font-size: 14px;
+  min-height: 40px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  padding: 0 10px;
+}
+label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink-2); }
+
+/* ---------- starting note ---------- */
+.home {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+.home-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.home-row > div:first-child { min-width: 0; flex: 1 1 220px; }
+.home h2 { font-size: 18px; font-weight: 680; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { min-height: 36px; padding: 0 14px; font-size: 14px; font-weight: 500; }
+.chip[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-text); }
+
+/* ---------- section heads ---------- */
+.sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.sec-head h2 { font-size: 26px; font-weight: 720; letter-spacing: -0.015em; }
+.progress { height: 6px; border-radius: 99px; background: var(--hair); overflow: hidden; margin-top: 10px; }
+.progress span { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 99px; transition: width .4s ease; }
+
+/* ---------- the ladder ---------- */
+.ladder { list-style: none; margin: 8px 0 0; padding: 0; }
+.rung {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 4px 12px;
+  padding: 20px 0;
+  border-top: 1px solid var(--line);
+}
+.rung:last-child { border-bottom: 1px solid var(--line); }
+.head-col { display: flex; flex-direction: column; align-items: center; gap: 6px; padding-top: 4px; }
+.notehead {
+  width: 30px;
+  height: 21px;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  transform: rotate(-22deg);
+  background: transparent;
+  transition: background-color .25s ease, transform .25s ease;
+}
+.rung.done .notehead { background: var(--accent); transform: rotate(-22deg) scale(1.08); }
+.syl {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--accent-text);
+}
+.rung-body { display: grid; gap: 12px; min-width: 0; }
+.rung-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.rung h3 { font-size: 21px; font-weight: 680; letter-spacing: -0.01em; }
+.dur { font-family: var(--font-mono); font-size: 12px; color: var(--muted); white-space: nowrap; }
+.rung p.how { color: var(--ink-2); max-width: 38em; }
+.done-btn { justify-self: start; min-height: 38px; font-size: 14px; }
+.rung.done .done-btn { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-text); }
+
+.reps { display: inline-flex; gap: 6px; align-items: center; }
+.reps i {
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 2px solid var(--accent);
+  display: block;
+  transition: background-color .2s;
+}
+.reps i.on { background: var(--accent); }
+.reps-label { font-size: 13px; color: var(--muted); }
+
+/* breath meter */
+.breath { display: grid; gap: 10px; }
+.breath-read { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.breath-phase { font-weight: 600; }
+.breath-time { font-family: var(--font-mono); font-size: 26px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.meter { position: relative; height: 14px; border-radius: 99px; background: var(--hair); overflow: hidden; }
+.meter .fill { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--accent); border-radius: 99px; }
+.meter .fill.inhale { background: var(--inhale); }
+.meter .best { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--ink); opacity: .55; }
+
+/* note pills */
+.pills { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.pill {
+  flex-direction: column;
+  gap: 0;
+  border-radius: 12px;
+  min-height: 58px;
+  padding: 6px 2px;
+  line-height: 1.15;
+}
+.pill .s { font-family: var(--font-display); font-style: italic; font-weight: 600; font-size: 15px; }
+.pill .n { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-weight: 500; }
+.pill[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.pill[aria-pressed="true"] .s { color: var(--accent-text); }
+.pill.sounding { box-shadow: 0 0 0 3px var(--accent) inset; }
+
+/* scale pattern */
+.pattern { display: flex; flex-wrap: wrap; gap: 4px; }
+.pattern span {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 3px 7px;
+  border-radius: 8px;
+  background: var(--hair);
+  color: var(--ink-2);
+  transition: background-color .12s, color .12s;
+}
+.pattern span.lit { background: var(--accent); color: var(--accent-ink); }
+
+/* ---------- pitch check ---------- */
+.check {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 18px 16px;
+  display: grid;
+  gap: 14px;
+}
+.badge {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 3px 9px;
+  border-radius: 99px;
+  border: 1px dashed var(--muted);
+  color: var(--ink-2);
+}
+.badge.mine { border-style: solid; border-color: var(--accent); color: var(--accent-text); }
+.live-read {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 4px 16px;
+  padding: 10px 0;
+}
+.live-note { font-family: var(--font-display); font-size: 56px; font-weight: 780; line-height: 1; letter-spacing: -0.03em; min-width: 2.4ch; }
+.live-cents { font-family: var(--font-mono); font-size: 18px; font-weight: 600; }
+.live-dir { font-size: 15px; color: var(--ink-2); }
+.graph-wrap { position: relative; width: 100%; }
+.graph-wrap canvas { display: block; width: 100%; height: 260px; touch-action: pan-y; }
+.tip {
+  position: absolute;
+  top: 6px;
+  pointer-events: none;
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 18px; height: 3px; border-radius: 2px; display: inline-block; }
+.legend .band { width: 14px; height: 10px; border-radius: 3px; background: var(--target); border: 1px solid var(--accent); opacity: .8; }
+.take-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 0; }
+.take-stats > div { min-width: 0; }
+.take-stats dt { font-size: 12px; color: var(--muted); }
+.take-stats dd { margin: 2px 0 0; font-family: var(--font-display); font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.take-stats dd small { font-family: var(--font-body); font-size: 13px; font-weight: 500; color: var(--ink-2); }
+.status { font-size: 14px; color: var(--ink-2); min-height: 1.5em; }
+.status.err { color: var(--bad-text); }
+.status:empty { display: none; }
+
+/* ---------- log ---------- */
+.cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin-top: 12px; }
+.cal .dow { font-family: var(--font-mono); font-size: 11px; color: var(--muted); text-align: center; }
+.cal .day {
+  aspect-ratio: 1 / 1;
+  max-width: 100%;
+  border-radius: 9px;
+  background: var(--heat-0);
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 4px 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+.cal .day.l1 { background: var(--heat-1); color: var(--ink-2); }
+.cal .day.l2 { background: var(--heat-2); color: var(--ink); }
+.cal .day.l3 { background: var(--heat-3); color: var(--accent-ink); }
+.cal .day.future { background: transparent; border: 1px dashed var(--line); }
+.cal .day.today { box-shadow: 0 0 0 2px var(--ink); }
+.cal-legend { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin-top: 10px; }
+.cal-legend i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+.trends { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-top: 18px; }
+.trend { margin: 0; min-width: 0; }
+.trend figcaption { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.trend svg { width: 100%; height: 96px; display: block; overflow: visible; }
+.trend .read { font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); min-height: 1.5em; margin-top: 4px; }
+.empty { font-size: 13px; color: var(--muted); padding: 30px 0; text-align: center; border: 1px dashed var(--line); border-radius: 10px; }
+
+/* ---------- rules ---------- */
+.rules h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+.rules ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; color: var(--ink-2); }
+.foot { font-size: 12px; color: var(--muted); }
+
+@media (max-width: 420px) {
+  .rung { grid-template-columns: 40px minmax(0, 1fr); gap: 4px 10px; }
+  .notehead { width: 26px; height: 18px; }
+  .stats dd { font-size: 21px; }
+  .take-stats dd { font-size: 19px; }
+  .graph-wrap canvas { height: 230px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow" id="today-label">Today</p>
+    <h1>Voice Ladder</h1>
+    <p class="lede">Five short steps, about 11 minutes a day. Work down the ladder from <em>do</em> to <em>sol</em>, then check your pitch once a week.</p>
+    <dl class="stats">
+      <div><dt>Streak</dt><dd><span id="st-streak">0</span><small>days</small></dd></div>
+      <div><dt>This week</dt><dd><span id="st-week">0</span><small>/ 7</small></dd></div>
+      <div><dt>Best hiss</dt><dd><span id="st-hiss">–</span><small id="st-hiss-unit"></small></dd></div>
+    </dl>
+  </header>
+
+  <section class="home" aria-labelledby="home-h">
+    <div class="home-row">
+      <div>
+        <h2 id="home-h">Your starting note</h2>
+        <p class="small">This is your <em>do</em>. Pick the voice that fits, then nudge it until the five notes feel easy.</p>
+      </div>
+      <div class="stepper">
+        <button id="home-down" aria-label="Lower the starting note a half step">−</button>
+        <output id="home-note" aria-live="polite">C3</output>
+        <button id="home-up" aria-label="Raise the starting note a half step">+</button>
+      </div>
+    </div>
+    <div class="chips">
+      <button class="chip" data-home="48" aria-pressed="false">Lower voice · C3</button>
+      <button class="chip" data-home="60" aria-pressed="false">Higher voice · C4</button>
+      <button class="chip" id="home-play">Play my <em>do</em></button>
+    </div>
+  </section>
+
+  <section aria-labelledby="routine-h">
+    <div class="sec-head">
+      <h2 id="routine-h">Today's routine</h2>
+      <p class="small" id="routine-progress">0 of 5 done</p>
+    </div>
+    <div class="progress" aria-hidden="true"><span id="routine-bar"></span></div>
+
+    <ol class="ladder">
+      <li class="rung" data-step="do">
+        <div class="head-col" aria-hidden="true"><span class="notehead"></span><span class="syl">do</span></div>
+        <div class="rung-body">
+          <div class="rung-top"><h3>Breathe</h3><span class="dur">2 min</span></div>
+          <p class="how">Stand tall with loose shoulders. Breathe in through your nose for four counts so your belly and lower ribs expand, not your chest. Then let it out on a steady "sss" for as long as it stays even. Do three rounds.</p>
+          <div class="breath">
+            <div class="breath-read">
+              <span class="breath-phase" id="hiss-phase">Tap start when you're ready</span>
+              <span class="breath-time" id="hiss-time">0.0 s</span>
+            </div>
+            <div class="meter" aria-hidden="true"><span class="fill" id="hiss-fill"></span><span class="best" id="hiss-best" hidden></span></div>
+            <div class="row">
+              <button class="primary" id="hiss-btn">Start a round</button>
+              <span class="reps" id="hiss-reps" aria-label="0 of 3 rounds"></span>
+            </div>
+            <p class="small" id="hiss-note">Most beginners start around 10 to 20 seconds. Steady matters more than long.</p>
+          </div>
+          <button class="done-btn" data-done="do">Mark done</button>
+        </div>
+      </li>
+
+      <li class="rung" data-step="re">
+        <div class="head-col" aria-hidden="true"><span class="notehead"></span><span class="syl">re</span></div>
+        <div class="rung-body">
+          <div class="rung-top"><h3>Warm up</h3><span class="dur">2 min</span></div>
+          <p class="how">Do lip trills: close your lips loosely and blow so they flutter like a motorboat, then add your voice and slide up and back down with the tone. If trills won't happen yet, hum with your lips closed instead. Five slides.</p>
+          <div class="row">
+            <button class="primary" id="siren-btn">Play a slide</button>
+            <span class="reps" id="siren-reps" aria-label="0 of 5 slides"></span>
+          </div>
+          <button class="done-btn" data-done="re">Mark done</button>
+        </div>
+      </li>
+
+      <li class="rung" data-step="mi">
+        <div class="head-col" aria-hidden="true"><span class="notehead"></span><span class="syl">mi</span></div>
+        <div class="rung-body">
+          <div class="rung-top"><h3>Match the note</h3><span class="dur">3 min</span></div>
+          <p class="how">Tap a note, listen, then sing it back on "ah" and hold it for three seconds. If it sounds wavy against the tone, slide slowly up or down until the waves smooth out. That smooth sound means you've matched it.</p>
+          <div class="pills" id="match-pills" role="group" aria-label="Notes to match"></div>
+          <label class="inline"><input type="checkbox" id="drone-toggle"> Keep the note sounding while I sing</label>
+          <button class="done-btn" data-done="mi">Mark done</button>
+        </div>
+      </li>
+
+      <li class="rung" data-step="fa">
+        <div class="head-col" aria-hidden="true"><span class="notehead"></span><span class="syl">fa</span></div>
+        <div class="rung-body">
+          <div class="rung-top"><h3>Five-note scale</h3><span class="dur">3 min</span></div>
+          <p class="how">Play the pattern, then sing it back on "ah": do re mi fa sol fa mi re do. Move up a half step and repeat. Stop going higher as soon as your throat feels tight; that's today's top.</p>
+          <div class="pattern" id="scale-pattern" aria-hidden="true"></div>
+          <div class="row">
+            <button class="primary" id="scale-play">Play pattern</button>
+            <div class="stepper">
+              <button id="scale-down" aria-label="Move the scale down a half step">−</button>
+              <output id="scale-note" aria-live="polite">C3</output>
+              <button id="scale-up" aria-label="Move the scale up a half step">+</button>
+            </div>
+          </div>
+          <button class="done-btn" data-done="fa">Mark done</button>
+        </div>
+      </li>
+
+      <li class="rung" data-step="sol">
+        <div class="head-col" aria-hidden="true"><span class="notehead"></span><span class="syl">sol</span></div>
+        <div class="rung-body">
+          <div class="rung-top"><h3>Cool down</h3><span class="dur">1 min</span></div>
+          <p class="how">Hum quietly with your lips closed and slide down from the middle of your range to your lowest easy note. Keep it soft and lazy. Three slides, then you're done for today.</p>
+          <div class="row">
+            <button class="primary" id="cool-btn">Play a slide down</button>
+            <span class="reps" id="cool-reps" aria-label="0 of 3 slides"></span>
+          </div>
+          <button class="done-btn" data-done="sol">Mark done</button>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section class="check" aria-labelledby="check-h">
+    <div class="sec-head">
+      <h2 id="check-h">See your pitch</h2>
+      <span class="badge" id="take-badge">Example take</span>
+    </div>
+    <p class="small" id="check-how">Record yourself singing the <em>fa</em> pattern with a voice memo or a selfie video, then upload it. Each note you sang lands on the staff below, next to the notes you were aiming for.</p>
+    <div class="row">
+      <input type="file" id="take-file" class="sr-only" accept="audio/*,video/*">
+      <label for="take-file" class="btn primary">Upload a take</label>
+      <button id="live-btn" hidden>Live mic</button>
+      <label class="inline">Compare to
+        <select id="compare">
+          <option value="scale">Scale notes</option>
+          <option value="any">Nearest note</option>
+        </select>
+      </label>
+    </div>
+    <p class="status" id="take-status" role="status"></p>
+
+    <div class="live-read" id="live-read" hidden aria-live="off">
+      <div class="live-note" id="live-note">–</div>
+      <div>
+        <div class="live-cents" id="live-cents">Sing "ah"</div>
+        <div class="live-dir" id="live-dir">Use headphones so the app only hears you.</div>
+      </div>
+    </div>
+
+    <div class="graph-wrap" id="graph-wrap">
+      <canvas id="graph" role="img" aria-label="Pitch graph"></canvas>
+      <div class="tip" id="graph-tip" hidden></div>
+    </div>
+    <div class="legend" aria-hidden="true">
+      <span><i class="band"></i>Target note</span>
+      <span><i style="background: var(--good)"></i>On pitch (within 25¢)</span>
+      <span><i style="background: var(--warn)"></i>Close (within 60¢)</span>
+      <span><i style="background: var(--bad)"></i>Off</span>
+    </div>
+    <dl class="take-stats">
+      <div><dt>On target</dt><dd id="ts-on">–</dd></div>
+      <div><dt>Average miss</dt><dd id="ts-miss">–</dd></div>
+      <div><dt>Longest steady hold</dt><dd id="ts-hold">–</dd></div>
+    </dl>
+    <p class="small muted" id="cents-note">100 cents (¢) is one half step. Within 25¢ sounds in tune to most ears.</p>
+    <p class="small muted" id="live-hint">Live, real-time tracking turns on when this page runs on your own website. Inside Claude, upload a take instead.</p>
+  </section>
+
+  <section aria-labelledby="log-h">
+    <div class="sec-head">
+      <h2 id="log-h">Your last 4 weeks</h2>
+      <p class="small" id="sync-state">Saved on this device</p>
+    </div>
+    <div class="cal" id="cal"></div>
+    <div class="cal-legend" aria-hidden="true">
+      Steps done:
+      <i style="background: var(--heat-0)"></i>0
+      <i style="background: var(--heat-1)"></i>1–2
+      <i style="background: var(--heat-2)"></i>3–4
+      <i style="background: var(--heat-3)"></i>all 5
+    </div>
+    <p class="small muted" style="margin-top:6px">A day counts toward your streak once you finish 3 or more steps.</p>
+    <div class="trends">
+      <figure class="trend">
+        <figcaption>Longest hiss each day (seconds)</figcaption>
+        <div id="tr-hiss"></div>
+        <p class="read" id="tr-hiss-read"></p>
+      </figure>
+      <figure class="trend">
+        <figcaption>On target in your best take (%)</figcaption>
+        <div id="tr-acc"></div>
+        <p class="read" id="tr-acc-read"></p>
+      </figure>
+    </div>
+  </section>
+
+  <section class="rules" aria-labelledby="rules-h">
+    <h2 id="rules-h">Ground rules</h2>
+    <ul>
+      <li>Sing at talking volume. Loud doesn't help while you're learning.</li>
+      <li>If it hurts or your voice goes hoarse, stop and rest a day. Hoarse for more than two weeks? Get it checked by a doctor.</li>
+      <li>Sip water, and hum or swallow instead of clearing your throat.</li>
+      <li>Ten minutes every day beats an hour once a week.</li>
+      <li>No sound on iPhone? Turn off silent mode.</li>
+    </ul>
+  </section>
+  <p class="foot" id="foot">Your log stays private to you.</p>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  // ---------- music helpers ----------
+  const NOTE = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+  const noteName = m => NOTE[((m % 12) + 12) % 12] + (Math.floor(m / 12) - 1);
+  const hz = m => 440 * Math.pow(2, (m - 69) / 12);
+  const toMidi = f => 69 + 12 * Math.log2(f / 440);
+  const SCALE = [0, 2, 4, 5, 7];
+  const SYL = ['do', 're', 'mi', 'fa', 'sol'];
+  const PATTERN = [0, 2, 4, 5, 7, 5, 4, 2, 0];
+  const PATTERN_SYL = ['do', 're', 'mi', 'fa', 'sol', 'fa', 'mi', 're', 'do'];
+  const STEPS = ['do', 're', 'mi', 'fa', 'sol'];
+  const HOME_MIN = 43, HOME_MAX = 65; // G2 .. F4
+
+  const $ = s => document.querySelector(s);
+  const pad = n => String(n).padStart(2, '0');
+  const dkey = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  const todayKey = () => dkey(new Date());
+  const clone = o => JSON.parse(JSON.stringify(o));
+  const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const fmtDate = k => {
+    const [y, m, d] = k.split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  };
+
+  // ---------- state ----------
+  const state = {
+    home: 48,
+    settingsUpdated: 0,
+    days: {},
+    scaleShift: 0,
+    matchIdx: 0,
+    reps: { do: 0, re: 0, sol: 0 },
+    compare: 'scale',
+  };
+  const peekDay = k => state.days[k] || null;
+  const dayOf = k => state.days[k] || (state.days[k] = { date: k, steps: {}, hiss: 0, onTarget: null, avgMiss: null, updated: 0 });
+  const stepsDone = k => { const d = peekDay(k); return d && d.steps ? Object.keys(d.steps).length : 0; };
+
+  // ---------- storage: account db when available, device storage always ----------
+  const LS_KEY = 'voice-ladder-v1';
+  function lsLoad() {
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if (!raw) return;
+      const o = JSON.parse(raw);
+      if (o && typeof o === 'object') {
+        if (o.days && typeof o.days === 'object') state.days = o.days;
+        if (typeof o.home === 'number') state.home = o.home;
+        state.settingsUpdated = o.settingsUpdated || 0;
+      }
+    } catch (e) { /* storage unavailable */ }
+  }
+  function lsSave() {
+    try {
+      localStorage.setItem(LS_KEY, JSON.stringify({ days: state.days, home: state.home, settingsUpdated: state.settingsUpdated }));
+    } catch (e) { /* storage unavailable */ }
+  }
+
+  const remote = { col: null };
+  const chains = {};
+  const timers = {};
+  function setSync(kind) {
+    const el = $('#sync-state');
+    if (kind === 'account') el.textContent = 'Saved to your Claude account';
+    else if (kind === 'retry') el.textContent = "Couldn't reach your account just now. Saved on this device.";
+    else el.textContent = 'Saved on this device';
+  }
+  function queueWrite(id, getBody) {
+    if (!remote.col) return;
+    clearTimeout(timers[id]);
+    timers[id] = setTimeout(() => {
+      const body = clone(getBody());
+      chains[id] = (chains[id] || Promise.resolve())
+        .then(() => remote.col ? remote.col.doc(id).set(body) : null)
+        .then(() => { if (remote.col) setSync('account'); })
+        .catch(err => {
+          const code = err && err.code;
+          if (code === 'unavailable' || code === 'resource_exhausted') { setSync('retry'); return; }
+          remote.col = null;
+          setSync('device');
+        });
+    }, 600);
+  }
+  function saveDay(k) {
+    dayOf(k).updated = Date.now();
+    lsSave();
+    queueWrite('day-' + k, () => state.days[k]);
+  }
+  function saveSettings() {
+    state.settingsUpdated = Date.now();
+    lsSave();
+    queueWrite('settings', () => ({ home: state.home, updated: state.settingsUpdated }));
+  }
+  async function initRemote() {
+    const c = window.claude;
+    if (!c || typeof c.use !== 'function') return;
+    try {
+      const [db, user] = await Promise.all([c.use('db'), c.use('user')]);
+      if (!db || !user) return;
+      const uid = await user.id();
+      if (!uid) return;
+      const col = db.collection('data/users/' + uid);
+      const snap = await col.get();
+      const serverDays = {};
+      let serverSettings = null;
+      snap.docs.forEach(d => {
+        if (!d.exists) return;
+        const v = d.data();
+        if (!v) return;
+        if (d.id === 'settings') serverSettings = clone(v);
+        else if (d.id.indexOf('day-') === 0 && typeof v.date === 'string') serverDays[v.date] = clone(v);
+      });
+      const push = [];
+      new Set([...Object.keys(serverDays), ...Object.keys(state.days)]).forEach(k => {
+        const s = serverDays[k], l = state.days[k];
+        if (s && (!l || (s.updated || 0) >= (l.updated || 0))) state.days[k] = s;
+        else if (l) push.push(k);
+      });
+      let pushSettings = false;
+      if (serverSettings && typeof serverSettings.home === 'number' && (serverSettings.updated || 0) >= state.settingsUpdated) {
+        state.home = serverSettings.home;
+        state.settingsUpdated = serverSettings.updated || 0;
+      } else if (state.settingsUpdated) pushSettings = true;
+      remote.col = col;
+      lsSave();
+      setSync('account');
+      renderAll();
+      push.forEach(k => queueWrite('day-' + k, () => state.days[k]));
+      if (pushSettings) queueWrite('settings', () => ({ home: state.home, updated: state.settingsUpdated }));
+    } catch (e) {
+      setSync('device');
+    }
+  }
+
+  // ---------- audio out ----------
+  let AC = null;
+  const active = new Set();
+  let seqTimers = [];
+  let droneVoice = null;
+  function ac() {
+    if (!AC) {
+      const C = window.AudioContext || window.webkitAudioContext;
+      if (!C) return null;
+      AC = new C();
+    }
+    if (AC.state === 'suspended') AC.resume();
+    return AC;
+  }
+  function makeVoice(c, freq) {
+    const g = c.createGain();
+    g.gain.value = 0;
+    const lp = c.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.value = 2400;
+    const o1 = c.createOscillator();
+    o1.type = 'triangle';
+    o1.frequency.value = freq;
+    const o2 = c.createOscillator();
+    o2.type = 'sine';
+    o2.frequency.value = freq * 2;
+    const g2 = c.createGain();
+    g2.gain.value = 0.22;
+    o1.connect(lp);
+    o2.connect(g2);
+    g2.connect(lp);
+    lp.connect(g);
+    g.connect(c.destination);
+    const v = { g, o1, o2 };
+    active.add(v);
+    o1.onended = () => { active.delete(v); try { g.disconnect(); } catch (e) {} };
+    return v;
+  }
+  function envelope(v, t0, dur, peak) {
+    const g = v.g.gain;
+    g.setValueAtTime(0, t0);
+    g.linearRampToValueAtTime(peak, t0 + 0.04);
+    g.setValueAtTime(peak, Math.max(t0 + 0.05, t0 + dur - 0.14));
+    g.linearRampToValueAtTime(0, t0 + dur);
+    v.o1.start(t0); v.o2.start(t0);
+    v.o1.stop(t0 + dur + 0.05); v.o2.stop(t0 + dur + 0.05);
+  }
+  function stopAll() {
+    seqTimers.forEach(clearTimeout);
+    seqTimers = [];
+    document.querySelectorAll('.pattern span.lit, .pill.sounding').forEach(el => el.classList.remove('lit', 'sounding'));
+    if (!AC) return;
+    const now = AC.currentTime;
+    active.forEach(v => {
+      try {
+        v.g.gain.cancelScheduledValues(now);
+        v.g.gain.setValueAtTime(v.g.gain.value, now);
+        v.g.gain.linearRampToValueAtTime(0, now + 0.05);
+        v.o1.stop(now + 0.08); v.o2.stop(now + 0.08);
+      } catch (e) {}
+    });
+    active.clear();
+    droneVoice = null;
+  }
+  function playNote(midi, dur = 1.6, peak = 0.2) {
+    const c = ac(); if (!c) return;
+    stopAll();
+    envelope(makeVoice(c, hz(midi)), c.currentTime + 0.02, dur, peak);
+  }
+  function playSeq(midis, step, onStep) {
+    const c = ac(); if (!c) return;
+    stopAll();
+    const t0 = c.currentTime + 0.05;
+    midis.forEach((m, i) => {
+      envelope(makeVoice(c, hz(m)), t0 + i * step, step * 0.92, 0.19);
+      seqTimers.push(setTimeout(() => onStep && onStep(i), (0.05 + i * step) * 1000));
+    });
+    seqTimers.push(setTimeout(() => onStep && onStep(-1), (0.05 + midis.length * step) * 1000));
+  }
+  function glide(points, peak = 0.17) {
+    // points: [[midi, seconds], ...]
+    const c = ac(); if (!c) return;
+    stopAll();
+    const t0 = c.currentTime + 0.03;
+    const v = makeVoice(c, hz(points[0][0]));
+    const total = points[points.length - 1][1];
+    points.forEach(([m, t], i) => {
+      const f = hz(m);
+      if (i === 0) { v.o1.frequency.setValueAtTime(f, t0); v.o2.frequency.setValueAtTime(f * 2, t0); }
+      else { v.o1.frequency.exponentialRampToValueAtTime(f, t0 + t); v.o2.frequency.exponentialRampToValueAtTime(f * 2, t0 + t); }
+    });
+    envelope(v, t0, total + 0.15, peak);
+  }
+  function startDrone(midi) {
+    const c = ac(); if (!c) return;
+    stopAll();
+    const v = makeVoice(c, hz(midi));
+    const t0 = c.currentTime + 0.02;
+    v.g.gain.setValueAtTime(0, t0);
+    v.g.gain.linearRampToValueAtTime(0.15, t0 + 0.25);
+    v.o1.start(t0); v.o2.start(t0);
+    droneVoice = v;
+  }
+
+  // ---------- pitch detection (YIN) ----------
+  function yin(buf, sr, fmin, fmax, thr) {
+    const tauMin = Math.max(2, Math.floor(sr / fmax));
+    const tauMax = Math.min(Math.floor(sr / fmin), buf.length - 2);
+    const W = buf.length - tauMax;
+    if (W < 32 || tauMax <= tauMin) return null;
+    const c = new Float32Array(tauMax + 1);
+    let run = 0;
+    c[0] = 1;
+    for (let tau = 1; tau <= tauMax; tau++) {
+      let s = 0;
+      for (let i = 0; i < W; i++) { const x = buf[i] - buf[i + tau]; s += x * x; }
+      run += s;
+      c[tau] = run > 0 ? (s * tau) / run : 1;
+    }
+    let tau = -1;
+    for (let t = tauMin; t <= tauMax; t++) {
+      if (c[t] < thr) {
+        while (t + 1 <= tauMax && c[t + 1] < c[t]) t++;
+        tau = t;
+        break;
+      }
+    }
+    if (tau < 0) return null;
+    let bt = tau;
+    if (tau > 1 && tau < tauMax) {
+      const a = c[tau - 1], b = c[tau], d = c[tau + 1];
+      const den = a + d - 2 * b;
+      if (den > 0) bt = tau + (a - d) / (2 * den);
+    }
+    return sr / bt;
+  }
+  function decimate(data, sr, target) {
+    const k = Math.max(1, Math.floor(sr / target));
+    if (k === 1) return { data, sr };
+    const n = Math.floor(data.length / k);
+    const out = new Float32Array(n);
+    for (let i = 0; i < n; i++) {
+      let s = 0;
+      for (let j = 0; j < k; j++) s += data[i * k + j];
+      out[i] = s / k;
+    }
+    return { data: out, sr: sr / k };
+  }
+  function smooth(m) {
+    const out = new Array(m.length).fill(null);
+    for (let i = 0; i < m.length; i++) {
+      if (m[i] == null) continue;
+      const w = [];
+      for (let j = i - 2; j <= i + 2; j++) if (j >= 0 && j < m.length && m[j] != null) w.push(m[j]);
+      if (w.length < 3) continue;
+      w.sort((a, b) => a - b);
+      const med = w[Math.floor(w.length / 2)];
+      out[i] = Math.abs(m[i] - med) > 1 ? med : m[i];
+    }
+    return out;
+  }
+  async function decodeFile(file) {
+    const arr = await file.arrayBuffer();
+    let buf = null;
+    try {
+      const OC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+      const oc = new OC(1, 16000, 16000);
+      buf = await new Promise((res, rej) => {
+        const p = oc.decodeAudioData(arr.slice(0), res, rej);
+        if (p && p.then) p.then(res, rej);
+      });
+    } catch (e) { buf = null; }
+    if (!buf) {
+      const C = window.AudioContext || window.webkitAudioContext;
+      const c = AC || new C();
+      buf = await new Promise((res, rej) => {
+        const p = c.decodeAudioData(arr.slice(0), res, rej);
+        if (p && p.then) p.then(res, rej);
+      });
+    }
+    const len = Math.min(buf.length, Math.floor(buf.sampleRate * 180));
+    const mono = new Float32Array(len);
+    for (let ch = 0; ch < buf.numberOfChannels; ch++) {
+      const d = buf.getChannelData(ch);
+      for (let i = 0; i < len; i++) mono[i] += d[i] / buf.numberOfChannels;
+    }
+    return decimate(mono, buf.sampleRate, 16000);
+  }
+  async function analyze(data, sr, onProgress) {
+    const hopSec = 0.02;
+    const hop = Math.round(sr * hopSec);
+    const tauMax = Math.floor(sr / 65);
+    const frame = tauMax + Math.round(sr * 0.032);
+    const n = Math.max(0, Math.floor((data.length - frame) / hop) + 1);
+    const rms = new Float32Array(n);
+    for (let i = 0; i < n; i++) {
+      let s = 0;
+      for (let j = 0; j < frame; j++) { const x = data[i * hop + j]; s += x * x; }
+      rms[i] = Math.sqrt(s / frame);
+    }
+    const sorted = Array.from(rms).sort((a, b) => a - b);
+    const p95 = sorted[Math.floor(n * 0.95)] || 0;
+    const gate = Math.max(0.003, p95 * 0.18);
+    const raw = new Array(n).fill(null);
+    for (let i = 0; i < n; i++) {
+      if (i % 120 === 0) { onProgress && onProgress(i / n); await new Promise(r => setTimeout(r, 0)); }
+      if (rms[i] < gate) continue;
+      const f = yin(data.subarray(i * hop, i * hop + frame), sr, 65, 1050, 0.18);
+      if (f) raw[i] = toMidi(f);
+    }
+    const m = smooth(raw);
+    return { m, hop: hopSec, t0: frame / (2 * sr), dur: data.length / sr };
+  }
+
+  // ---------- scoring ----------
+  function scoreTake(take, mode, key) {
+    const tg = mode === 'scale' ? SCALE.map(s => key + s) : null;
+    const near = v => {
+      if (!tg) return Math.round(v);
+      let best = tg[0];
+      for (const x of tg) if (Math.abs(x - v) < Math.abs(best - v)) best = x;
+      return best;
+    };
+    let voiced = 0, on = 0, miss = 0, longest = 0, runStart = -1, runTarget = null;
+    const cls = take.m.map((v, i) => {
+      if (v == null) { runStart = -1; return null; }
+      voiced++;
+      const t = near(v);
+      const dev = (v - t) * 100;
+      const a = Math.abs(dev);
+      miss += Math.min(a, 200);
+      const k = a <= 25 ? 'on' : a <= 60 ? 'close' : 'off';
+      if (k === 'on') {
+        on++;
+        if (runStart < 0 || runTarget !== t) { runStart = i; runTarget = t; }
+        longest = Math.max(longest, (i - runStart + 1) * take.hop);
+      } else runStart = -1;
+      return { t, dev, k };
+    });
+    return {
+      voicedSec: voiced * take.hop,
+      onPct: voiced ? Math.round((100 * on) / voiced) : 0,
+      avgMiss: voiced ? Math.round(miss / voiced) : 0,
+      longest,
+      cls,
+      targets: tg,
+    };
+  }
+
+  // ---------- example take (synthetic, clearly labeled) ----------
+  function exampleTake(key) {
+    let seed = 7;
+    const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647 - 0.5; };
+    const hop = 0.02;
+    const offs = [-8, 6, -4, 34, -28, 12, -6, 4, -14];
+    const m = [];
+    const gap = n => { for (let i = 0; i < n; i++) m.push(null); };
+    gap(15);
+    PATTERN.forEach((s, j) => {
+      const frames = 31;
+      for (let f = 0; f < frames; f++) {
+        const p = f / frames;
+        const scoop = p < 0.18 ? -55 * (1 - p / 0.18) : 0;
+        const vib = p > 0.45 ? 10 * Math.sin(2 * Math.PI * 5.2 * f * hop) : 0;
+        m.push(key + s + (offs[j] + scoop + vib + rnd() * 6) / 100);
+      }
+      gap(j === 4 ? 10 : 6);
+    });
+    gap(12);
+    return { m, hop, t0: 0, dur: m.length * hop, example: true };
+  }
+
+  // ---------- pitch graph ----------
+  const view = { take: null, score: null, kind: 'example', label: '', hoverIdx: -1, liveWindow: 0 };
+  const scaleKey = () => state.home + state.scaleShift;
+
+  function setTake(take, kind, label) {
+    view.take = take;
+    view.kind = kind;
+    view.label = label || '';
+    rescore();
+  }
+  function rescore() {
+    if (!view.take) return;
+    view.score = scoreTake(view.take, state.compare, scaleKey());
+    renderTakeStats();
+    drawGraph();
+  }
+  function renderTakeStats() {
+    const s = view.score;
+    const badge = $('#take-badge');
+    badge.classList.toggle('mine', view.kind !== 'example');
+    badge.textContent = view.kind === 'example' ? 'Example take' : view.kind === 'live' ? 'Live' : view.label;
+    if (!s || !s.voicedSec) {
+      $('#ts-on').textContent = '–'; $('#ts-miss').textContent = '–'; $('#ts-hold').textContent = '–';
+      return;
+    }
+    $('#ts-on').innerHTML = s.onPct + '<small>%</small>';
+    $('#ts-miss').innerHTML = s.avgMiss + '<small>¢</small>';
+    $('#ts-hold').innerHTML = s.longest.toFixed(1) + '<small> s</small>';
+  }
+
+  function drawGraph() {
+    const cv = $('#graph');
+    const wrap = $('#graph-wrap');
+    const W = wrap.clientWidth;
+    const H = cv.clientHeight || 260;
+    if (!W) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 3);
+    if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) {
+      cv.width = Math.round(W * dpr);
+      cv.height = Math.round(H * dpr);
+    }
+    const g = cv.getContext('2d');
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.clearRect(0, 0, W, H);
+
+    const col = {
+      ink: css('--ink'), ink2: css('--ink-2'), muted: css('--muted'), line: css('--line'), hair: css('--hair'),
+      accentText: css('--accent-text'), target: css('--target'), good: css('--good'), warn: css('--warn'), bad: css('--bad'),
+    };
+    const take = view.take, sc = view.score;
+    if (!take || !sc) return;
+
+    // time domain
+    const n = take.m.length;
+    const tAt = i => take.t0 + i * take.hop;
+    let tStart = 0, tEnd = Math.max(take.dur, tAt(n - 1) || 0, 1);
+    if (view.kind === 'live') { tEnd = Math.max(8, tAt(n - 1) || 0); tStart = tEnd - 8; }
+
+    // pitch domain
+    const vals = [];
+    take.m.forEach((v, i) => { if (v != null && tAt(i) >= tStart) vals.push(v); });
+    vals.sort((a, b) => a - b);
+    let lo, hi;
+    if (sc.targets) { lo = sc.targets[0]; hi = sc.targets[sc.targets.length - 1]; }
+    if (vals.length) {
+      const pLo = vals[Math.floor(vals.length * 0.02)], pHi = vals[Math.floor(vals.length * 0.98)];
+      lo = lo == null ? pLo : Math.min(lo, pLo);
+      hi = hi == null ? pHi : Math.max(hi, pHi);
+    }
+    if (lo == null) { lo = scaleKey(); hi = scaleKey() + 7; }
+    lo = Math.floor(lo) - 1.5; hi = Math.ceil(hi) + 1.5;
+    if (hi - lo < 10) { const c = (hi + lo) / 2; lo = c - 5; hi = c + 5; }
+
+    const L = 52, R = 10, T = 8, B = 24;
+    const PW = W - L - R, PH = H - T - B;
+    const x = t => L + ((t - tStart) / (tEnd - tStart)) * PW;
+    const y = m => T + ((hi - m) / (hi - lo)) * PH;
+    const laneH = PH / (hi - lo);
+
+    // lanes
+    g.font = '500 11px ' + css('--font-mono');
+    g.textBaseline = 'middle';
+    const tset = new Set(sc.targets || []);
+    for (let m = Math.ceil(lo); m <= Math.floor(hi); m++) {
+      const isT = tset.has(m);
+      const natural = NOTE[((m % 12) + 12) % 12].length === 1;
+      if (isT) {
+        g.fillStyle = col.target;
+        g.fillRect(L, y(m + 0.25), PW, y(m - 0.25) - y(m + 0.25));
+      }
+      if (natural || isT) {
+        g.strokeStyle = isT ? col.line : col.hair;
+        g.lineWidth = 1;
+        g.beginPath(); g.moveTo(L, Math.round(y(m)) + 0.5); g.lineTo(W - R, Math.round(y(m)) + 0.5); g.stroke();
+      }
+      const showLabel = isT || (natural && (laneH >= 11 || m % 12 === 0));
+      if (showLabel) {
+        if (isT) {
+          const si = sc.targets.indexOf(m);
+          g.fillStyle = col.accentText;
+          g.font = 'italic 600 11px ' + css('--font-display');
+          g.textAlign = 'left';
+          g.fillText(SYL[si], 2, y(m));
+          g.font = '500 11px ' + css('--font-mono');
+          g.textAlign = 'right';
+          g.fillText(noteName(m), L - 6, y(m));
+        } else {
+          g.fillStyle = col.muted;
+          g.textAlign = 'right';
+          g.fillText(noteName(m), L - 6, y(m));
+        }
+      }
+    }
+
+    // time axis
+    g.strokeStyle = col.line;
+    g.beginPath(); g.moveTo(L, H - B + 0.5); g.lineTo(W - R, H - B + 0.5); g.stroke();
+    const span = tEnd - tStart;
+    const step = span <= 10 ? 1 : span <= 24 ? 2 : span <= 60 ? 5 : span <= 120 ? 10 : 20;
+    g.fillStyle = col.muted;
+    g.textAlign = 'center';
+    g.textBaseline = 'top';
+    g.font = '500 11px ' + css('--font-mono');
+    for (let t = Math.ceil(tStart / step) * step; t <= tEnd + 1e-6; t += step) {
+      const xx = x(t);
+      if (xx < L + 8 || xx > W - R - 8) continue;
+      g.fillText((view.kind === 'live' ? Math.round(t - tEnd) : Math.round(t)) + 's', xx, H - B + 6);
+    }
+
+    // pitch line, broken at silence or jumps, colored by accuracy
+    const colorOf = k => (k === 'on' ? col.good : k === 'close' ? col.warn : col.bad);
+    g.lineWidth = 2.5;
+    g.lineCap = 'round';
+    g.lineJoin = 'round';
+    for (let i = 1; i < n; i++) {
+      const a = take.m[i - 1], b = take.m[i];
+      if (a == null || b == null || Math.abs(a - b) > 1.2) continue;
+      if (tAt(i) < tStart) continue;
+      const c = sc.cls[i];
+      g.strokeStyle = colorOf(c ? c.k : 'off');
+      g.beginPath();
+      g.moveTo(x(tAt(i - 1)), y(a));
+      g.lineTo(x(tAt(i)), y(b));
+      g.stroke();
+    }
+    // isolated points
+    for (let i = 0; i < n; i++) {
+      const v = take.m[i];
+      if (v == null || tAt(i) < tStart) continue;
+      const prevOk = i > 0 && take.m[i - 1] != null && Math.abs(take.m[i - 1] - v) <= 1.2;
+      const nextOk = i < n - 1 && take.m[i + 1] != null && Math.abs(take.m[i + 1] - v) <= 1.2;
+      if (prevOk || nextOk) continue;
+      g.fillStyle = colorOf(sc.cls[i] ? sc.cls[i].k : 'off');
+      g.beginPath(); g.arc(x(tAt(i)), y(v), 2, 0, Math.PI * 2); g.fill();
+    }
+
+    // hover crosshair
+    const hi2 = view.hoverIdx;
+    const tip = $('#graph-tip');
+    if (hi2 >= 0 && hi2 < n && view.kind !== 'live') {
+      const xx = x(tAt(hi2));
+      g.strokeStyle = col.ink2;
+      g.lineWidth = 1;
+      g.setLineDash([3, 3]);
+      g.beginPath(); g.moveTo(Math.round(xx) + 0.5, T); g.lineTo(Math.round(xx) + 0.5, H - B); g.stroke();
+      g.setLineDash([]);
+      const v = take.m[hi2];
+      let text = tAt(hi2).toFixed(1) + 's · silence';
+      if (v != null) {
+        const c = sc.cls[hi2];
+        g.fillStyle = colorOf(c.k);
+        g.strokeStyle = css('--card');
+        g.lineWidth = 2;
+        g.beginPath(); g.arc(xx, y(v), 5, 0, Math.PI * 2); g.fill(); g.stroke();
+        const word = c.k === 'on' ? 'on pitch' : c.k === 'close' ? 'close' : 'off';
+        const dv = Math.round(c.dev);
+        text = tAt(hi2).toFixed(1) + 's · ' + noteName(c.t) + ' ' + (dv > 0 ? '+' : dv < 0 ? '−' : '±') + Math.abs(dv) + '¢ · ' + word;
+      }
+      tip.textContent = text;
+      tip.hidden = false;
+      const tw = tip.offsetWidth;
+      tip.style.left = Math.max(0, Math.min(W - tw, xx - tw / 2)) + 'px';
+    } else {
+      tip.hidden = true;
+    }
+    cv.setAttribute('aria-label', 'Pitch graph. ' + (sc.voicedSec ? sc.onPct + '% on target, average miss ' + sc.avgMiss + ' cents.' : 'No singing detected yet.'));
+  }
+
+  function graphPointer(ev) {
+    if (!view.take || view.kind === 'live') return;
+    const wrap = $('#graph-wrap');
+    const r = wrap.getBoundingClientRect();
+    const L = 52, R = 10;
+    const PW = r.width - L - R;
+    const take = view.take;
+    const tEnd = Math.max(take.dur, take.t0 + (take.m.length - 1) * take.hop, 1);
+    const t = ((ev.clientX - r.left - L) / PW) * tEnd;
+    let idx = Math.round((t - take.t0) / take.hop);
+    idx = Math.max(0, Math.min(take.m.length - 1, idx));
+    // snap to nearest sung frame within 0.2 s
+    if (take.m[idx] == null) {
+      for (let d = 1; d <= 10; d++) {
+        if (take.m[idx - d] != null) { idx -= d; break; }
+        if (take.m[idx + d] != null) { idx += d; break; }
+      }
+    }
+    view.hoverIdx = idx;
+    drawGraph();
+  }
+
+  // ---------- uploads ----------
+  async function handleFile(file) {
+    const st = $('#take-status');
+    st.classList.remove('err');
+    if (!file) return;
+    stopLive();
+    st.textContent = 'Reading your take…';
+    try {
+      const { data, sr } = await decodeFile(file);
+      const take = await analyze(data, sr, p => { st.textContent = 'Listening to your take… ' + Math.round(p * 100) + '%'; });
+      const sc = scoreTake(take, state.compare, scaleKey());
+      if (sc.voicedSec < 1.5) {
+        st.classList.add('err');
+        st.textContent = 'I heard less than 2 seconds of singing in that file. Sing a little louder or hold the phone closer, then try again.';
+        return;
+      }
+      const mins = Math.floor(take.dur / 60), secs = Math.round(take.dur % 60);
+      view.hoverIdx = -1;
+      setTake(take, 'file', 'Your take · ' + mins + ':' + pad(secs));
+      st.textContent = 'Compared against the scale on ' + noteName(scaleKey()) + '. Sang in a few different keys? Switch to "Nearest note".';
+      recordTake(view.score);
+    } catch (e) {
+      st.classList.add('err');
+      st.textContent = "That file's audio couldn't be read. Try a voice memo (.m4a) or a video from your camera roll.";
+    }
+  }
+  function recordTake(sc) {
+    if (!sc || sc.voicedSec < 1.5) return;
+    const k = todayKey();
+    const d = dayOf(k);
+    if (d.onTarget == null || sc.onPct > d.onTarget) {
+      d.onTarget = sc.onPct;
+      d.avgMiss = sc.avgMiss;
+      saveDay(k);
+      renderTrends();
+    }
+  }
+
+  // ---------- live mic (works when self-hosted) ----------
+  let live = null;
+  async function startLive() {
+    const st = $('#take-status');
+    st.classList.remove('err');
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      st.classList.add('err');
+      st.textContent = "This browser can't open the mic here. Upload a take instead.";
+      return;
+    }
+    const c = ac();
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+      const src = c.createMediaStreamSource(stream);
+      const an = c.createAnalyser();
+      an.fftSize = 4096;
+      src.connect(an);
+      live = { stream, an, src, buf: new Float32Array(an.fftSize), t0: performance.now(), last: -1, raw: [], hold: 0, holdTarget: null, raf: 0 };
+      const take = { m: [], hop: 0.02, t0: 0, dur: 0 };
+      view.hoverIdx = -1;
+      setTake(take, 'live');
+      $('#live-read').hidden = false;
+      $('#live-btn').textContent = 'Stop mic';
+      st.textContent = 'Listening. Sing "ah" on any note from the scale.';
+      live.raf = requestAnimationFrame(liveLoop);
+    } catch (e) {
+      st.classList.add('err');
+      st.textContent = 'The mic was blocked. Allow microphone access for this page, or upload a take instead.';
+    }
+  }
+  function liveLoop(ts) {
+    if (!live) return;
+    const t = (ts - live.t0) / 1000;
+    if (t - live.last >= 0.02) {
+      live.last = t;
+      live.an.getFloatTimeDomainData(live.buf);
+      const { data, sr } = decimate(live.buf, AC.sampleRate, 16000);
+      let s = 0;
+      for (let i = 0; i < data.length; i++) s += data[i] * data[i];
+      const rms = Math.sqrt(s / data.length);
+      let midi = null;
+      if (rms > 0.008) { const f = yin(data, sr, 65, 1050, 0.18); if (f) midi = toMidi(f); }
+      live.raw.push(midi);
+      const take = view.take;
+      const k = live.raw.length - 1;
+      // causal median of last five frames
+      const w = live.raw.slice(-5).filter(v => v != null).sort((a, b) => a - b);
+      take.m.push(midi != null && w.length >= 3 ? w[Math.floor(w.length / 2)] : null);
+      take.hop = Math.max(0.01, t / take.m.length);
+      take.dur = t;
+      view.score = scoreTake(take, state.compare, scaleKey());
+      updateLiveRead();
+      drawGraph();
+    }
+    live.raf = requestAnimationFrame(liveLoop);
+  }
+  function updateLiveRead() {
+    const sc = view.score;
+    const c = sc.cls[sc.cls.length - 1];
+    if (!c) {
+      $('#live-note').textContent = '–';
+      $('#live-cents').textContent = 'Sing "ah"';
+      $('#live-dir').textContent = 'Use headphones so the app only hears you.';
+      live.hold = 0;
+      return;
+    }
+    const step = view.take.hop;
+    if (c.k === 'on' && live.holdTarget === c.t) live.hold += step;
+    else if (c.k === 'on') { live.hold = step; live.holdTarget = c.t; }
+    else { live.hold = 0; live.holdTarget = null; }
+    $('#live-note').textContent = noteName(c.t);
+    $('#live-note').style.color = c.k === 'on' ? css('--good-text') : c.k === 'close' ? css('--warn-text') : css('--bad-text');
+    const dv = Math.round(c.dev);
+    $('#live-cents').textContent = (dv > 0 ? '+' : dv < 0 ? '−' : '±') + Math.abs(dv) + '¢';
+    $('#live-dir').textContent = c.k === 'on'
+      ? 'On pitch · holding ' + live.hold.toFixed(1) + ' s'
+      : dv < 0 ? '↑ A little higher' : '↓ A little lower';
+  }
+  function stopLive() {
+    if (!live) return;
+    cancelAnimationFrame(live.raf);
+    try { live.src.disconnect(); } catch (e) {}
+    live.stream.getTracks().forEach(t => t.stop());
+    live = null;
+    $('#live-read').hidden = true;
+    $('#live-btn').textContent = 'Live mic';
+    const take = view.take;
+    if (take && view.kind === 'live') {
+      view.kind = 'file';
+      view.label = 'Mic take · ' + take.dur.toFixed(0) + ' s';
+      rescore();
+      recordTake(view.score);
+      $('#take-status').textContent = 'Mic stopped. Tap the graph to inspect any moment.';
+    }
+  }
+
+  // ---------- breath timer ----------
+  const hiss = { phase: 'idle', t0: 0, raf: 0 };
+  function bestHissAllTime() {
+    let b = 0;
+    Object.values(state.days).forEach(d => { if (d && d.hiss > b) b = d.hiss; });
+    return b;
+  }
+  function hissFrame() {
+    const now = performance.now();
+    const el = (now - hiss.t0) / 1000;
+    const best = bestHissAllTime();
+    const max = Math.max(30, best * 1.25);
+    if (hiss.phase === 'in') {
+      const left = Math.max(0, 4 - el);
+      $('#hiss-phase').textContent = 'Breathe in… ' + Math.ceil(left || 0.0001);
+      $('#hiss-time').textContent = left.toFixed(1) + ' s';
+      const f = $('#hiss-fill');
+      f.classList.add('inhale');
+      f.style.width = Math.min(100, (el / 4) * 100) + '%';
+      if (el >= 4) { hiss.phase = 'out'; hiss.t0 = now; $('#hiss-btn').textContent = 'Stop'; }
+    } else if (hiss.phase === 'out') {
+      $('#hiss-phase').textContent = 'Hiss "sss" steadily';
+      $('#hiss-time').textContent = el.toFixed(1) + ' s';
+      const f = $('#hiss-fill');
+      f.classList.remove('inhale');
+      f.style.width = Math.min(100, (el / max) * 100) + '%';
+    }
+    if (hiss.phase === 'in' || hiss.phase === 'out') hiss.raf = requestAnimationFrame(hissFrame);
+  }
+  function hissClick() {
+    if (hiss.phase === 'idle') {
+      hiss.phase = 'in';
+      hiss.t0 = performance.now();
+      $('#hiss-btn').textContent = 'Cancel';
+      hiss.raf = requestAnimationFrame(hissFrame);
+    } else if (hiss.phase === 'in') {
+      cancelAnimationFrame(hiss.raf);
+      hiss.phase = 'idle';
+      $('#hiss-btn').textContent = 'Start a round';
+      $('#hiss-phase').textContent = 'Tap start when you\'re ready';
+      $('#hiss-time').textContent = '0.0 s';
+      $('#hiss-fill').style.width = '0%';
+    } else if (hiss.phase === 'out') {
+      cancelAnimationFrame(hiss.raf);
+      const secs = Math.round(((performance.now() - hiss.t0) / 1000) * 10) / 10;
+      hiss.phase = 'idle';
+      $('#hiss-btn').textContent = 'Start another round';
+      const prevBest = bestHissAllTime();
+      $('#hiss-time').textContent = secs.toFixed(1) + ' s';
+      if (secs >= 2) {
+        const k = todayKey();
+        const d = dayOf(k);
+        if (secs > (d.hiss || 0)) d.hiss = secs;
+        saveDay(k);
+        $('#hiss-phase').textContent = secs > prevBest && prevBest > 0 ? 'New personal best' : 'Round logged';
+        addRep('do', 3);
+        renderStats();
+        renderTrends();
+        renderBreathMeta();
+      } else {
+        $('#hiss-phase').textContent = 'Too short to count. Try a full breath.';
+      }
+    }
+  }
+  function renderBreathMeta() {
+    const best = bestHissAllTime();
+    const d = peekDay(todayKey());
+    const todayBest = d && d.hiss ? d.hiss : 0;
+    const mark = $('#hiss-best');
+    if (best > 0) {
+      const max = Math.max(30, best * 1.25);
+      mark.hidden = false;
+      mark.style.left = Math.min(100, (best / max) * 100) + '%';
+      $('#hiss-note').textContent = 'Today: ' + (todayBest ? todayBest.toFixed(1) + ' s' : '–') + ' · Personal best: ' + best.toFixed(1) + ' s (the line on the bar)';
+    } else {
+      mark.hidden = true;
+    }
+  }
+
+  // ---------- reps & steps ----------
+  function renderReps(step, total, el) {
+    const n = state.reps[step];
+    el.innerHTML = '';
+    for (let i = 0; i < total; i++) {
+      const dot = document.createElement('i');
+      if (i < n) dot.className = 'on';
+      el.appendChild(dot);
+    }
+    const word = step === 'do' ? 'rounds' : 'slides';
+    el.setAttribute('aria-label', Math.min(n, total) + ' of ' + total + ' ' + word);
+  }
+  function addRep(step, total) {
+    state.reps[step] = Math.min(total, state.reps[step] + 1);
+    renderAllReps();
+    if (state.reps[step] === total) setStep(step, true);
+  }
+  function renderAllReps() {
+    renderReps('do', 3, $('#hiss-reps'));
+    renderReps('re', 5, $('#siren-reps'));
+    renderReps('sol', 3, $('#cool-reps'));
+  }
+  function setStep(step, on) {
+    const k = todayKey();
+    const d = dayOf(k);
+    const was = !!d.steps[step];
+    if (was === on) return;
+    if (on) d.steps[step] = 1; else delete d.steps[step];
+    saveDay(k);
+    renderRungs();
+    renderStats();
+    renderCal();
+  }
+  function renderRungs() {
+    const d = peekDay(todayKey());
+    let count = 0;
+    document.querySelectorAll('.rung').forEach(r => {
+      const s = r.dataset.step;
+      const on = !!(d && d.steps && d.steps[s]);
+      if (on) count++;
+      r.classList.toggle('done', on);
+      const b = r.querySelector('.done-btn');
+      b.textContent = on ? 'Done · tap to undo' : 'Mark done';
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    $('#routine-progress').textContent = count === 5 ? 'All 5 done. Nice work.' : count + ' of 5 done';
+    $('#routine-bar').style.width = (count / 5) * 100 + '%';
+  }
+
+  // ---------- notes UI ----------
+  function renderHome() {
+    $('#home-note').textContent = noteName(state.home);
+    document.querySelectorAll('.chip[data-home]').forEach(c => c.setAttribute('aria-pressed', String(Number(c.dataset.home) === state.home)));
+    const pills = $('#match-pills');
+    pills.innerHTML = '';
+    SCALE.forEach((s, i) => {
+      const b = document.createElement('button');
+      b.className = 'pill';
+      b.setAttribute('aria-pressed', String(i === state.matchIdx));
+      b.innerHTML = '<span class="s">' + SYL[i] + '</span><span class="n">' + noteName(state.home + s) + '</span>';
+      b.setAttribute('aria-label', 'Play ' + SYL[i] + ', ' + noteName(state.home + s));
+      b.addEventListener('click', () => pickMatch(i));
+      pills.appendChild(b);
+    });
+    renderScale();
+  }
+  function pickMatch(i) {
+    state.matchIdx = i;
+    document.querySelectorAll('.pill').forEach((p, j) => { p.setAttribute('aria-pressed', String(j === i)); p.classList.remove('sounding'); });
+    const midi = state.home + SCALE[i];
+    if ($('#drone-toggle').checked) startDrone(midi);
+    else playNote(midi, 1.8);
+    const pill = document.querySelectorAll('.pill')[i];
+    pill.classList.add('sounding');
+    if (!$('#drone-toggle').checked) seqTimers.push(setTimeout(() => pill.classList.remove('sounding'), 1800));
+  }
+  function renderScale() {
+    const key = scaleKey();
+    $('#scale-note').textContent = noteName(key);
+    const el = $('#scale-pattern');
+    el.innerHTML = '';
+    PATTERN.forEach((s, i) => {
+      const sp = document.createElement('span');
+      sp.textContent = PATTERN_SYL[i] + ' ' + noteName(key + s);
+      el.appendChild(sp);
+    });
+  }
+  function changeHome(v) {
+    const nv = Math.max(HOME_MIN, Math.min(HOME_MAX, v));
+    if (nv === state.home) return;
+    state.home = nv;
+    state.scaleShift = 0;
+    saveSettings();
+    renderHome();
+    if (view.kind === 'example') setTake(exampleTake(scaleKey()), 'example');
+    else rescore();
+  }
+
+  // ---------- stats, calendar, trends ----------
+  function practiced(k) { return stepsDone(k) >= 3; }
+  function renderStats() {
+    const now = new Date();
+    const back = n => dkey(new Date(now.getFullYear(), now.getMonth(), now.getDate() - n));
+    let i = practiced(back(0)) ? 0 : 1, streak = 0;
+    while (practiced(back(i))) { streak++; i++; }
+    $('#st-streak').textContent = streak;
+    const dow = (now.getDay() + 6) % 7;
+    let wk = 0;
+    for (let j = 0; j <= dow; j++) if (practiced(back(j))) wk++;
+    $('#st-week').textContent = wk;
+    const best = bestHissAllTime();
+    $('#st-hiss').textContent = best ? best.toFixed(1) : '–';
+    $('#st-hiss-unit').textContent = best ? 's' : '';
+    $('#today-label').textContent = now.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
+  }
+  function renderCal() {
+    const el = $('#cal');
+    el.innerHTML = '';
+    ['M', 'T', 'W', 'T', 'F', 'S', 'S'].forEach(d => {
+      const h = document.createElement('div');
+      h.className = 'dow';
+      h.textContent = d;
+      h.setAttribute('aria-hidden', 'true');
+      el.appendChild(h);
+    });
+    const now = new Date();
+    const dow = (now.getDay() + 6) % 7;
+    const tk = todayKey();
+    for (let i = 0; i < 28; i++) {
+      const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dow - 21 + i);
+      const k = dkey(d);
+      const c = document.createElement('div');
+      const n = stepsDone(k);
+      const future = k > tk;
+      c.className = 'day' + (future ? ' future' : n === 0 ? '' : n <= 2 ? ' l1' : n <= 4 ? ' l2' : ' l3') + (k === tk ? ' today' : '');
+      c.textContent = d.getDate();
+      c.title = fmtDate(k) + ': ' + (future ? 'upcoming' : n + ' of 5 steps');
+      c.setAttribute('aria-label', c.title);
+      el.appendChild(c);
+    }
+  }
+  function niceMax(v) {
+    if (v <= 0) return 10;
+    const p = Math.pow(10, Math.floor(Math.log10(v)));
+    for (const m of [1, 2, 2.5, 5, 10]) if (m * p >= v) return m * p;
+    return 10 * p;
+  }
+  function renderTrend(hostId, readId, points, unit, fixedMax, emptyMsg) {
+    const host = $('#' + hostId);
+    const read = $('#' + readId);
+    host.innerHTML = '';
+    if (!points.length) {
+      const e = document.createElement('div');
+      e.className = 'empty';
+      e.textContent = emptyMsg;
+      host.appendChild(e);
+      read.textContent = '';
+      return;
+    }
+    const W = Math.max(200, host.clientWidth || 280), H = 96;
+    const L = 30, R = 34, T = 10, B = 18;
+    const max = fixedMax || niceMax(Math.max(...points.map(p => p.v)) * 1.1);
+    const x = i => points.length === 1 ? L + (W - L - R) / 2 : L + (i / (points.length - 1)) * (W - L - R);
+    const y = v => T + (1 - v / max) * (H - T - B);
+    const NS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', points.map(p => fmtDate(p.k) + ' ' + p.v + unit).join(', '));
+    const add = (tag, attrs) => {
+      const el = document.createElementNS(NS, tag);
+      Object.entries(attrs).forEach(([a, v]) => {
+        if (String(v).indexOf('var(') === 0) el.style.setProperty(a, v);
+        else el.setAttribute(a, v);
+      });
+      svg.appendChild(el);
+      return el;
+    };
+    [0, max / 2, max].forEach(v => {
+      add('line', { x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: 'var(--hair)', 'stroke-width': 1 });
+      const t = add('text', { x: L - 6, y: y(v) + 4, 'text-anchor': 'end', fill: 'var(--muted)', 'font-size': 10, 'font-family': 'var(--font-mono)' });
+      t.textContent = Math.round(v);
+    });
+    if (points.length > 1) {
+      const d = points.map((p, i) => (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(p.v).toFixed(1)).join(' ');
+      add('path', { d: d + ' L' + x(points.length - 1).toFixed(1) + ' ' + y(0) + ' L' + x(0).toFixed(1) + ' ' + y(0) + ' Z', fill: 'var(--accent)', opacity: 0.12, stroke: 'none' });
+      add('path', { d, fill: 'none', stroke: 'var(--accent)', 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' });
+    }
+    points.forEach((p, i) => {
+      const last = i === points.length - 1;
+      add('circle', { cx: x(i), cy: y(p.v), r: last ? 5 : 3.5, fill: 'var(--accent)', stroke: 'var(--bg)', 'stroke-width': 2 });
+    });
+    const lp = points[points.length - 1];
+    const lt = add('text', { x: x(points.length - 1) + 8, y: y(lp.v) + 4, fill: 'var(--ink)', 'font-size': 11, 'font-weight': 600, 'font-family': 'var(--font-mono)' });
+    lt.textContent = lp.v + unit;
+    const fl = add('text', { x: L, y: H - 3, fill: 'var(--muted)', 'font-size': 10, 'font-family': 'var(--font-mono)' });
+    fl.textContent = fmtDate(points[0].k);
+    if (points.length > 1) {
+      const fr = add('text', { x: W - R, y: H - 3, 'text-anchor': 'end', fill: 'var(--muted)', 'font-size': 10, 'font-family': 'var(--font-mono)' });
+      fr.textContent = fmtDate(lp.k);
+    }
+    const cross = add('line', { x1: 0, x2: 0, y1: T, y2: H - B, stroke: 'var(--ink-2)', 'stroke-width': 1, 'stroke-dasharray': '3 3', visibility: 'hidden' });
+    const hit = add('rect', { x: 0, y: 0, width: W, height: H, fill: 'transparent' });
+    const defaultRead = 'Latest: ' + fmtDate(lp.k) + ' · ' + lp.v + unit + (points.length > 1 ? ' · tap the chart for any day' : '');
+    read.textContent = defaultRead;
+    const onMove = ev => {
+      const r = svg.getBoundingClientRect();
+      const px = ((ev.clientX - r.left) / r.width) * W;
+      let bi = 0, bd = Infinity;
+      points.forEach((p, i) => { const dd = Math.abs(x(i) - px); if (dd < bd) { bd = dd; bi = i; } });
+      cross.setAttribute('x1', x(bi)); cross.setAttribute('x2', x(bi));
+      cross.setAttribute('visibility', 'visible');
+      read.textContent = fmtDate(points[bi].k) + ' · ' + points[bi].v + unit;
+    };
+    hit.addEventListener('pointermove', onMove);
+    hit.addEventListener('pointerdown', onMove);
+    hit.addEventListener('pointerleave', () => { cross.setAttribute('visibility', 'hidden'); read.textContent = defaultRead; });
+    host.appendChild(svg);
+  }
+  function renderTrends() {
+    const keys = Object.keys(state.days).sort();
+    const hissPts = keys.filter(k => state.days[k] && state.days[k].hiss > 0).slice(-14).map(k => ({ k, v: state.days[k].hiss }));
+    const accPts = keys.filter(k => state.days[k] && state.days[k].onTarget != null).slice(-14).map(k => ({ k, v: state.days[k].onTarget }));
+    renderTrend('tr-hiss', 'tr-hiss-read', hissPts, ' s', 0, 'Finish a breath round in do to start this chart.');
+    renderTrend('tr-acc', 'tr-acc-read', accPts, '%', 100, 'Upload a take to start this chart.');
+  }
+  function renderAll() {
+    renderHome();
+    renderRungs();
+    renderAllReps();
+    renderBreathMeta();
+    renderStats();
+    renderCal();
+    renderTrends();
+    if (view.kind === 'example') setTake(exampleTake(scaleKey()), 'example');
+    else rescore();
+  }
+
+  // ---------- wiring ----------
+  document.querySelectorAll('.done-btn').forEach(b => b.addEventListener('click', () => {
+    const s = b.dataset.done;
+    const d = peekDay(todayKey());
+    setStep(s, !(d && d.steps && d.steps[s]));
+  }));
+  $('#hiss-btn').addEventListener('click', hissClick);
+  $('#siren-btn').addEventListener('click', () => {
+    const h = state.home;
+    glide([[h, 0], [h + 7, 1.8], [h, 3.6]]);
+    addRep('re', 5);
+  });
+  $('#cool-btn').addEventListener('click', () => {
+    const h = state.home;
+    glide([[h + 5, 0], [h - 5, 3.2]], 0.12);
+    addRep('sol', 3);
+  });
+  $('#drone-toggle').addEventListener('change', e => {
+    if (e.target.checked) pickMatch(state.matchIdx);
+    else stopAll();
+  });
+  $('#scale-play').addEventListener('click', () => {
+    const key = scaleKey();
+    const spans = document.querySelectorAll('#scale-pattern span');
+    playSeq(PATTERN.map(s => key + s), 0.55, i => {
+      spans.forEach((sp, j) => sp.classList.toggle('lit', j === i));
+    });
+  });
+  $('#scale-up').addEventListener('click', () => {
+    if (state.home + state.scaleShift >= HOME_MAX + 7) return;
+    state.scaleShift++;
+    renderScale();
+    rescore();
+  });
+  $('#scale-down').addEventListener('click', () => {
+    if (state.home + state.scaleShift <= HOME_MIN - 3) return;
+    state.scaleShift--;
+    renderScale();
+    rescore();
+  });
+  $('#home-up').addEventListener('click', () => changeHome(state.home + 1));
+  $('#home-down').addEventListener('click', () => changeHome(state.home - 1));
+  document.querySelectorAll('.chip[data-home]').forEach(c => c.addEventListener('click', () => {
+    changeHome(Number(c.dataset.home));
+    playNote(state.home, 1.4);
+  }));
+  $('#home-play').addEventListener('click', () => playNote(state.home, 1.6));
+  $('#take-file').addEventListener('change', e => {
+    const f = e.target.files && e.target.files[0];
+    handleFile(f);
+    e.target.value = '';
+  });
+  $('#compare').addEventListener('change', e => { state.compare = e.target.value; rescore(); });
+  $('#live-btn').addEventListener('click', () => { if (live) stopLive(); else startLive(); });
+  const gw = $('#graph-wrap');
+  gw.addEventListener('pointermove', graphPointer);
+  gw.addEventListener('pointerdown', graphPointer);
+  gw.addEventListener('pointerleave', () => { view.hoverIdx = -1; drawGraph(); });
+
+  // Live mic is only offered outside the Claude viewer, where the browser allows it.
+  const inViewer = !!(window.claude && typeof window.claude.use === 'function');
+  if (!inViewer && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    $('#live-btn').hidden = false;
+    $('#live-hint').textContent = 'Live mic: wear headphones, tap Live mic, and sing. The note readout tells you to go higher or lower.';
+    $('#foot').textContent = 'Your log is saved in this browser.';
+  }
+
+  // redraw on resize and theme change
+  let rt = 0;
+  const redraw = () => { cancelAnimationFrame(rt); rt = requestAnimationFrame(() => { drawGraph(); renderTrends(); }); };
+  if (window.ResizeObserver) new ResizeObserver(redraw).observe(gw);
+  else window.addEventListener('resize', redraw);
+  const mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  if (mq) { if (mq.addEventListener) mq.addEventListener('change', redraw); else if (mq.addListener) mq.addListener(redraw); }
+  new MutationObserver(redraw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) { renderStats(); renderCal(); renderRungs(); } });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(redraw);
+
+  // boot
+  lsLoad();
+  renderAll();
+  initRemote();
+})();
+</script>
+
+</body>
+</html>
