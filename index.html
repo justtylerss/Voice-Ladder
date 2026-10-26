@@ -1450,7 +1450,7 @@ button.sess-item.done { border-color: var(--good); }
     </ul>
   </section>
   <p class="foot" id="foot">Your log stays private to you.</p>
-  <p class="foot">App version 8 · Oct 26</p>
+  <p class="foot">App version 9 · Oct 26</p>
 </div>
 <div class="mic-chip" id="mic-chip" hidden>
   <span class="dot" aria-hidden="true"></span>
@@ -2710,6 +2710,7 @@ button.sess-item.done { border-color: var(--good); }
       renderStats();
       renderTrends();
       renderBreathMeta();
+      checkGateUp();
     } else {
       $('#hiss-phase').textContent = 'Too short to count. Try a full breath.';
     }
@@ -3606,7 +3607,7 @@ button.sess-item.done { border-color: var(--good); }
       P().strong = P().strong.slice(-20);
       saveSettings();
     }
-    if (P().level < 5 && strongDays().length >= 3) { changeLevel(P().level + 1); return; }
+    if (P().level < 5 && strongDays().length >= 3 && gateCap() > P().level) { changeLevel(P().level + 1); return; }
     renderCoach();
   }
   function logWeak() {
@@ -3783,7 +3784,7 @@ button.sess-item.done { border-color: var(--good); }
     if (ph === 'match') { lcHint('Part 1 done.'); lcLater(() => lcPart('leap'), 900); }
     else if (ph === 'leap') { lcHint('Part 2 done.'); lcLater(() => lcPart('hold'), 900); }
     else if (ph === 'hold') {
-      if (placeLevel(lcMetrics()) >= 4) { lcHint('Strong control. One bonus round.'); lcLater(() => lcPart('run'), 1200); }
+      if (pitchLevel(lcMetrics()) >= 4) { lcHint('Strong control. One bonus round.'); lcLater(() => lcPart('run'), 1200); }
       else lcFinish();
     } else if (ph === 'run') { LC.res.runDone = true; lcFinish(); }
   }
@@ -3809,13 +3810,43 @@ button.sess-item.done { border-color: var(--good); }
     if (q.run != null && (m.run == null || m.run < q.run)) fails.push('run');
     return fails;
   }
-  function placeLevel(m) {
+  // What the ear can do, from the level check alone.
+  function pitchLevel(m) {
     let lvl = 1;
     for (let L = 2; L <= 5; L++) {
       if (lcFails(m, L).length) break;
       lvl = L;
     }
     return lvl;
+  }
+  // A good ear can run ahead of technique, so Level 3+ also needs breath support and
+  // practice time, the way a teacher wouldn't skip fundamentals for a singer with a good ear.
+  const GATES = { 3: { days: 10, hiss: 20, steady: 70 }, 4: { days: 30, hiss: 20, steady: 70 }, 5: { days: 60, hiss: 20, steady: 70 } };
+  function gateFails(L) {
+    const q = GATES[L];
+    if (!q) return [];
+    const out = [];
+    const n = practiceDays(), h = recentMedian('hiss', 5), st = recentMedian('steady', 5);
+    if (n < q.days) out.push('practice on ' + q.days + ' different days (' + n + ' so far)');
+    if (h == null || h < q.hiss) out.push('a typical hiss of ' + q.hiss + ' s' + (h != null ? ' (now ' + h.toFixed(1) + ' s)' : ' (log a few breath rounds)'));
+    if (st == null || st < q.steady) out.push('hiss steadiness of ' + q.steady + '%' + (st != null ? ' (now ' + Math.round(st) + '%)' : ' (do breath rounds with the mic on)'));
+    return out;
+  }
+  function gateCap() {
+    let L = 2;
+    while (L < 5 && !gateFails(L + 1).length) L++;
+    return L;
+  }
+  const placeLevel = m => Math.min(pitchLevel(m), gateCap());
+  function enforceGates() {
+    const cap = gateCap();
+    if (P().level > cap) changeLevel(cap, 'Level ' + cap + ' for now. Your ear is ahead, but breath support and practice days set the pace for Level ' + (cap + 1) + '. You\'ll move up automatically as they catch up.');
+  }
+  function checkGateUp() {
+    const lc = lastCheck();
+    if (!lc) return;
+    const to = Math.min(lc.ear || lc.level, gateCap());
+    if (to > P().level) changeLevel(to, 'Your breath and practice days caught up with your ear. You\'re now Level ' + to + ': ' + LEVELS[to].name + '.');
   }
   function metricLevel(key, m) {
     if (m[key] == null) return null;
@@ -3879,13 +3910,14 @@ button.sess-item.done { border-color: var(--good); }
   function lcFinish() {
     const m = lcMetrics();
     const placed = placeLevel(m);
+    const ear = pitchLevel(m);
     const prev = P().level;
     LC.timers.forEach(clearTimeout);
     LC.timers = [];
     LC.phase = null;
     setConsumer(null);
     $('#lc').hidden = true;
-    P().checks.push({ date: todayKey(), level: placed, match: m.match, landed: m.landed, leap: m.leap, sd: m.sd, run: m.run, range: m.range });
+    P().checks.push({ date: todayKey(), level: placed, ear, match: m.match, landed: m.landed, leap: m.leap, sd: m.sd, run: m.run, range: m.range });
     P().checks = P().checks.slice(-24);
     const k = todayKey();
     dayOf(k).checkMiss = m.match;
@@ -3921,10 +3953,12 @@ button.sess-item.done { border-color: var(--good); }
       tbl.appendChild(row);
     });
     host.appendChild(tbl);
+    const ear = pitchLevel(m);
+    if (ear > placed) host.appendChild(el('p', 'small', 'Your ear tested at Level ' + ear + '. Breath support and practice time set your level to ' + placed + ' for now, and you\'ll move up automatically as they catch up.'));
     if (placed < 5) {
       const nextL = placed + 1;
-      const fails = lcFails(m, nextL);
-      host.appendChild(el('p', 'small', 'To reach Level ' + nextL + ': ' + fails.map(key => lcFixText(key, LC_REQ[nextL][key], m)).join('; ') + '.'));
+      const fails = lcFails(m, nextL).map(key => lcFixText(key, LC_REQ[nextL][key], m)).concat(gateFails(nextL));
+      if (fails.length) host.appendChild(el('p', 'small', 'To reach Level ' + nextL + ': ' + fails.join('; ') + '.'));
     }
     if (m.drift != null && Math.abs(m.drift) >= 20) {
       host.appendChild(el('p', 'small', 'Your held note drifted ' + Math.abs(m.drift) + '¢ ' + (m.drift < 0 ? 'flat' : 'sharp') + ' by the end, usually a sign of breath support fading. The hiss rounds in do train exactly that.'));
@@ -4322,11 +4356,11 @@ button.sess-item.done { border-color: var(--good); }
       words: '"~" means hold the same word over two notes.' },
   ];
   let songPick = null;
-  const songsOpen = () => SONGS.filter(g => g.min <= P().level);
+  const songsOpen = () => { const o = SONGS.filter(g => g.min <= P().level); return o.length ? o : SONGS; };
   function curSong() {
-    const open = songsOpen();
-    const g = open.find(x => x.id === songPick);
+    const g = SONGS.find(x => x.id === songPick);
     if (g) return g;
+    const open = songsOpen();
     const top = rangeTop(), low = rangeLow();
     const fit = open.filter(x => top == null || low == null || Math.max(...x.notes) - Math.min(...x.notes) <= top - 1 - low);
     const pool = fit.length ? fit : open;
@@ -4396,9 +4430,8 @@ button.sess-item.done { border-color: var(--good); }
     const g = curSong();
     sel.innerHTML = '';
     SONGS.forEach(x => {
-      const opt = el('option', '', x.title + (x.min > P().level ? ' (Level ' + x.min + ')' : ''));
+      const opt = el('option', '', x.title + (x.min > P().level ? ' (harder: Level ' + x.min + ' suggested)' : ''));
       opt.value = x.id;
-      opt.disabled = x.min > P().level;
       opt.selected = x.id === g.id;
       sel.appendChild(opt);
     });
@@ -5528,6 +5561,8 @@ button.sess-item.done { border-color: var(--good); }
       note = 'Last level check: ' + fmtDate(last.date) + ' (Level ' + last.level + ').' +
         (p.level >= 5 ? ' Top level.' : ' Your level also moves up on its own after 3 strong sessions on different days (' + days + ' of 3 so far), and down if sing-backs keep falling short.') +
         ' Pitch target now: ±' + lv().tol + '¢.' + (due ? ' Your monthly recheck is due.' : '');
+      const gf = p.level < 5 ? gateFails(p.level + 1) : [];
+      if (gf.length) note += ' Level ' + (p.level + 1) + ' also needs ' + gf.join(', ') + '.';
     }
     $('#lvl-note').textContent = note;
     const btn = $('#lc-start');
@@ -5642,7 +5677,7 @@ button.sess-item.done { border-color: var(--good); }
   function roadmap() {
     const n = practiceDays();
     const lc = lastCheck();
-    const lcl = lc ? lc.level : 0;
+    const lcl = lc ? Math.min(lc.level, gateCap()) : 0;
     const hiss5 = recentMedian('hiss', 5);
     const rg = rangeGain();
     const days = k => goal('Practice on ' + k + ' different days', n >= k, n + ' / ' + k);
@@ -6118,6 +6153,7 @@ button.sess-item.done { border-color: var(--good); }
     renderStats();
     renderCal();
     renderRoadmap();
+    if (on) checkGateUp();
   }
   const activeSteps = () => STEPS.filter(s => !P().skip[s]);
   function renderRungs() {
@@ -6651,6 +6687,8 @@ button.sess-item.done { border-color: var(--good); }
   lsLoad();
   if (state.voice && !P().rangeHistory.length) P().rangeHistory = [{ date: state.voice.date, low: state.voice.low, high: state.voice.high, brk: state.voice.brk != null ? state.voice.brk : null }];
   renderAll();
+  enforceGates();
+  checkGateUp();
   renderAI();
   aiInitViewer();
   initRemote();
