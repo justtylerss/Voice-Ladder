@@ -677,6 +677,27 @@ button.sess-item.done { border-color: var(--good); }
 .quiz-opts button.right { border-color: var(--good); background: var(--good-soft); color: var(--good-text); }
 .quiz-opts button.wrong { border-color: var(--bad); color: var(--bad-text); }
 
+/* ---------- Claude coach ---------- */
+.ai { display: grid; gap: 10px; border-top: 1px solid var(--line); padding-top: 12px; }
+.ai-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+#ai-setup, #ai-on { display: grid; gap: 10px; }
+.ai input[type="password"], .chat-form input { font: inherit; font-size: 15px; flex: 1 1 200px; min-width: 0; min-height: 44px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); padding: 0 12px; }
+.ai input:focus-visible, .chat-form input:focus-visible { outline: 3px solid var(--accent); outline-offset: 1px; }
+.ai-out { display: grid; gap: 8px; padding: 12px 14px; border-radius: 12px; background: var(--accent-soft); color: var(--ink); font-size: 14px; line-height: 1.5; }
+.ai-body { display: grid; gap: 8px; }
+.ai-out p, .bubble p { margin: 0; }
+.md-h { font-family: var(--font-display); font-weight: 680; font-size: 15px; }
+.md-list { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
+.ai-think { color: var(--ink-2); font-style: italic; }
+.ai-out > button, .ai-why { justify-self: start; min-height: 34px; font-size: 13px; }
+.chat { display: grid; gap: 8px; }
+.chat-log { display: grid; gap: 8px; max-height: 440px; overflow-y: auto; padding: 2px; }
+.bubble { padding: 10px 12px; border-radius: 14px; font-size: 14px; line-height: 1.5; max-width: 92%; display: grid; gap: 6px; min-width: 0; }
+.bubble.me { justify-self: end; background: var(--accent); color: var(--accent-ink); border-bottom-right-radius: 4px; }
+.bubble.coach { justify-self: start; background: var(--accent-soft); border-bottom-left-radius: 4px; }
+.chat-form { display: flex; gap: 8px; }
+#ai-model { font-size: 13px; }
+
 /* ---------- device sync ---------- */
 .sync {
   margin-top: 22px;
@@ -791,6 +812,45 @@ button.sess-item.done { border-color: var(--good); }
       <div><dt>Next milestone</dt><dd id="s-next"></dd></div>
     </dl>
     <p class="small muted" id="s-stats"></p>
+    <div class="ai" id="ai">
+      <div class="ai-head"><p class="picks-h">Claude coach</p><span class="small" id="ai-mode"></span></div>
+      <div id="ai-setup" hidden>
+        <p class="small">Connect a Claude API key and Claude becomes your coach: it writes today's plan from your data, explains any exercise result, and answers your questions. Max plans include monthly API credits: claim them on claude.ai under Settings → Billing → API credits, then create a key in the Claude Console.</p>
+        <div class="row">
+          <label for="ai-key" class="sr-only">Claude API key</label>
+          <input type="password" id="ai-key" placeholder="sk-ant-…" autocomplete="off" autocapitalize="off" spellcheck="false">
+          <button class="primary" id="ai-save">Connect</button>
+        </div>
+        <p class="small" id="ai-status" role="status"></p>
+        <p class="small muted">Your key stays on this device and only talks to Claude. Do this once on each device. Setting a monthly spend limit in the Console is a good safety net.</p>
+      </div>
+      <div id="ai-on" hidden>
+        <div class="row">
+          <button class="primary" id="ai-plan">Ask Claude for today's plan</button>
+          <button id="ai-week">Weekly review</button>
+        </div>
+        <div class="ai-out" id="ai-plan-out" hidden></div>
+        <div class="chat">
+          <div class="chat-log" id="chat-log" aria-live="polite" hidden></div>
+          <div class="chips" id="chat-presets"></div>
+          <form class="chat-form" id="chat-form">
+            <label for="chat-in" class="sr-only">Ask your coach</label>
+            <input id="chat-in" type="text" placeholder="Ask your coach anything…" autocomplete="off">
+            <button class="primary" type="submit" id="chat-send">Send</button>
+          </form>
+        </div>
+        <div class="row" id="ai-keyrow">
+          <label class="inline" for="ai-model">Model
+            <select id="ai-model">
+              <option value="claude-sonnet-5-5">Sonnet (best coaching)</option>
+              <option value="claude-haiku-5-5">Haiku (fastest)</option>
+              <option value="claude-opus-5-5">Opus (deepest)</option>
+            </select>
+          </label>
+          <button class="ghost" id="ai-disconnect">Disconnect key</button>
+        </div>
+      </div>
+    </div>
     <div class="ptime" id="ptime">
       <div class="ptime-head"><span class="ptime-label">Practice time today</span><span class="ptime-val" id="ptime-val">0 min</span></div>
       <div class="ptime-bar" aria-hidden="true"><span class="ptime-fill" id="ptime-fill"></span><span class="ptime-rec" id="ptime-rec"></span></div>
@@ -1239,11 +1299,12 @@ button.sess-item.done { border-color: var(--good); }
         <p class="ex-why"></p>
         <p class="lock-note"></p>
         <div class="ex-body">
-          <p class="how">Hear the phrase, then sing it back on "la" or the words. The app follows along note by note. More songs open as you level up.</p>
+          <p class="how">Hear the phrase, then sing it back on "la" or the words, and the app follows along note by note. Or use Sing along: the melody plays while you sing, and with "Fade the guide" it gets quieter each round until you're singing solo. More songs open as you level up.</p>
           <label class="inline" for="song-pick">Song <select id="song-pick"></select></label>
           <p class="song-words" id="song-words"></p>
           <div class="pattern" id="song-chips" role="group" aria-label="Melody notes"></div>
-          <div class="row"><button class="primary" id="song-play">Hear the phrase</button><button id="song-sing" hidden>Sing it</button></div>
+          <div class="row"><button class="primary" id="song-play">Hear the phrase</button><button id="song-sing" hidden>Sing it</button><button id="song-along" hidden>Sing along</button></div>
+          <label class="inline" id="song-fade-row" hidden><input type="checkbox" id="song-fade" checked> Fade the guide each round (headphones needed)</label>
           <div class="tuner" id="tuner-song" hidden>
             <div class="tuner-top"><span class="tuner-note">–</span><span class="tuner-cents">Sing</span><span class="tuner-hint"></span></div>
             <div class="tuner-bar" aria-hidden="true"><span class="z-close"></span><span class="z-on"></span><span class="center"></span><span class="needle"></span></div>
@@ -2592,6 +2653,7 @@ button.sess-item.done { border-color: var(--good); }
       if (steady != null) {
         hissFb(steady >= 75 ? 'ok' : steady >= 55 ? 'meh' : 'bad',
           'Steady ' + steady + '% of the time. ' + (steady >= 75 ? 'Nice, even airflow.' : steady >= 55 ? 'Pretty good. Keep the hiss the same loudness the whole way.' : 'Wobbly. Use a gentler hiss you can hold evenly.'));
+        aiExplain($('#hiss-fb'), 'Hiss lasted ' + secs.toFixed(1) + ' s; loudness stayed within ±3 dB ' + steady + '% of the time; previous best ' + (prevBest || 0).toFixed(1) + ' s.');
       }
       addRep('do', repTotal('do'));
       renderStats();
@@ -2718,6 +2780,7 @@ button.sess-item.done { border-color: var(--good); }
           if (med != null && med > -20) msg += ' Try it softer; a cool-down should be quiet.';
         }
         fb(follow >= 70 ? 'ok' : follow >= 40 ? 'meh' : 'bad', msg);
+        aiExplain(opts.fb, 'Slide ' + opts.points().map(q => noteName(Math.round(q[0]))).join(' → ') + ' over ' + dur().toFixed(1) + ' s. Followed within a half step ' + follow + '% of the time I heard you; heard you ' + Math.round(voicedPct * 100) + '% of the slide.');
         const k = todayKey();
         const d = dayOf(k);
         if (d.follow == null || follow > d.follow) { d.follow = follow; saveDay(k); renderTrends(); }
@@ -3099,6 +3162,7 @@ button.sess-item.done { border-color: var(--good); }
       const notes = o.notes();
       const top = Math.max(...notes.map(n => n.midi));
       if (result === 'miss' && target === top) r.tips.topMiss = true;
+      r.noteData.push({ t: noteName(target), r: result, mean: att.mean, sc: att.scoops > 0 });
       r.prev = target;
       r.results.push(result);
       r.idx++;
@@ -3130,15 +3194,17 @@ button.sess-item.done { border-color: var(--good); }
         scoops: r.tips.scoops,
         onsets: r.tips.onsets,
         results: r.results.slice(),
+        noteData: r.noteData.slice(),
       };
       setConsumer(null);
       o.onFinish(res);
+      aiExplain(o.fb, 'Tolerance ±' + (o.tol ? o.tol() : lv().tol) + '¢. Notes in order: ' + fmtNotes(res.noteData) + (res.avgMiss != null ? '. Average miss while singing: ' + res.avgMiss + '¢' : '') + '.');
     }
     async function toggle() {
       if (Mic.consumer === consumer) { setConsumer(null); return; }
       if (!(await micStart())) { o.fb.className = 'feedback bad'; o.fb.textContent = micFailMsg(); return; }
       stopAll();
-      Object.assign(r, { idx: 0, hold: 0, devs: [], holdDevs: [], el: 0, last: 0, results: [], voiced: 0, on: 0, miss: 0, voicedSec: 0, pauseUntil: 0, at: makeAttempt(), prev: null, tips: { onsets: 0, scoops: 0, wobbles: 0, rise: [], fall: [], topMiss: false } });
+      Object.assign(r, { idx: 0, hold: 0, devs: [], holdDevs: [], el: 0, last: 0, results: [], noteData: [], voiced: 0, on: 0, miss: 0, voicedSec: 0, pauseUntil: 0, at: makeAttempt(), prev: null, tips: { onsets: 0, scoops: 0, wobbles: 0, rise: [], fall: [], topMiss: false } });
       o.fb.textContent = '';
       setConsumer(consumer);
       o.tuner.show(true);
@@ -3406,6 +3472,8 @@ button.sess-item.done { border-color: var(--good); }
     }
     if (steady < 60 && !tips.length) tips.push('The pitch moved around. Pick a softer peak so you can keep the note still.');
     drillFeedback(fb, 'Swell ' + shape + '% on the curve, pitch steady ' + steady + '% of the time. ', { tips }, score >= 70 ? 'ok' : score >= 45 ? 'meh' : 'bad');
+    aiExplain(fb, 'Messa di voce on ' + noteName(swellMidi()) + ' for 8 s: loudness followed the swell curve ' + shape + '% of the time, pitch within ±' + (lv().tol * 2) + '¢ ' + steady + '% of the time, peak ' + Math.round(peak) + ' dB above the soft start' +
+      (loud.length >= 10 && soft.length >= 10 ? ', pitch when loud ' + signedC(median(loud)) + ' vs soft ' + signedC(median(soft)) : '') + '.');
     const k = todayKey();
     const d = dayOf(k);
     if (d.swell == null || score > d.swell) { d.swell = score; saveDay(k); renderTrends(); }
@@ -3779,6 +3847,8 @@ button.sess-item.done { border-color: var(--good); }
       renderAll();
     }
     renderLcResult(m, placed, prev);
+    aiExplain($('#lc-result .vt-sub'), 'Level check placed them at Level ' + placed + ' (was ' + prev + '). Note matching ' + m.match + '¢ average miss, ' + m.landed + ' of 5 within 50¢; pattern from memory ' + m.leap + '¢; held-note wobble ' + m.sd + '¢' +
+      (m.drift != null ? ', drift ' + signedC(m.drift) : '') + (m.run != null ? '; quick run ' + m.run + ' of 9' : '') + (m.range != null ? '; range ' + m.range + ' half steps' : '') + '. Explain what this says about their voice and the one thing to work on to reach the next level.', 'Level check');
   }
   function renderLcResult(m, placed, prev) {
     const host = $('#lc-result');
@@ -3977,6 +4047,7 @@ button.sess-item.done { border-color: var(--good); }
       const voiced = s.v;
       setConsumer(null);
       o.onFinish({ segs, sd, voiced });
+      aiExplain(o.fb, 'Target ' + noteName(o.target()) + '. Average pitch per part: ' + segs.map(g => g.label + ' ' + (g.mean == null ? 'not heard' : signedC(g.mean))).join(', ') + (sd != null ? '. Pitch wobble (smoothed) ' + Math.round(sd) + '¢' : '') + '. Sang for ' + voiced.toFixed(1) + ' s.');
     }
     async function toggle() {
       if (Mic.consumer === consumer) { setConsumer(null); return; }
@@ -4730,7 +4801,8 @@ button.sess-item.done { border-color: var(--good); }
     if (d.checkin) parts.push('check-in: ' + CI_VOICE[d.checkin.voice].toLowerCase() + ', ' + CI_ENERGY[d.checkin.energy].toLowerCase());
     return '- ' + parts.join(' · ');
   }
-  function coachPrompt() {
+  function coachPrompt(opts) {
+    opts = opts || {};
     const p = P();
     const N = (p.name || '').trim() || 'the singer';
     const v = state.voice;
@@ -4738,7 +4810,7 @@ button.sess-item.done { border-color: var(--good); }
     const base = hist[0] || (v ? { date: v.date, low: v.low, high: v.high, brk: v.brk } : null);
     const firstDay = Object.keys(state.days).filter(isPracticeDay).sort()[0];
     const brkText = r => (r.brk != null ? 'register break near ' + noteName(r.brk) : 'no clear register break detected');
-    const recent = Object.keys(state.days).filter(isPracticeDay).sort().slice(-7).map(sessionLine);
+    const recent = Object.keys(state.days).filter(isPracticeDay).sort().slice(-(opts.days || 7)).map(sessionLine);
     const c = todayCheckin();
     let streak = 0;
     for (let i = practiced(todayKey()) ? 0 : 1; practiced(dkey(new Date(Date.now() - i * 86400000))); i++) streak++;
@@ -4793,9 +4865,7 @@ button.sess-item.done { border-color: var(--good); }
       '- [Exercise] — [notes/range] — [time] — [what to listen for]',
       '**Song of the day:** [title] — range [low]–[high]',
       '**Next milestone:** [specific measurable target]',
-      '',
-      'Give me today\'s session plan.',
-    ].join('\n');
+    ].concat(opts.ask === false ? [] : ['', 'Give me today\'s session plan.']).join('\n');
   }
   async function copyPrompt() {
     const text = coachPrompt();
@@ -4811,6 +4881,422 @@ button.sess-item.done { border-color: var(--good); }
       ta.select();
       $('#cp-status').textContent = 'Copy this text, then paste it into a new Claude chat.';
     }
+  }
+
+  // ----- Claude coach -----
+  // GitHub version: the singer's own API key (Max plans include monthly API credits).
+  // Claude version: the page asks Claude on the viewer's account, no key needed.
+  const AI_KEY = 'voice-ladder-ai';
+  const AI = { key: null, model: 'claude-sonnet-5-5', sample: null, chat: [], busy: 0 };
+  function aiLoad() {
+    try {
+      const o = JSON.parse(localStorage.getItem(AI_KEY) || 'null');
+      if (o && o.key) { AI.key = o.key; AI.model = o.model || AI.model; }
+    } catch (e) {}
+  }
+  function aiSave() {
+    try {
+      if (AI.key) localStorage.setItem(AI_KEY, JSON.stringify({ key: AI.key, model: AI.model }));
+      else localStorage.removeItem(AI_KEY);
+    } catch (e) {}
+  }
+  const aiOn = () => !!(AI.sample || AI.key);
+  async function askClaude({ system, messages, maxTokens, onText, signal }) {
+    if (AI.sample) {
+      const turns = [{ role: 'user', content: system }].concat(messages);
+      const r = await AI.sample(turns, { onText: ({ text }) => onText && onText(text), signal, cache: false });
+      return r.text;
+    }
+    if (!AI.key) throw { code: 'no_key' };
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      signal,
+      headers: {
+        'x-api-key': AI.key,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({ model: AI.model, max_tokens: maxTokens || 1200, system, messages, stream: true }),
+    });
+    if (!res.ok) {
+      let message = '';
+      try { const j = await res.json(); message = (j.error && j.error.message) || ''; } catch (e) {}
+      throw { code: 'http', status: res.status, message };
+    }
+    const reader = res.body.getReader();
+    const dec = new TextDecoder();
+    let buf = '', text = '';
+    for (;;) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      let i;
+      while ((i = buf.indexOf('\n\n')) >= 0) {
+        const chunk = buf.slice(0, i);
+        buf = buf.slice(i + 2);
+        const line = chunk.split('\n').find(l => l.startsWith('data:'));
+        if (!line) continue;
+        let ev;
+        try { ev = JSON.parse(line.slice(5).trim()); } catch (e) { continue; }
+        if (ev.type === 'content_block_delta' && ev.delta && ev.delta.type === 'text_delta') {
+          text += ev.delta.text;
+          if (onText) onText(text);
+        } else if (ev.type === 'error') {
+          throw { code: 'http', status: 529, message: (ev.error && ev.error.message) || '' };
+        }
+      }
+    }
+    if (!text.trim()) throw { code: 'empty' };
+    return text;
+  }
+  function aiErrorText(e) {
+    if (!e) return 'Claude couldn\'t answer just now. Try again.';
+    if (e.code === 'cancelled' || e.name === 'AbortError') return '';
+    if (e.code === 'no_key') return 'Connect your Claude API key in the Claude coach panel first.';
+    if (e.code === 'http') {
+      if (e.status === 401) return 'Claude didn\'t accept your API key. Check it, or create a new one in the Claude Console.';
+      if (e.status === 400 && /credit/i.test(e.message || '')) return 'Your API credits are used up. Max credits refresh at the start of each billing cycle.';
+      if (e.status === 404) return 'That model isn\'t available on your key. Pick a different model below.';
+      if (e.status === 429) return 'Too many requests right now. Wait a minute and try again.';
+      if (e.status >= 500) return 'Claude is busy right now. Try again in a minute.';
+      return 'Claude returned an error (' + e.status + ')' + (e.message ? ': ' + e.message : '.');
+    }
+    if (e.code === 'not_granted' || e.code === 'sampling_disabled') return 'This page isn\'t allowed to use Claude. You can allow it from the page\'s Permissions menu.';
+    if (e.code === 'rate_limited') return 'You\'ve hit a usage limit. Try again later.';
+    if (e.code === 'session_expired') return 'Sign in to Claude again, then retry.';
+    if (e instanceof TypeError) return 'Couldn\'t reach Claude. Check your internet connection.';
+    return 'Claude couldn\'t answer just now. Try again.';
+  }
+  // Small, safe Markdown: paragraphs, headings, bullet and numbered lists, **bold**.
+  function renderMd(host, md) {
+    host.innerHTML = '';
+    let list = null;
+    const inline = (node, str) => {
+      str.split(/(\*\*[^*]+\*\*)/).forEach(part => {
+        if (/^\*\*[^*]+\*\*$/.test(part)) node.appendChild(el('strong', '', part.slice(2, -2)));
+        else if (part) node.appendChild(document.createTextNode(part.replace(/(^|[\s(])\*([^*\s][^*]*)\*/g, '$1$2')));
+      });
+    };
+    md.split('\n').forEach(raw => {
+      const line = raw.replace(/\s+$/, '');
+      const b = /^\s*[-*•]\s+(.*)$/.exec(line), n = /^\s*\d+[.)]\s+(.*)$/.exec(line), h = /^#{1,4}\s+(.*)$/.exec(line);
+      if (b || n) {
+        const tag = b ? 'UL' : 'OL';
+        if (!list || list.tagName !== tag) { list = el(tag.toLowerCase(), 'md-list'); host.appendChild(list); }
+        const li = el('li');
+        inline(li, (b || n)[1]);
+        list.appendChild(li);
+        return;
+      }
+      list = null;
+      if (!line.trim() || /^-{3,}$/.test(line.trim())) return;
+      const p = el('p', h ? 'md-h' : '');
+      inline(p, h ? h[1] : line);
+      host.appendChild(p);
+    });
+  }
+  function aiContext() {
+    const v = state.voice, c = todayCheckin();
+    return 'Singer: ' + ((P().name || '').trim() || 'the singer') + ', Level ' + P().level + ' (' + lv().name + '), pitch target ±' + lv().tol + '¢' +
+      (v ? ', ' + v.type + ', comfortable range ' + noteName(v.low) + '–' + noteName(rangeTop()) + (v.brk != null ? ', break near ' + noteName(v.brk) : '') : '') +
+      '. Goals: ' + ((P().about || '').trim() || GOALS[P().goal].name + ' singing') +
+      '. Today\'s check-in: ' + (c ? CI_VOICE[c.voice] + ', ' + CI_ENERGY[c.energy] : 'not answered') + '.';
+  }
+  const AI_RULES = 'Priorities: vocal health > pitch accuracy > breath support > register blending > range > style. Never encourage pushing chest voice higher by force; route upward progress through head voice and mix. If pain or lasting hoarseness comes up, tell them to rest and see an ENT or laryngologist. Be direct and specific, use numbers and note names, skip vague encouragement.';
+  // stream an answer into a box, with a Stop button
+  async function aiRun(out, btn, req, done) {
+    if (!aiOn()) return;
+    const ctl = new AbortController();
+    const label = btn ? btn.innerHTML : '';
+    out.hidden = false;
+    out.innerHTML = '';
+    const think = el('p', 'ai-think', 'Thinking…');
+    out.appendChild(think);
+    const stop = el('button', 'ghost ai-stop', 'Stop');
+    stop.type = 'button';
+    stop.addEventListener('click', () => ctl.abort());
+    out.appendChild(stop);
+    if (btn) btn.disabled = true;
+    const body = el('div', 'ai-body');
+    let text = '';
+    try {
+      text = await askClaude(Object.assign({}, req, {
+        signal: ctl.signal,
+        onText: t => { text = t; if (think.parentNode) { think.remove(); out.insertBefore(body, stop); } renderMd(body, t); },
+      }));
+      if (think.parentNode) { think.remove(); out.insertBefore(body, stop); }
+      renderMd(body, text);
+      if (done) done(text);
+    } catch (e) {
+      if (think.parentNode) think.remove();
+      if (text && !body.parentNode) out.insertBefore(body, stop);
+      const msg = aiErrorText(e);
+      if (msg) out.appendChild(el('p', 'status err', msg));
+      else if (!text) out.hidden = true;
+    } finally {
+      stop.remove();
+      if (btn) { btn.disabled = false; btn.innerHTML = label; }
+    }
+  }
+
+  // "Ask Claude about this" under any exercise result
+  function aiExplain(fbEl, detail, forcedTitle) {
+    if (!aiOn() || !fbEl) return;
+    const box = fbEl.parentNode;
+    box.querySelectorAll(':scope > .ai-why, :scope > .ai-out.explain').forEach(n => n.remove());
+    const card = fbEl.closest('.drill, .rung, .coach, .home');
+    const h = card && card.querySelector('h3, .vt-type');
+    const title = forcedTitle || (h ? h.textContent.trim() : 'Exercise');
+    const btn = el('button', 'ghost ai-why', 'Ask Claude about this');
+    btn.type = 'button';
+    const out = el('div', 'ai-out explain');
+    out.hidden = true;
+    fbEl.after(btn, out);
+    btn.addEventListener('click', () => aiRun(out, btn, {
+      system: 'You are a skilled one-on-one vocal coach inside the Voice Ladder practice app. ' + aiContext() + ' ' + AI_RULES,
+      messages: [{ role: 'user', content: 'Exercise: ' + title + '\nApp feedback: ' + fbEl.textContent.trim() + '\nData: ' + detail + '\n\nExplain what happened in 2–4 sentences using the numbers, then give one concrete fix to try on the next round. No preamble.' }],
+      maxTokens: 350,
+    }));
+  }
+  const fmtNotes = list => list.map(n => n.t + ' ' + (n.r === 'miss' ? 'missed' : n.r) + (n.mean != null ? ' (' + signedC(n.mean) + ')' : '') + (n.sc ? ' scooped' : '')).join(', ');
+
+  // today's plan and weekly review
+  function aiPlan(regen) {
+    const d = dayOf(todayKey());
+    const out = $('#ai-plan-out');
+    if (d.aiPlan && !regen) { out.hidden = false; renderMd(out, d.aiPlan); addRegen(out); return; }
+    aiRun(out, $('#ai-plan'), {
+      system: coachPrompt({ ask: false }) + '\n\nKeep the whole plan under 260 words.',
+      messages: [{ role: 'user', content: 'Give me today\'s session plan. Use exercises that exist in the Voice Ladder app (breath rounds, warm-up slides, match the note, scales and arpeggios, cool-down, and the library: posture, clean onsets, hum into a vowel, interval echo, interval quiz, vowel tuning, top-note check, hold & swell, bridge the break, agility run, song phrases).' }],
+      maxTokens: 900,
+    }, text => { d.aiPlan = text; saveDay(todayKey()); addRegen(out); });
+  }
+  function addRegen(out) {
+    const b = el('button', 'ghost', 'Write a new plan');
+    b.type = 'button';
+    b.addEventListener('click', () => aiPlan(true));
+    out.appendChild(b);
+  }
+  function aiWeek() {
+    aiRun($('#ai-plan-out'), $('#ai-week'), {
+      system: coachPrompt({ ask: false, days: 14 }),
+      messages: [{ role: 'user', content: 'Give me my weekly review: what improved and what didn\'t over the last 1–2 weeks (with numbers), any plateau or regression and the likely reason, and next week\'s plan (one focus, three exercises with targets). Under 230 words.' }],
+      maxTokens: 800,
+    });
+  }
+
+  // chat
+  const CHAT_PRESETS = [
+    ['Songs that fit my range', 'Suggest 6 songs that fit my current comfortable range for my goals. Include pop, R&B, and rock, and at least one Spanish song. For each: title, artist, its lowest and highest sung notes, and why it suits me now. Flag any that go above my comfortable top. Note that song ranges are approximate and I should check them by ear.'],
+    ['Why do I miss notes?', 'Based on my data, where and why do I tend to miss pitch, and what\'s the single best fix to work on this week?'],
+    ['Start my mixed voice', 'How should I start building a mixed voice through my break? Give two exercises from this app and what to listen for in each.'],
+    ['Check my practice time', 'Is my practice time and frequency right for my level and how my voice has felt? Adjust it if needed.'],
+  ];
+  function renderChat() {
+    const log = $('#chat-log');
+    log.innerHTML = '';
+    AI.chat.forEach(m => {
+      const b = el('div', 'bubble ' + (m.role === 'user' ? 'me' : 'coach'));
+      if (m.role === 'user') b.textContent = m.label || m.content;
+      else renderMd(b, m.content);
+      log.appendChild(b);
+    });
+    log.hidden = !AI.chat.length;
+  }
+  async function chatSend(text, label) {
+    text = (text || '').trim();
+    if (!text || AI.busy) return;
+    AI.busy = 1;
+    AI.chat.push({ role: 'user', content: text, label });
+    $('#chat-in').value = '';
+    renderChat();
+    const log = $('#chat-log');
+    const bubble = el('div', 'bubble coach');
+    bubble.appendChild(el('p', 'ai-think', 'Thinking…'));
+    log.appendChild(bubble);
+    $('#chat-send').disabled = true;
+    try {
+      const reply = await askClaude({
+        system: coachPrompt({ ask: false }) + '\n\nYou\'re chatting inside the app. Answer the question directly in under 150 words unless asked for more, using their data when it helps.',
+        messages: AI.chat.slice(-12).map(m => ({ role: m.role, content: m.content })),
+        maxTokens: 700,
+        onText: t => renderMd(bubble, t),
+      });
+      AI.chat.push({ role: 'assistant', content: reply });
+    } catch (e) {
+      AI.chat.pop();
+      bubble.innerHTML = '';
+      bubble.appendChild(el('p', 'status err', aiErrorText(e) || 'Stopped.'));
+      if (!label) $('#chat-in').value = text;
+      AI.busy = 0;
+      $('#chat-send').disabled = false;
+      return;
+    }
+    AI.busy = 0;
+    $('#chat-send').disabled = false;
+    renderChat();
+    log.lastChild && log.lastChild.scrollIntoView({ block: 'nearest' });
+  }
+
+  // setup
+  async function aiConnect() {
+    const key = $('#ai-key').value.trim();
+    const st = $('#ai-status');
+    st.className = 'small';
+    if (!key) { $('#ai-key').focus(); return; }
+    st.textContent = 'Checking your key…';
+    AI.key = key;
+    try {
+      await askClaude({ system: 'Reply with the single word OK.', messages: [{ role: 'user', content: 'Test' }], maxTokens: 5 });
+      aiSave();
+      $('#ai-key').value = '';
+      st.textContent = '';
+      renderAI();
+    } catch (e) {
+      AI.key = null;
+      st.className = 'small status err';
+      st.textContent = aiErrorText(e);
+    }
+  }
+  function aiDisconnect() {
+    AI.key = null;
+    aiSave();
+    renderAI();
+  }
+  function renderAI() {
+    const box = $('#ai');
+    const viewerNoAI = inViewer && !AI.sample;
+    box.hidden = viewerNoAI;
+    if (viewerNoAI) return;
+    const on = aiOn();
+    $('.cp').hidden = on;
+    $('#ai-setup').hidden = on;
+    $('#ai-on').hidden = !on;
+    $('#ai-model').value = AI.model;
+    $('#ai-mode').textContent = AI.sample ? 'Uses your Claude account' : on ? 'Connected · ' + (($('#ai-model').selectedOptions[0] || {}).textContent || '') : 'Not connected';
+    $('#ai-keyrow').hidden = !!AI.sample;
+    const d = peekDay(todayKey());
+    if (on && d && d.aiPlan && $('#ai-plan-out').hidden) { $('#ai-plan-out').hidden = false; renderMd($('#ai-plan-out'), d.aiPlan); addRegen($('#ai-plan-out')); }
+    const pre = $('#chat-presets');
+    if (!pre.childNodes.length) {
+      CHAT_PRESETS.forEach(([label, q]) => {
+        const b = el('button', 'chip', label);
+        b.type = 'button';
+        b.addEventListener('click', () => chatSend(q, label));
+        pre.appendChild(b);
+      });
+    }
+    renderChat();
+  }
+  async function aiInitViewer() {
+    if (!inViewer || !window.claude || typeof window.claude.use !== 'function') return;
+    try {
+      const s = await window.claude.use('sample');
+      if (s) AI.sample = s;
+    } catch (e) {}
+    renderAI();
+  }
+
+  // ----- sing along: the guide melody plays while the mic scores you; the guide fades each round -----
+  const ALONG_STEP = 0.55;
+  const ALONG_VOL = [1, 0.55, 0.25, 0];
+  const along = { round: 0, t0: 0, ns: [], map: [], devs: [], active: false, vol: 1, last: 0 };
+  function alongVolume() { return $('#song-fade').checked ? ALONG_VOL[Math.min(along.round, ALONG_VOL.length - 1)] : 1; }
+  function renderAlongLabel() {
+    const v = alongVolume();
+    micLabel($('#song-along'), along.active ? 'Stop' : 'Sing along' + (v < 1 ? (v === 0 ? ' · solo' : ' · guide ' + Math.round(v * 100) + '%') : ''));
+  }
+  const alongTuner = makeTuner($('#tuner-song'));
+  const alongConsumer = {
+    frame(f) {
+      const t = f.t - along.t0;
+      const n = along.ns.length;
+      if (t < 0) {
+        alongTuner.render({ target: along.ns[0], dev: null, hold: 0, msg: 'Starting note. Get ready… ' + Math.max(1, Math.ceil(-t)) });
+        return;
+      }
+      const idx = Math.floor(t / ALONG_STEP);
+      if (idx >= n) { finishAlong(); return; }
+      const target = along.ns[idx];
+      const chips = document.querySelectorAll('#song-chips .pc');
+      chips.forEach((c, j) => c.classList.toggle('lit', j === along.map[idx]));
+      if (f.midi != null && !f.blocked) {
+        const { dev, oct } = foldTo(f.midi, target);
+        if (t - idx * ALONG_STEP > 0.12) along.devs[along.map[idx]].push(dev);
+        alongTuner.render({ target, dev, oct, sung: f.midi, hold: (idx + 1) / n });
+      } else {
+        alongTuner.render({ target, dev: null, hold: (idx + 1) / n, msg: 'Sing along on "la" or the words' });
+      }
+    },
+    onStop() {
+      along.active = false;
+      alongTuner.show(false);
+      document.querySelectorAll('#song-chips .pc').forEach(c => c.classList.remove('lit'));
+      renderAlongLabel();
+    },
+  };
+  async function alongToggle() {
+    if (Mic.consumer === alongConsumer) { stopAll(); setConsumer(null); return; }
+    const fb = $('#song-fb');
+    if (!Mic.headphones) {
+      fb.className = 'feedback meh';
+      fb.textContent = 'Sing along needs headphones, so the mic hears only you and not the guide. Put them on and tick "I\'m wearing headphones" in Mic feedback at the top.';
+      return;
+    }
+    if (!(await micStart())) { fb.className = 'feedback bad'; fb.textContent = micFailMsg(); return; }
+    stopAll();
+    const g = curSong(), base = songBase(g);
+    along.ns = g.notes.map(d => base + d);
+    along.map = [];
+    let k = -1;
+    g.notes.forEach((d, i) => { if (i === 0 || g.notes[i - 1] !== d) k++; along.map.push(k); });
+    along.devs = Array.from({ length: k + 1 }, () => []);
+    along.vol = alongVolume();
+    const c = ac();
+    const now = c.currentTime;
+    // starting note, two count-in clicks, then the melody at the guide volume
+    envelope(makeVoice(c, hz(along.ns[0])), now + 0.05, 0.7, 0.18);
+    [1.0, 1.0 + ALONG_STEP].forEach(dt => envelope(makeVoice(c, 2093), now + dt, 0.05, 0.08));
+    along.t0 = now + 1.0 + 2 * ALONG_STEP;
+    if (along.vol > 0) along.ns.forEach((m, i) => envelope(makeVoice(c, hz(m)), along.t0 + i * ALONG_STEP, ALONG_STEP * 0.92, 0.19 * along.vol));
+    document.querySelectorAll('#song-chips .pc').forEach(ch => ch.classList.remove('r-on', 'r-close', 'r-miss', 'cur'));
+    fb.textContent = '';
+    along.active = true;
+    alongTuner.show(true);
+    renderAlongLabel();
+    setConsumer(alongConsumer);
+  }
+  function finishAlong() {
+    const tol = Math.max(35, Math.round(lv().tol * 1.5));
+    const res = along.devs.map(d => {
+      if (d.length < 4) return { r: 'miss', mean: null };
+      const m = median(d);
+      return { r: Math.abs(m) <= tol ? 'on' : Math.abs(m) <= tol * 2 ? 'close' : 'miss', mean: m };
+    });
+    const vol = along.vol;
+    setConsumer(null);
+    const chips = document.querySelectorAll('#song-chips .pc');
+    res.forEach((x, i) => { if (chips[i]) chips[i].classList.add('r-' + x.r); });
+    const on = res.filter(x => x.r === 'on').length, close = res.filter(x => x.r === 'close').length, n = res.length;
+    const roundName = vol === 1 ? 'With the full guide' : vol === 0 ? 'Solo, no guide' : 'Guide at ' + Math.round(vol * 100) + '%';
+    const good = on >= n * 0.8;
+    const fb = $('#song-fb');
+    fb.className = 'feedback ' + (good ? 'ok' : on + close >= n * 0.6 ? 'meh' : 'bad');
+    fb.textContent = roundName + ': ' + on + ' of ' + n + ' notes on pitch' + (close ? ', ' + close + ' close' : '') + '. ' +
+      (vol === 0 ? (good ? 'That\'s from memory, with no help. Nice.' : 'Go back one round with a little guide, then try solo again.')
+        : good ? ($('#song-fade').checked ? 'Next round, the guide gets quieter.' : 'Solid. Try "Fade the guide" to wean off it.') : 'Run this round again before the guide fades.');
+    if (good && $('#song-fade').checked && along.round < ALONG_VOL.length - 1) along.round++;
+    if (vol === 0) {
+      const pct = Math.round((100 * on) / n);
+      const k = todayKey();
+      const d = dayOf(k);
+      if (d.song == null || pct > d.song) { d.song = pct; saveDay(k); renderTrends(); }
+    }
+    exDone('song', Math.round((100 * on) / n));
+    renderAlongLabel();
+    aiExplain(fb, 'Sing along to ' + curSong().title + ' (' + roundName.toLowerCase() + ', tolerance ±' + tol + '¢): ' +
+      res.map((x, i) => (chips[i] ? chips[i].textContent.replace(/[✓~✗]/g, '').trim() : '#' + (i + 1)) + ' ' + (x.mean == null ? 'not heard' : signedC(x.mean))).join(', '));
   }
 
   // ----- plan, coach, bonus and roadmap rendering -----
@@ -5905,6 +6391,11 @@ button.sess-item.done { border-color: var(--good); }
     $('#br-sing').addEventListener('click', brDrill.toggle);
     $('#br-replay').addEventListener('click', brDrill.replay);
     $('#song-sing').addEventListener('click', songDrill.toggle);
+    $('#song-along').hidden = false;
+    $('#song-fade-row').hidden = false;
+    renderAlongLabel();
+    $('#song-along').addEventListener('click', alongToggle);
+    $('#song-fade').addEventListener('change', () => { along.round = 0; renderAlongLabel(); });
     micLabel($('#top-sing'), 'Sing the top note');
     $('#top-sing').hidden = false;
     $('#top-sing').addEventListener('click', topSus.toggle);
@@ -5941,7 +6432,7 @@ button.sess-item.done { border-color: var(--good); }
   $('#iv-play').addEventListener('click', () => { const n = ivList[0]; if (n) playSeq([n.root, n.midi], 0.7, litFn('#iv-chips')); });
   $('#br-play').addEventListener('click', () => playSeq(bridgeNotes().map(n => n.midi), 0.9, litFn('#br-chips')));
   $('#song-play').addEventListener('click', playSong);
-  $('#song-pick').addEventListener('change', e => { songPick = e.target.value; renderSongUI(); });
+  $('#song-pick').addEventListener('change', e => { songPick = e.target.value; along.round = 0; if (Mic.available) renderAlongLabel(); renderSongUI(); });
 
   // coach controls
   document.querySelectorAll('input[name="ci-voice"]').forEach(i => i.addEventListener('change', e => setCheckin('voice', e.target.value)));
@@ -5957,6 +6448,15 @@ button.sess-item.done { border-color: var(--good); }
   };
   $('#p-name').addEventListener('input', onAbout);
   $('#p-about').addEventListener('input', onAbout);
+
+  // Claude coach controls
+  $('#ai-save').addEventListener('click', aiConnect);
+  $('#ai-key').addEventListener('keydown', e => { if (e.key === 'Enter') aiConnect(); });
+  $('#ai-disconnect').addEventListener('click', aiDisconnect);
+  $('#ai-model').addEventListener('change', e => { AI.model = e.target.value; aiSave(); renderAI(); });
+  $('#ai-plan').addEventListener('click', () => aiPlan(false));
+  $('#ai-week').addEventListener('click', aiWeek);
+  $('#chat-form').addEventListener('submit', e => { e.preventDefault(); chatSend($('#chat-in').value); });
 
   // plan controls
   const onPlan = fn => e => { fn(e); saveSettings(); renderAll(); };
@@ -5991,9 +6491,12 @@ button.sess-item.done { border-color: var(--good); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(redraw);
 
   // boot
+  aiLoad();
   lsLoad();
   if (state.voice && !P().rangeHistory.length) P().rangeHistory = [{ date: state.voice.date, low: state.voice.low, high: state.voice.high, brk: state.voice.brk != null ? state.voice.brk : null }];
   renderAll();
+  renderAI();
+  aiInitViewer();
   initRemote();
   if (!inViewer) {
     ghLoadCfg();

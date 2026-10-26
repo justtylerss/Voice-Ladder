@@ -18,7 +18,16 @@ A tired voice or low energy gets a lighter 15-minute session. Hoarseness or pain
 
 **Practice time:** recommended 30 minutes and a 45-minute daily max to start. The max grows 5 minutes for every 10 practice days in a row with no tired or hoarse check-ins, up to 60. Mic exercises pause once you reach the max.
 
-**Copy coach prompt for Claude** fills a full coaching prompt with your live data (range history, recent sessions, notes hit and missed, check-in, streak, and weekly minutes). Paste it into Claude for a deeper plan and song picks.
+## Claude coach
+
+Connect a Claude API key once per device (Max plans include monthly API credits: claim them on claude.ai under Settings → Billing → API credits, then create a key in the Claude Console). Claude then:
+
+- **Writes today's plan** from your coach prompt and live data, in the same format
+- **Explains any result:** every exercise gets an "Ask Claude about this" button that sends the note-by-note numbers (cents off, scoops, wobble, timing) and returns what happened plus one fix
+- **Answers questions** in an "Ask your coach" chat, with presets for songs that fit your range, why you miss notes, starting a mixed voice, and checking your practice time
+- **Gives a weekly review:** trends, plateaus, and next week's plan
+
+The key stays in the browser's local storage and goes only to Claude's API. The app's pitch detection runs on your device, and Claude sees numbers, never audio. Without a key, **Copy coach prompt for Claude** fills the same prompt with your data so you can paste it into Claude yourself.
 
 ## The daily core
 
@@ -31,6 +40,8 @@ A tired voice or low energy gets a lighter 15-minute session. Hoarseness or pain
 | sol · Cool down | Quiet hums sliding down | Follow-the-dot graph plus a softness check |
 
 ## Exercise library
+
+**Sing along** (in Song phrase): the guide melody plays while the mic scores each note. With "Fade the guide" on, the guide drops to 55%, then 25%, then silent each time you pass a round, until you're singing from memory. Needs headphones.
 
 Posture & release, clean onsets (staccato), hum into a vowel, interval echo, interval quiz (no singing), vowel tuning, top-note check, Hold & swell (*messa di voce*), bridge the break, agility runs, and song phrases. Songs include Twinkle Twinkle, Frère Jacques, La Cucaracha, Ode to Joy, Happy Birthday, and Amazing Grace, all transposed to your range. The session plan picks from the library every day based on your weak spots.
 
