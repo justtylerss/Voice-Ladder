@@ -569,6 +569,114 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
 .g-prog { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
 .mile-here { font-size: 13px; font-weight: 600; color: var(--accent-text); margin-top: 6px; }
 
+/* ---------- level check & practice time ---------- */
+.lvl-msg { font-weight: 650; color: var(--accent-text); }
+.lvl-msg:empty { display: none; }
+.lc { display: grid; gap: 10px; padding: 14px; border: 1.5px solid var(--accent); border-radius: 12px; background: var(--bg); }
+.lc-live { display: flex; align-items: center; gap: 14px; }
+.lc-meter { flex: 1; min-width: 0; display: grid; gap: 6px; }
+.lc-dots { display: flex; gap: 8px; flex-wrap: wrap; }
+.lc-dot { width: 15px; height: 11px; border-radius: 50%; border: 2px solid var(--accent); transform: rotate(-22deg); transition: background-color .2s; }
+.lc-dot.done { background: var(--accent); }
+.lc-dot.cur { box-shadow: 0 0 0 4px var(--accent-soft); }
+.lc-dot.lit { background: var(--heat-2); }
+.lc-result { display: grid; gap: 10px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); }
+.lc-result .ghost { justify-self: start; }
+.lc-table { display: grid; }
+.lc-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; padding: 9px 0; border-top: 1px solid var(--line); align-items: center; }
+.lc-name { font-weight: 600; font-size: 14px; }
+.lc-val { grid-column: 1; font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.lc-chip { grid-column: 2; grid-row: 1 / span 2; font-family: var(--font-mono); font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 99px; background: var(--accent-soft); color: var(--accent-text); white-space: nowrap; }
+.lc-chip.none { background: var(--hair); color: var(--muted); }
+.ptime { display: grid; gap: 6px; border-top: 1px solid var(--line); padding-top: 12px; }
+.ptime-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.ptime-label { font-weight: 650; font-size: 14px; }
+.ptime-val { font-family: var(--font-mono); font-weight: 600; font-size: 14px; font-variant-numeric: tabular-nums; }
+.ptime-bar { position: relative; height: 10px; border-radius: 99px; background: var(--hair); }
+.ptime-fill { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 99px; background: var(--accent); transition: width .4s ease; }
+.ptime-fill.done { background: var(--good); }
+.ptime-fill.over { background: var(--bad); }
+.ptime-rec { position: absolute; top: -4px; bottom: -4px; width: 2px; margin-left: -1px; background: var(--ink); opacity: .7; }
+.ptime-scale { position: relative; display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 11px; color: var(--muted); height: 1.4em; }
+.ptime-reclab { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.ptime.static .ptime-bar, .ptime.static .ptime-val, .ptime.static .ptime-scale { display: none; }
+
+/* ---------- roadmap chart ---------- */
+.road-pace { font-size: 16px; color: var(--ink-2); margin-top: 8px; max-width: 36em; }
+.road-chart { margin-top: 12px; }
+.road-chart svg { display: block; width: 100%; height: auto; overflow: visible; touch-action: pan-y; }
+.road-read { font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); min-height: 1.5em; margin: 4px 0 8px; }
+
+/* ---------- exercise library ---------- */
+.lib { display: grid; gap: 14px; margin-top: 14px; }
+.ex-head { display: flex; align-items: baseline; justify-content: space-between; gap: 6px 10px; flex-wrap: wrap; }
+.ex-head h3 { font-size: 20px; font-weight: 680; }
+.ex-tags { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.tag { font-size: 11px; font-weight: 650; padding: 2px 8px; border-radius: 99px; white-space: nowrap; }
+.tag-pick { background: var(--accent); color: var(--accent-ink); }
+.tag-done { background: var(--good-soft); color: var(--good-text); }
+.ex-why { font-size: 14px; color: var(--ink-2); max-width: 38em; }
+.lock-note { font-size: 13px; color: var(--muted); }
+.lock-note:empty { display: none; }
+.ex-body { display: grid; gap: 12px; }
+.drill.locked { background: transparent; border-style: dashed; gap: 6px; }
+.drill.locked .ex-body { display: none; }
+.drill.locked h3 { color: var(--ink-2); }
+.drill.flash { animation: flash 1.4s ease; }
+@keyframes flash { 0% { box-shadow: 0 0 0 4px var(--accent); } 100% { box-shadow: 0 0 0 0 transparent; } }
+.post-steps { margin: 0; padding-left: 22px; display: grid; gap: 6px; color: var(--ink-2); }
+.post-steps li { transition: color .2s; }
+.post-steps li.cur { color: var(--ink); font-weight: 650; }
+.post-steps li.done { color: var(--muted); }
+.sus { display: flex; align-items: center; gap: 14px; }
+.sus-prompt { font-family: var(--font-display); font-size: 34px; font-weight: 760; line-height: 1; min-width: 3.2ch; color: var(--accent-text); }
+.sus-track { flex: 1; height: 8px; border-radius: 99px; background: var(--hair); overflow: hidden; }
+.sus-track span { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 99px; }
+.vow-res { display: flex; flex-wrap: wrap; gap: 6px; }
+.vow-res:empty { display: none; }
+.song-words { font-style: italic; color: var(--ink-2); font-size: 14px; }
+.picks { display: grid; gap: 8px; }
+.picks-h { font-size: 12px; font-weight: 650; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+.picks-list { display: grid; gap: 8px; }
+button.pick { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; text-align: left; border-radius: 12px; padding: 10px 12px; min-height: 0; justify-content: stretch; align-items: center; }
+.pick-title { font-weight: 650; }
+.pick-why { grid-column: 1; font-size: 13px; font-weight: 400; color: var(--ink-2); }
+.pick-go { grid-column: 2; grid-row: 1 / span 2; font-family: var(--font-mono); font-size: 12px; color: var(--accent-text); white-space: nowrap; }
+button.pick.done { border-color: var(--good); }
+
+/* ---------- today's session ---------- */
+.checkin { display: grid; gap: 8px; padding: 12px; border-radius: 12px; background: var(--bg); border: 1px solid var(--line); }
+.ci-q { font-weight: 650; font-size: 14px; }
+.checkin .seg span { min-height: 32px; font-size: 13px; padding: 0 12px; }
+.sess-head, .sess-foot { margin: 0; display: grid; gap: 12px; }
+.sess-head dt, .sess-foot dt { font-size: 12px; font-weight: 650; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+.sess-head dd, .sess-foot dd { margin: 2px 0 0; font-size: 15px; max-width: 38em; }
+#s-focus { font-family: var(--font-display); font-size: 19px; font-weight: 650; line-height: 1.3; }
+.sess-title { font-family: var(--font-display); font-weight: 680; font-size: 17px; border-top: 1px solid var(--line); padding-top: 12px; }
+.sess-list { display: grid; gap: 6px; }
+.sess-sec { font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent-text); margin-top: 6px; }
+button.sess-item { display: flex; align-items: flex-start; gap: 10px; text-align: left; justify-content: flex-start; border-radius: 12px; padding: 9px 12px; min-height: 0; font-weight: 500; }
+button.sess-item.static { cursor: default; }
+button.sess-item.done { border-color: var(--good); }
+.si-check { width: 1.1em; flex: none; color: var(--muted); font-weight: 700; }
+.sess-item.done .si-check { color: var(--good-text); }
+.si-main { display: grid; gap: 1px; min-width: 0; }
+.si-title { font-weight: 650; }
+.si-meta { font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); }
+.si-listen { font-size: 13px; color: var(--ink-2); }
+#notes-h[hidden] { display: none; }
+.flash { animation: flash 1.4s ease; }
+.cp { display: grid; gap: 6px; border-top: 1px solid var(--line); padding-top: 12px; }
+.cp a { color: var(--accent-text); font-weight: 600; }
+.cp-text { width: 100%; font-family: var(--font-mono); font-size: 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); padding: 8px; }
+.field { display: grid; gap: 4px; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+.field input, .field textarea { font: inherit; font-weight: 400; font-size: 15px; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; min-width: 0; width: 100%; }
+.field input:focus-visible, .field textarea:focus-visible { outline: 3px solid var(--accent); outline-offset: 1px; }
+.quiz-opts { display: flex; flex-wrap: wrap; gap: 6px; }
+.quiz-opts button { min-height: 40px; }
+.quiz-opts button.right { border-color: var(--good); background: var(--good-soft); color: var(--good-text); }
+.quiz-opts button.wrong { border-color: var(--bad); color: var(--bad-text); }
+
 /* ---------- device sync ---------- */
 .sync {
   margin-top: 22px;
@@ -633,7 +741,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     <div class="coach-top">
       <div>
         <p class="eyebrow">Your coach</p>
-        <h2 id="coach-h">Today's focus</h2>
+        <h2 id="coach-h">Today's session</h2>
       </div>
       <div class="lvl">
         <span class="lvl-num" id="lvl-num">Level 1</span>
@@ -641,8 +749,55 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       </div>
     </div>
     <div class="lvl-track" aria-hidden="true"><span id="lvl-fill"></span></div>
+    <p class="lvl-msg" id="lvl-msg" role="status"></p>
     <p class="small" id="lvl-note"></p>
-    <button class="primary" id="lvl-up" hidden style="justify-self: start">Level up</button>
+    <button id="lc-start" hidden style="justify-self: start">Start the level check</button>
+    <div class="lc" id="lc" hidden>
+      <p class="vt-step" id="lc-step">Part 1 of 3</p>
+      <p class="small" id="lc-instr"></p>
+      <div class="lc-live">
+        <span class="tuner-note" id="lc-target">–</span>
+        <div class="lc-meter">
+          <div class="level" aria-hidden="true"><span class="fill" id="lc-lvl"></span></div>
+          <p class="small" id="lc-hint" role="status"></p>
+        </div>
+      </div>
+      <div class="lc-dots" id="lc-dots" aria-hidden="true"></div>
+      <button class="ghost" id="lc-cancel" style="justify-self: start">Cancel</button>
+    </div>
+    <div class="lc-result" id="lc-result" hidden></div>
+    <div class="checkin" id="checkin">
+      <p class="ci-q" id="ci-q">How's your voice today?</p>
+      <div class="seg" role="radiogroup" aria-label="How your voice feels">
+        <label><input type="radio" name="ci-voice" id="ci-v-fresh" value="fresh"><span>Feels good</span></label>
+        <label><input type="radio" name="ci-voice" id="ci-v-tired" value="tired"><span>A bit tired</span></label>
+        <label><input type="radio" name="ci-voice" id="ci-v-hoarse" value="hoarse"><span>Hoarse or scratchy</span></label>
+        <label><input type="radio" name="ci-voice" id="ci-v-pain" value="pain"><span>Pain or losing my voice</span></label>
+      </div>
+      <div class="seg" role="radiogroup" aria-label="Energy">
+        <label><input type="radio" name="ci-energy" id="ci-e-low" value="low"><span>Low energy</span></label>
+        <label><input type="radio" name="ci-energy" id="ci-e-ok" value="ok"><span>Normal</span></label>
+        <label><input type="radio" name="ci-energy" id="ci-e-high" value="high"><span>Lots of energy</span></label>
+      </div>
+    </div>
+    <dl class="sess-head">
+      <div><dt>Today's focus</dt><dd id="s-focus"></dd></div>
+      <div><dt>Since last time</dt><dd id="s-since"></dd></div>
+    </dl>
+    <p class="sess-title" id="s-title">Session</p>
+    <div class="sess-list" id="s-list"></div>
+    <dl class="sess-foot">
+      <div><dt>Song of the day</dt><dd id="s-song"></dd></div>
+      <div><dt>Next milestone</dt><dd id="s-next"></dd></div>
+    </dl>
+    <p class="small muted" id="s-stats"></p>
+    <div class="ptime" id="ptime">
+      <div class="ptime-head"><span class="ptime-label">Practice time today</span><span class="ptime-val" id="ptime-val">0 min</span></div>
+      <div class="ptime-bar" aria-hidden="true"><span class="ptime-fill" id="ptime-fill"></span><span class="ptime-rec" id="ptime-rec"></span></div>
+      <div class="ptime-scale" aria-hidden="true"><span>0</span><span class="ptime-reclab" id="ptime-reclab">15 recommended</span><span id="ptime-max">Max 30</span></div>
+      <p class="small" id="ptime-note"></p>
+    </div>
+    <p class="picks-h" id="notes-h">Coach notes</p>
     <ol class="focus" id="focus-list"></ol>
     <button id="focus-start" hidden style="justify-self: start">Drill my weak notes</button>
     <div id="focus-drill" hidden>
@@ -654,6 +809,12 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
             <div class="hold" aria-hidden="true"><span></span></div>
           </div>
       <p class="feedback" id="focus-fb" role="status"></p>
+    </div>
+    <div class="cp">
+      <div class="row"><button id="cp-btn">Copy coach prompt for Claude</button><a class="small" href="https://claude.ai/new" target="_blank" rel="noopener">Open Claude</a></div>
+      <p class="small" id="cp-status">Fills your coach prompt with today's data. Paste it into Claude for a deeper session plan and pop, R&amp;B, or Spanish song picks that fit your range.</p>
+      <label for="cp-text" class="sr-only">Coach prompt</label>
+      <textarea id="cp-text" class="cp-text" rows="8" readonly hidden></textarea>
     </div>
     <p class="goal-tip" id="goal-tip"></p>
   </section>
@@ -692,12 +853,18 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   <details class="home plan" id="plan">
     <summary><span class="plan-title">Your plan</span><span class="small" id="plan-sum"></span></summary>
     <div class="plan-body">
+      <label class="field" for="p-name">Your name
+        <input type="text" id="p-name" maxlength="40" autocomplete="given-name">
+      </label>
+      <label class="field" for="p-about">Goals and notes for your coach
+        <textarea id="p-about" rows="3" placeholder="e.g., Sing pop and R&amp;B songs in tune, build a smooth mix through my break, Spanish songs welcome. Visual learner."></textarea>
+      </label>
       <fieldset>
         <legend>Session length</legend>
         <div class="seg">
-          <label><input type="radio" name="p-length" id="p-len-5" value="5"><span>5 min</span></label>
-          <label><input type="radio" name="p-length" id="p-len-11" value="11"><span>11 min</span></label>
-          <label><input type="radio" name="p-length" id="p-len-20" value="20"><span>20 min</span></label>
+          <label><input type="radio" name="p-length" id="p-len-15" value="15"><span>Short · 15 min</span></label>
+          <label><input type="radio" name="p-length" id="p-len-35" value="35"><span>Standard · 35 min</span></label>
+          <label><input type="radio" name="p-length" id="p-len-45" value="45"><span>Full · 45 min</span></label>
         </div>
       </fieldset>
       <fieldset>
@@ -737,17 +904,9 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
           <label class="inline"><input type="checkbox" class="p-step" id="p-step-sol" data-step="sol"> Cool down</label>
         </div>
       </fieldset>
-      <label class="inline" for="p-level">Level
-        <select id="p-level">
-          <option value="1">1 · Foundations (±40¢)</option>
-          <option value="2">2 · Pitch control (±30¢)</option>
-          <option value="3">3 · Range &amp; registers (±25¢)</option>
-          <option value="4">4 · Agility (±20¢)</option>
-          <option value="5">5 · Polish (±15¢)</option>
-        </select>
-      </label>
+      <p class="small"><strong>Level:</strong> set by your level check, then moves up or down automatically as you practice.</p>
       <label class="inline"><input type="checkbox" id="p-blind"> Ear training: hide the needle until each note is done</label>
-      <p class="small muted">Practice like the pros: short, focused sessions 5–6 days a week with one full rest day. Stop early if your voice feels tired or scratchy.</p>
+      <p class="small muted">Practice like the pros: short, focused sessions 5–6 days a week with one full rest day. The coach shows a recommended time and a daily max for your level, and stops mic exercises at the max. Stop sooner if your voice feels tired or scratchy.</p>
     </div>
   </details>
 
@@ -891,29 +1050,210 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
         </div>
       </li>
     </ol>
+  </section>
 
-    <div class="bonus" id="bonus" hidden>
-      <h3 class="sub-h">Level drills</h3>
-      <div class="drill" id="swell-card" hidden>
-        <div class="rung-top"><h3>Hold &amp; swell</h3><span class="dur">2 min</span></div>
-        <p class="how">The classic <em>messa di voce</em>. Hold one note (<span id="swell-how-note">E3</span>) for 8 seconds: start soft, swell louder, then fade back to soft, keeping the pitch perfectly still. Follow the curve. It builds breath control and keeps your pitch steady when you change volume.</p>
-        <div class="row"><button class="primary" id="swell-btn">Start a swell</button><span class="small" id="swell-note"></span></div>
-        <canvas class="slide-cv" id="swell-cv" hidden></canvas>
-        <p class="feedback" id="swell-fb" role="status"></p>
+  <section class="lib-sec" id="lib" aria-labelledby="lib-h">
+    <div class="sec-head">
+      <h2 id="lib-h">Exercise library</h2>
+      <p class="small" id="lib-count"></p>
+    </div>
+    <p class="small" style="margin-top: 6px; max-width: 38em">What a voice teacher rotates through beyond the daily core. Your coach picks a few each day based on your weak spots; locked exercises open as you level up.</p>
+    <div class="lib" id="lib-list">
+
+      <div class="drill" id="ex-posture" data-ex="posture">
+        <div class="ex-head"><h3>Posture &amp; release</h3><span class="ex-tags"></span></div>
+        <p class="ex-why"></p>
+        <p class="lock-note"></p>
+        <div class="ex-body">
+          <p class="how">Do this before you sing. Tension in your jaw, tongue, neck, and shoulders shows up as strain and off-pitch notes.</p>
+          <ol class="post-steps" id="post-steps">
+            <li>Feet hip-width apart, weight balanced, knees soft</li>
+            <li>Roll your shoulders up, back, and let them drop</li>
+            <li>Let your jaw hang loose and gently massage the hinge</li>
+            <li>Slow neck stretches: ear toward each shoulder</li>
+            <li>Big yawn, then sigh from high to low</li>
+            <li>Stand tall, as if a string lifts the top of your head</li>
+          </ol>
+          <div class="row"><button class="primary" id="post-btn">Start 1-minute release</button><span class="small mono" id="post-time"></span></div>
+        </div>
       </div>
-      <div class="drill" id="agility-card" hidden>
-        <div class="rung-top"><h3>Agility run</h3><span class="dur">2 min</span></div>
-        <p class="how">Hear the run once at speed, then sing it back quickly and lightly. Each note only needs a quick, clean touch, so keep it small and easy.</p>
-        <div class="pattern" id="agility-chips" role="group" aria-label="Run notes"></div>
-        <div class="row"><button class="primary" id="agility-play">Hear the run</button><button id="agility-sing">Sing the run</button></div>
-        <div class="tuner" id="tuner-agility" hidden>
+
+      <div class="drill" id="ex-staccato" data-ex="staccato">
+        <div class="ex-head"><h3>Clean onsets</h3><span class="ex-tags"></span></div>
+        <p class="ex-why"></p>
+        <p class="lock-note"></p>
+        <div class="ex-body">
+          <p class="how">Short, bouncy "ha" notes on do-mi-sol-mi-do, like a light laugh. Start each one right on pitch with a tiny puff of air, without sliding up into it.</p>
+          <div class="pattern" id="stac-chips" role="group" aria-label="Pattern notes"></div>
+          <div class="row"><button class="primary" id="stac-play">Hear it</button><button id="stac-sing" hidden>Sing it back</button></div>
+          <div class="tuner" id="tuner-stac" hidden>
             <div class="tuner-top"><span class="tuner-note">–</span><span class="tuner-cents">Sing</span><span class="tuner-hint"></span></div>
             <div class="tuner-bar" aria-hidden="true"><span class="z-close"></span><span class="z-on"></span><span class="center"></span><span class="needle"></span></div>
             <div class="tuner-scale" aria-hidden="true"><span>♭ flat</span><span>on pitch</span><span>sharp ♯</span></div>
             <div class="hold" aria-hidden="true"><span></span></div>
           </div>
-        <p class="feedback" id="agility-fb" role="status"></p>
+          <p class="feedback" id="stac-fb" role="status"></p>
+        </div>
       </div>
+
+      <div class="drill" id="ex-ngvowel" data-ex="ngvowel">
+        <div class="ex-head"><h3>Hum into a vowel</h3><span class="ex-tags"></span></div>
+        <p class="ex-why"></p>
+        <p class="lock-note"></p>
+        <div class="ex-body">
+          <p class="how">Hum "ng" (as in "sing") on the note for 2 seconds, then open into "ahhh" without letting the pitch move. Keep the buzz in your face as your mouth opens.</p>
+          <div class="sus" id="ngv-sus" hidden><span class="sus-prompt" id="ngv-prompt">ng</span><div class="sus-track"><span id="ngv-prog"></span></div></div>
+          <div class="row"><button class="primary" id="ngv-play">Hear the note</button><button id="ngv-sing" hidden>Start</button></div>
+          <div class="tuner" id="tuner-ngv" hidden>
+            <div class="tuner-top"><span class="tuner-note">–</span><span class="tuner-cents">Sing</span><span class="tuner-hint"></span></div>
+            <div class="tuner-bar" aria-hidden="true"><span class="z-close"></span><span class="z-on"></span><span class="center"></span><span class="needle"></span></div>
+            <div class="tuner-scale" aria-hidden="true"><span>♭ flat</span><span>on pitch</span><span>sharp ♯</span></div>
+            <div class="hold" aria-hidden="true"><span></span></div>
+          </div>
+          <p class="feedback" id="ngv-fb" role="status"></p>
+        </div>
+      </div>
+
+      <div class="drill" id="ex-interval" data-ex="interval">
+        <div class="ex-head"><h3>Interval echo</h3><span class="ex-tags"></span></div>
+        <p class="ex-why"></p>
+        <p class="lock-note"></p>
+        <div class="ex-body">
+          <p class="how">The app plays two notes. Sing back only the second one. You get 5 jumps, and they get wider as you level up.</p>
+          <p class="small" id="iv-set"></p>
+          <div class="pattern" id="iv-chips" role="group" aria-label="Jumps"></div>
+          <div class="row"><button class="primary" id="iv-play">Hear an example</button><button id="iv-sing" hidden>Start 5 jumps</button><button class="ghost" id="iv-replay" hidden>Hear this jump again</button></div>
+          <div class="tuner" id="tuner-iv" hidden>
+            <div class="tuner-top"><span class="tuner-note">–</span><span class="tuner-cents">Sing</span><span class="tuner-hint"></span></div>
+            <div class="tuner-bar" aria-hidden="true"><span class="z-close"></span><span class="z-on"></span><span class="center"></span><span class="needle"></span></div>
+            <div class="tuner-scale" aria-hidden="true"><span>♭ flat</span><span>on pitch</span><span>sharp ♯</span></div>
+            <div class="hold" aria-hidden="true"><span></span></div>
+          </div>
+          <p class="feedback" id="iv-fb" role="status"></p>
+        </div>
+      </div>
+
+      <div class="drill" id="ex-top" data-ex="top">
+        <div class="ex-head"><h3>Top-note check</h3><span class="ex-tags"></span></div>
+        <p class="ex-why"></p>
+        <p class="lock-note"></p>
+        <div class="ex-body">
+          <p class="how">Sing your current top note lightly on "oo" and hold it. It counts when it's within ±20¢, steady, and easy. Three easy days unlock the next half step up. Go up through a lighter, heady sound, never by pushing chest voice.</p>
+          <p class="small" id="top-note"></p>
+          <div class="sus" id="top-sus" hidden><span class="sus-prompt" id="top-prompt">oo</span><div class="sus-track"><span id="top-prog"></span></div></div>
+          <div class="row"><button class="primary" id="top-play">Hear it</button><button id="top-sing" hidden>Sing the top note</button></div>
+          <div class="tuner" id="tuner-top" hidden>
+            <div class="tuner-top"><span class="tuner-note">–</span><span class="tuner-cents">Sing</span><span class="tuner-hint"></span></div>
+            <div class="tuner-bar" aria-hidden="true"><span class="z-close"></span><span class="z-on"></span><span class="center"></span><span class="needle"></span></div>
+            <div class="tuner-scale" aria-hidden="true"><span>♭ flat</span><span>on pitch</span><span>sharp ♯</span></div>
+            <div class="hold" aria-hidden="true"><span></span></div>
+          </div>
+          <div class="row" id="top-ask" hidden><button class="primary" id="top-easy">Easy</button><button id="top-strain">It strained</button></div>
+          <p class="feedback" id="top-fb" role="status"></p>
+        </div>
+      </div>
+
+      <div class="drill" id="ex-quiz" data-ex="quiz">
+        <div class="ex-head"><h3>Interval quiz</h3><span class="ex-tags"></span></div>
+        <p class="ex-why"></p>
+        <p class="lock-note"></p>
+        <div class="ex-body">
+          <p class="how">No singing. Hear two notes and name the jump. Ten questions; the choices widen as you level up.</p>
+          <p class="small muted" id="quiz-hints"></p>
+          <div class="quiz-opts" id="quiz-opts" role="group" aria-label="Answers"></div>
+          <div class="row"><button class="primary" id="quiz-start">Start 10 questions</button><button class="ghost" id="quiz-replay" hidden>Hear it again</button><span class="small mono" id="quiz-status"></span></div>
+          <p class="feedback" id="quiz-fb" role="status"></p>
+        </div>
+      </div>
+
+      <div class="drill" id="ex-vowels" data-ex="vowels">
+        <div class="ex-head"><h3>Vowel tuning</h3><span class="ex-tags"></span></div>
+        <p class="ex-why"></p>
+        <p class="lock-note"></p>
+        <div class="ex-body">
+          <p class="how">Hold one note and move through ee, eh, ah, oh, oo, about 2 seconds each. The pitch should stay put; the app shows which vowels pull you flat or sharp.</p>
+          <div class="sus" id="vow-sus" hidden><span class="sus-prompt" id="vow-prompt">ee</span><div class="sus-track"><span id="vow-prog"></span></div></div>
+          <div class="row"><button class="primary" id="vow-play">Hear the note</button><button id="vow-sing" hidden>Start</button></div>
+          <div class="tuner" id="tuner-vow" hidden>
+            <div class="tuner-top"><span class="tuner-note">–</span><span class="tuner-cents">Sing</span><span class="tuner-hint"></span></div>
+            <div class="tuner-bar" aria-hidden="true"><span class="z-close"></span><span class="z-on"></span><span class="center"></span><span class="needle"></span></div>
+            <div class="tuner-scale" aria-hidden="true"><span>♭ flat</span><span>on pitch</span><span>sharp ♯</span></div>
+            <div class="hold" aria-hidden="true"><span></span></div>
+          </div>
+          <div class="vow-res" id="vow-res"></div>
+          <p class="feedback" id="vow-fb" role="status"></p>
+        </div>
+      </div>
+
+      <div class="drill" id="ex-swell" data-ex="swell">
+        <div class="ex-head"><h3>Hold &amp; swell</h3><span class="ex-tags"></span></div>
+        <p class="ex-why"></p>
+        <p class="lock-note"></p>
+        <div class="ex-body">
+          <p class="how">The classic <em>messa di voce</em>. Hold one note (<span id="swell-how-note">E3</span>) for 8 seconds: start soft, swell louder, then fade back to soft, keeping the pitch perfectly still. Follow the curve.</p>
+          <div class="row"><button class="primary" id="swell-btn">Start a swell</button><span class="small" id="swell-note"></span></div>
+          <canvas class="slide-cv" id="swell-cv" hidden></canvas>
+          <p class="feedback" id="swell-fb" role="status"></p>
+        </div>
+      </div>
+
+      <div class="drill" id="ex-bridge" data-ex="bridge">
+        <div class="ex-head"><h3>Bridge the break</h3><span class="ex-tags"></span></div>
+        <p class="ex-why"></p>
+        <p class="lock-note"></p>
+        <div class="ex-body">
+          <p class="how">A slow do-mi-sol-do′ arpeggio on "nay", placed so the top crosses your break. Keep it light and let your voice tip over at the top instead of pushing your chest voice up.</p>
+          <p class="small" id="br-note"></p>
+          <div class="pattern" id="br-chips" role="group" aria-label="Arpeggio notes"></div>
+          <div class="row"><button class="primary" id="br-play">Hear it</button><button id="br-sing" hidden>Sing it back</button><button class="ghost" id="br-replay" hidden>Hear this note again</button></div>
+          <div class="tuner" id="tuner-br" hidden>
+            <div class="tuner-top"><span class="tuner-note">–</span><span class="tuner-cents">Sing</span><span class="tuner-hint"></span></div>
+            <div class="tuner-bar" aria-hidden="true"><span class="z-close"></span><span class="z-on"></span><span class="center"></span><span class="needle"></span></div>
+            <div class="tuner-scale" aria-hidden="true"><span>♭ flat</span><span>on pitch</span><span>sharp ♯</span></div>
+            <div class="hold" aria-hidden="true"><span></span></div>
+          </div>
+          <p class="feedback" id="br-fb" role="status"></p>
+        </div>
+      </div>
+
+      <div class="drill" id="ex-agility" data-ex="agility">
+        <div class="ex-head"><h3>Agility run</h3><span class="ex-tags"></span></div>
+        <p class="ex-why"></p>
+        <p class="lock-note"></p>
+        <div class="ex-body">
+          <p class="how">Hear the run once at speed, then sing it back quickly and lightly. Each note only needs a quick, clean touch, so keep it small and easy.</p>
+          <div class="pattern" id="agility-chips" role="group" aria-label="Run notes"></div>
+          <div class="row"><button class="primary" id="agility-play">Hear the run</button><button id="agility-sing" hidden>Sing the run</button></div>
+          <div class="tuner" id="tuner-agility" hidden>
+            <div class="tuner-top"><span class="tuner-note">–</span><span class="tuner-cents">Sing</span><span class="tuner-hint"></span></div>
+            <div class="tuner-bar" aria-hidden="true"><span class="z-close"></span><span class="z-on"></span><span class="center"></span><span class="needle"></span></div>
+            <div class="tuner-scale" aria-hidden="true"><span>♭ flat</span><span>on pitch</span><span>sharp ♯</span></div>
+            <div class="hold" aria-hidden="true"><span></span></div>
+          </div>
+          <p class="feedback" id="agility-fb" role="status"></p>
+        </div>
+      </div>
+
+      <div class="drill" id="ex-song" data-ex="song">
+        <div class="ex-head"><h3>Song phrase</h3><span class="ex-tags"></span></div>
+        <p class="ex-why"></p>
+        <p class="lock-note"></p>
+        <div class="ex-body">
+          <p class="how">Hear the phrase, then sing it back on "la" or the words. The app follows along note by note. More songs open as you level up.</p>
+          <label class="inline" for="song-pick">Song <select id="song-pick"></select></label>
+          <p class="song-words" id="song-words"></p>
+          <div class="pattern" id="song-chips" role="group" aria-label="Melody notes"></div>
+          <div class="row"><button class="primary" id="song-play">Hear the phrase</button><button id="song-sing" hidden>Sing it</button></div>
+          <div class="tuner" id="tuner-song" hidden>
+            <div class="tuner-top"><span class="tuner-note">–</span><span class="tuner-cents">Sing</span><span class="tuner-hint"></span></div>
+            <div class="tuner-bar" aria-hidden="true"><span class="z-close"></span><span class="z-on"></span><span class="center"></span><span class="needle"></span></div>
+            <div class="tuner-scale" aria-hidden="true"><span>♭ flat</span><span>on pitch</span><span>sharp ♯</span></div>
+            <div class="hold" aria-hidden="true"><span></span></div>
+          </div>
+          <p class="feedback" id="song-fb" role="status"></p>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -1012,7 +1352,10 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       <h2 id="road-h">Your roadmap</h2>
       <p class="small" id="road-pos"></p>
     </div>
-    <p class="small" style="margin-top: 6px; max-width: 38em">What to expect with about 15 focused minutes a day, 5–6 days a week. These are typical timelines from voice teachers and practice data, not deadlines; everyone moves at their own pace. Goals check off automatically from your log.</p>
+    <p class="road-pace" id="road-pace"></p>
+    <div class="road-chart" id="road-chart"></div>
+    <p class="road-read" id="road-read"></p>
+    <p class="small" style="max-width: 38em">Typical timelines at about 15–20 focused minutes a day, 5 days a week, from voice teachers and practice data. Goals need both the practice days and a passing level check, so they only tick once your singing actually gets there.</p>
     <ol class="road-list" id="road-list"></ol>
   </section>
 
@@ -1070,9 +1413,10 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   const sylOf = d => DEG_SYL[d] || '';
   function defaultProfile() {
     return {
-      length: 11, warm: 'trill', vowel: 'ah', goal: 'fun', skip: {}, blind: false,
+      length: 35, warm: 'trill', vowel: 'ah', goal: 'fun', skip: {}, blind: false,
       level: 1, levelSince: null, strong: [], pattern: null,
       notes: {}, dir: { up: { n: 0, s: 0 }, down: { n: 0, s: 0 } }, habits: {}, flags: {},
+      weak: [], checks: [], levelLog: [], notice: null,
     };
   }
   function normProfile(p) {
@@ -1082,8 +1426,9 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     o.dir = { up: Object.assign({ n: 0, s: 0 }, p.dir && p.dir.up), down: Object.assign({ n: 0, s: 0 }, p.dir && p.dir.down) };
     ['notes', 'habits', 'flags', 'skip'].forEach(k => { o[k] = p[k] && typeof p[k] === 'object' ? p[k] : {}; });
     o.strong = Array.isArray(p.strong) ? p.strong : [];
+    ['weak', 'checks', 'levelLog', 'rangeHistory', 'topHits'].forEach(k => { o[k] = Array.isArray(p[k]) ? p[k] : []; });
     o.level = Math.max(1, Math.min(5, Number(p.level) || 1));
-    if (![5, 11, 20].includes(Number(o.length))) o.length = 11;
+    if (![15, 35, 45].includes(Number(o.length))) o.length = 35;
     o.length = Number(o.length);
     return o;
   }
@@ -1893,7 +2238,9 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     const s = arr.slice().sort((a, b) => a - b);
     return s[Math.floor(s.length / 2)];
   };
-  const MIC_FAIL = "Couldn't turn on the mic. Allow microphone access for this site in your browser settings, then try again.";
+  const MIC_FAIL_TEXT = "Couldn't turn on the mic. Allow microphone access for this site in your browser settings, then try again.";
+  let micErr = MIC_FAIL_TEXT;
+  const micFailMsg = () => micErr;
   function setMicStatus(text, isErr) {
     const el = $('#mic-status');
     el.textContent = text || '';
@@ -1905,6 +2252,15 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     if (!Mic.on) $('#mic-level').style.width = '0';
   }
   async function micStart() {
+    if (overLimit()) {
+      micErr = dayMode() === 'rest'
+        ? 'Rest day: you reported hoarseness or pain, so singing is off today. Try the interval quiz and silent breath work instead.'
+        : 'You\'ve reached today\'s practice max (' + maxMin() + ' min). Rest your voice; mic exercises open again tomorrow.';
+      setMicStatus(micErr, true);
+      renderPracticeTime();
+      return false;
+    }
+    micErr = MIC_FAIL_TEXT;
     if (Mic.on) return true;
     if (!Mic.available) return false;
     const c = ac();
@@ -1918,13 +2274,14 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       Mic.src.connect(Mic.an);
       Mic.buf = new Float32Array(Mic.an.fftSize);
       Mic.hist = [];
+      Mic.lastT = 0;
       Mic.on = true;
       setMicStatus('');
       renderMicUI();
       Mic.raf = requestAnimationFrame(micLoop);
       return true;
     } catch (e) {
-      setMicStatus(MIC_FAIL, true);
+      setMicStatus(micFailMsg(), true);
       return false;
     }
   }
@@ -1949,6 +2306,9 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     $('#mic-level').style.width = pct;
     $('#chip-level').style.width = pct;
     if (Mic.consumer) Mic.consumer.frame(f);
+    const dtl = Mic.lastT ? Math.min(0.1, f.t - Mic.lastT) : 0;
+    Mic.lastT = f.t;
+    if (Mic.consumer && Mic.on) addPracticeTime(dtl);
     Mic.raf = requestAnimationFrame(micLoop);
   }
   function micFrame() {
@@ -2051,7 +2411,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     st.classList.remove('err');
     if (!(await micStart())) {
       st.classList.add('err');
-      st.textContent = MIC_FAIL;
+      st.textContent = micFailMsg();
       return;
     }
     stopAll();
@@ -2392,7 +2752,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     };
     async function toggle() {
       if (Mic.consumer === consumer) { setConsumer(null); return; }
-      if (!(await micStart())) { fb('bad', MIC_FAIL); return; }
+      if (!(await micStart())) { fb('bad', micFailMsg()); return; }
       stopAll();
       s.trace = [];
       s.dbs = [];
@@ -2489,7 +2849,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   };
   async function matchCheckToggle() {
     if (Mic.consumer === matchConsumer) { setConsumer(null); return; }
-    if (!(await micStart())) { tunerMi.show(true); tunerMi.render({ target: curMatchMidi(), dev: null, msg: MIC_FAIL }); return; }
+    if (!(await micStart())) { tunerMi.show(true); tunerMi.render({ target: curMatchMidi(), dev: null, msg: micFailMsg() }); return; }
     if (match.matched.size >= matchNotes().length) { match.matched.clear(); markMatchedPills(); }
     Object.assign(match, { hold: 0, last: 0, pauseUntil: 0, at: makeAttempt(), prev: null, holdDevs: [] });
     setConsumer(matchConsumer);
@@ -2513,7 +2873,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   const flatSharp = v => Math.abs(Math.round(v)) + '¢ ' + (v < 0 ? 'flat' : 'sharp');
 
   // ----- range fit -----
-  const rangeTop = () => (state.voice ? state.voice.high : null);
+  const rangeTop = () => (state.voice ? (P().top != null ? P().top : state.voice.high) : null);
   const rangeLow = () => (state.voice ? state.voice.low : null);
   function matchNotes() {
     const top = rangeTop();
@@ -2560,29 +2920,6 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   }
   const curPattern = () => PATTERNS[curPatternId()];
   function strongDays() { return [...new Set(P().strong)]; }
-  function logStrong() {
-    const k = todayKey();
-    if (!P().strong.includes(k)) {
-      P().strong.push(k);
-      P().strong = P().strong.slice(-20);
-      saveSettings();
-    }
-    renderCoach();
-  }
-  function levelUp() {
-    if (P().level >= 5) return;
-    P().level++;
-    P().strong = [];
-    P().pattern = null;
-    P().levelSince = todayKey();
-    state.scaleShift = 0;
-    match.matched.clear();
-    saveSettings();
-    renderAll();
-    const fb = $('#lvl-note');
-    fb.textContent = 'Welcome to Level ' + P().level + ': ' + lv().name + '. ' + LEVEL_UNLOCKS[P().level];
-  }
-
   // ----- per-note stats and habits -----
   function makeAttempt() {
     return { devs: [], gap: 1, onset: null, onsets: 0, scoops: 0 };
@@ -2634,6 +2971,13 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       s.a = Math.round((s.a + (meanAbs - s.a) * al) * 10) / 10;
       s.n++;
       if (ok) s.ok++;
+      const dk = todayKey();
+      const dd = dayOf(dk);
+      dd.nerr = dd.nerr || {};
+      const ne = dd.nerr[key] || (dd.nerr[key] = [0, 0]);
+      ne[0] = Math.round(ne[0] + meanAbs);
+      ne[1]++;
+      saveDay(dk);
       if (prevMidi != null && Math.round(prevMidi) !== Math.round(midi)) {
         out.dir = midi > prevMidi ? 'up' : 'down';
         const d = P().dir[out.dir];
@@ -2686,11 +3030,13 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     function playTarget() {
       const n = o.notes()[r.idx];
       if (!n) return;
-      playNote(n.midi, 1.3);
+      let dur = 1.3;
+      if (o.cue) { dur = o.cue(n); r.pauseUntil = AC.currentTime + dur + 0.05; }
+      else playNote(n.midi, 1.3);
       r.el = 0;
       r.hold = 0;
       const c = chipsAll()[r.idx];
-      if (c) { c.classList.add('lit'); seqTimers.push(setTimeout(() => c.classList.remove('lit'), 1300)); }
+      if (c) { c.classList.add('lit'); seqTimers.push(setTimeout(() => c.classList.remove('lit'), dur * 1000)); }
     }
     const consumer = {
       frame(f) {
@@ -2745,7 +3091,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       },
     };
     function next(result, target) {
-      const att = finishAttempt(r.at, target, result !== 'miss', r.prev, r.holdDevs);
+      const att = finishAttempt(r.at, target, result !== 'miss', o.prevOf ? o.prevOf(r.idx) : r.prev, r.holdDevs);
       r.tips.onsets += att.onsets;
       r.tips.scoops += att.scoops;
       if (att.wobble) r.tips.wobbles++;
@@ -2761,6 +3107,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       r.holdDevs = [];
       r.el = 0;
       r.at = makeAttempt();
+      if (!o.perNote) r.at.gap = 0; // moving straight to the next note isn't a new onset
       if (r.idx >= notes.length) { finish(); return; }
       mark();
       if (o.perNote) {
@@ -2780,13 +3127,16 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
         avgMiss: r.voiced ? Math.round(r.miss / r.voiced) : null,
         voicedSec: r.voicedSec,
         tips: runTips(r.tips),
+        scoops: r.tips.scoops,
+        onsets: r.tips.onsets,
+        results: r.results.slice(),
       };
       setConsumer(null);
       o.onFinish(res);
     }
     async function toggle() {
       if (Mic.consumer === consumer) { setConsumer(null); return; }
-      if (!(await micStart())) { o.fb.className = 'feedback bad'; o.fb.textContent = MIC_FAIL; return; }
+      if (!(await micStart())) { o.fb.className = 'feedback bad'; o.fb.textContent = micFailMsg(); return; }
       stopAll();
       Object.assign(r, { idx: 0, hold: 0, devs: [], holdDevs: [], el: 0, last: 0, results: [], voiced: 0, on: 0, miss: 0, voicedSec: 0, pauseUntil: 0, at: makeAttempt(), prev: null, tips: { onsets: 0, scoops: 0, wobbles: 0, rise: [], fall: [], topMiss: false } });
       o.fb.textContent = '';
@@ -2845,6 +3195,8 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       if (d.scalePct == null || pct > d.scalePct) { d.scalePct = pct; saveDay(k); renderTrends(); }
       if (res.onPct != null) recordTake({ voicedSec: res.voicedSec, onPct: res.onPct, avgMiss: res.avgMiss });
       if (strong) logStrong();
+      else if (res.on < res.n * 0.4) logWeak();
+      else logOk();
       renderCoach();
       renderRoadmap();
     },
@@ -2870,6 +3222,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       const hit = res.on + res.close;
       const ok = hit >= Math.ceil(res.n * 0.8);
       drillFeedback($('#agility-fb'), hit + ' of ' + res.n + ' notes touched. ' + (ok ? 'Quick and clean. Try it faster in your head next time.' : 'Keep it light and small; agility comes from less effort, not more.'), res, ok ? 'ok' : 'meh');
+      exDone('agility', Math.round((100 * hit) / res.n));
       if (ok) logStrong();
     },
   });
@@ -2904,6 +3257,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     onFinish(res) {
       const ok = res.on >= Math.ceil(res.n * 0.6);
       drillFeedback($('#focus-fb'), res.on + ' of ' + res.n + ' landed on pitch. ' + (ok ? 'Those notes are getting stronger.' : 'Keep drilling these. Weak notes usually come around in a week or two.'), res, ok ? 'ok' : 'meh');
+      exDone('weak', Math.round((100 * res.on) / res.n));
       renderCoach();
     },
   });
@@ -3055,13 +3409,14 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     const k = todayKey();
     const d = dayOf(k);
     if (d.swell == null || score > d.swell) { d.swell = score; saveDay(k); renderTrends(); }
+    exDone('swell', score);
     if (score >= 70) logStrong();
     renderRoadmap();
   }
   async function swellToggle() {
     if (Mic.consumer === swellConsumer) { setConsumer(null); return; }
     const fb = $('#swell-fb');
-    if (!(await micStart())) { fb.className = 'feedback bad'; fb.textContent = MIC_FAIL; return; }
+    if (!(await micStart())) { fb.className = 'feedback bad'; fb.textContent = micFailMsg(); return; }
     stopAll();
     fb.textContent = '';
     playNote(swellMidi(), 1.4);
@@ -3075,14 +3430,1397 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     drawSwell();
   }
 
+  // ----- practice time: recommended amount and a daily maximum -----
+  // Beginners: about 15 minutes a day, 30 at most; more as the voice gets conditioned.
+  const PT = { acc: 0, cont: 0, lastActive: 0, lastRender: 0 };
+  const todayMins = () => { const d = peekDay(todayKey()); return (d && d.mins) || 0; };
+  const minsNow = () => todayMins() + PT.acc / 60;
+  const overLimit = () => minsNow() >= maxMin();
+  function flushPracticeTime() {
+    if (PT.acc <= 0) return;
+    const k = todayKey();
+    const d = dayOf(k);
+    d.mins = Math.round(((d.mins || 0) + PT.acc / 60) * 10) / 10;
+    PT.acc = 0;
+    saveDay(k);
+  }
+  function addPracticeTime(dt) {
+    if (document.hidden || dt <= 0) return;
+    const now = performance.now() / 1000;
+    if (now - PT.lastActive > 300) PT.cont = 0; // 5 quiet minutes counts as a break
+    PT.lastActive = now;
+    PT.cont += dt;
+    PT.acc += dt;
+    if (PT.acc >= 20) flushPracticeTime();
+    if (now - PT.lastRender > 1) { PT.lastRender = now; renderPracticeTime(); }
+    if (minsNow() >= maxMin() + 1) { // a minute of grace to finish the exercise in progress
+      flushPracticeTime();
+      micStop();
+      renderCoach();
+    }
+  }
+  // ----- automatic level changes -----
+  function setNotice(text) { P().notice = { date: todayKey(), text }; }
+  function logLevel() {
+    P().levelLog.push({ day: practiceDays(), date: todayKey(), level: P().level });
+    P().levelLog = P().levelLog.slice(-60);
+  }
+  function changeLevel(to, why) {
+    to = Math.max(1, Math.min(5, to));
+    const from = P().level;
+    if (to === from) return;
+    Object.assign(P(), { level: to, strong: [], weak: [], pattern: null, levelSince: todayKey() });
+    state.scaleShift = 0;
+    match.matched.clear();
+    logLevel();
+    setNotice(why || (to > from
+      ? 'You moved up to Level ' + to + ': ' + LEVELS[to].name + '. ' + (LEVEL_UNLOCKS[to] || '')
+      : 'Moved to Level ' + to + ' for now.'));
+    saveSettings();
+    renderAll();
+  }
+  function logStrong() {
+    const k = todayKey();
+    P().weak = [];
+    if (!P().strong.includes(k)) {
+      P().strong.push(k);
+      P().strong = P().strong.slice(-20);
+      saveSettings();
+    }
+    if (P().level < 5 && strongDays().length >= 3) { changeLevel(P().level + 1); return; }
+    renderCoach();
+  }
+  function logWeak() {
+    const w = P().weak;
+    w.push(todayKey());
+    P().weak = w.slice(-8);
+    saveSettings();
+    const last4 = P().weak.slice(-4);
+    if (P().level > 1 && last4.length >= 4 && new Set(last4).size >= 2) {
+      const to = P().level - 1;
+      changeLevel(to, 'Moved to Level ' + to + ' for now. Your last few sing-backs were tough at ±' + lv().tol + '¢, so the target loosens while you rebuild. You\'ll move back up automatically.');
+      return;
+    }
+    renderCoach();
+  }
+  function logOk() {
+    if (P().weak.length) { P().weak = []; saveSettings(); }
+  }
+
+  // ----- level check: placement from how you actually sing -----
+  // Average cents off after each note settles. In research pitch-matching tests, staying
+  // within ±50¢ counts as accurate and untrained adults average about 90¢ off.
+  const LC_REQ = {
+    2: { match: 50, landed: 4 },
+    3: { match: 30, leap: 40, sd: 25, range: 12 },
+    4: { match: 20, leap: 28, sd: 18, range: 15 },
+    5: { match: 12, leap: 18, sd: 12, range: 18, run: 7 },
+  };
+  const meanOf = a => (a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0);
+  const LC = { phase: null, items: [], idx: 0, listenAt: Infinity, t0: 0, last: 0, buf: [], run: 0, voicedT: 0, held: [], skip: 0, res: null, timers: [] };
+  function lcBase() {
+    const top = rangeTop();
+    const shift = top != null ? Math.max(0, state.home + 7 - (top - 1)) : 0;
+    return state.home - shift;
+  }
+  function lcSet(step, instr) { $('#lc-step').textContent = step; $('#lc-instr').textContent = instr; }
+  function lcHint(t) { $('#lc-hint').textContent = t; }
+  function lcLater(fn, ms) { LC.timers.push(setTimeout(() => { if (LC.phase) fn(); }, ms)); }
+  function renderLcDots(lit) {
+    const host = $('#lc-dots');
+    host.innerHTML = '';
+    LC.items.forEach((m, i) => {
+      const cls = 'lc-dot' + (i < LC.idx ? ' done' : '') + (i === LC.idx && LC.listenAt !== Infinity ? ' cur' : '') + (i === lit ? ' lit' : '');
+      host.appendChild(el('span', cls));
+    });
+  }
+  function lcPart(id) {
+    Object.assign(LC, { phase: id, idx: 0, buf: [], run: 0, voicedT: 0, held: [], skip: 0, listenAt: Infinity });
+    const b = lcBase();
+    const vw = vowelWord();
+    if (id === 'match') {
+      LC.items = [0, 4, 7, 2, 5].map(d => b + d);
+      lcSet('Part 1 of 3 · Match notes', 'You\'ll hear 5 notes, one at a time. After each one, sing it back on ' + vw + ' and hold it for about 2 seconds. There\'s no needle this time: the check measures your ear on its own.');
+      lcPlayItem();
+    } else if (id === 'leap') {
+      LC.items = [0, 4, 7, 4, 0].map(d => b + d);
+      lcSet('Part 2 of 3 · Sing it back', 'You\'ll hear a 5-note pattern once. Then sing the whole thing back from memory on ' + vw + ', holding each note about a second.');
+      lcPlaySeq(0.75);
+    } else if (id === 'hold') {
+      LC.items = [b + 2];
+      lcSet('Part 3 of 3 · Hold a note', 'Sing this note on ' + vw + ' and hold it as steadily as you can for 5 seconds.');
+      lcPlayItem();
+    } else if (id === 'run') {
+      LC.items = [0, 2, 4, 5, 7, 5, 4, 2, 0].map(d => b + d);
+      lcSet('Bonus · Quick run', 'You qualified for the bonus round. Hear 9 fast notes once, then sing them right back, quickly and lightly.');
+      lcPlaySeq(0.3);
+    }
+  }
+  function lcPlayItem() {
+    const m = LC.items[LC.idx];
+    playNote(m, 1.2);
+    $('#lc-target').textContent = noteName(m);
+    lcHint('Listen…');
+    LC.listenAt = AC.currentTime + 1.3;
+    LC.t0 = LC.listenAt;
+    renderLcDots();
+  }
+  function lcPlaySeq(step) {
+    $('#lc-target').textContent = '♪';
+    lcHint('Listen to the whole pattern…');
+    LC.listenAt = Infinity;
+    renderLcDots();
+    playSeq(LC.items, step, i => { if (LC.phase) renderLcDots(i); });
+    lcLater(() => {
+      LC.listenAt = AC.currentTime;
+      LC.t0 = LC.listenAt;
+      $('#lc-target').textContent = noteName(LC.items[0]);
+      lcHint('Your turn: sing it back on ' + vowelWord() + '.');
+      renderLcDots();
+    }, (0.05 + LC.items.length * step) * 1000 + 250);
+  }
+  function holdStats(pts) {
+    const w = pts.filter(p => p.t >= 1 && p.t <= 4.5);
+    if (w.length < 30) return { sd: 60, drift: null };
+    // Average over 0.3 s first, so natural vibrato doesn't count as wobble.
+    const sm = w.map(p => meanOf(w.filter(q => Math.abs(q.t - p.t) <= 0.15).map(q => q.dev)));
+    const m = meanOf(sm);
+    const sd = Math.sqrt(meanOf(sm.map(v => (v - m) * (v - m))));
+    const first = meanOf(w.filter(p => p.t < 2).map(p => p.dev));
+    const lastv = meanOf(w.filter(p => p.t > 3.5).map(p => p.dev));
+    return { sd, drift: lastv - first };
+  }
+  const lcConsumer = {
+    frame(f) {
+      const dt = LC.last ? Math.min(0.1, f.t - LC.last) : 0;
+      LC.last = f.t;
+      $('#lc-lvl').style.width = (f.midi != null ? Math.max(8, Math.min(100, ((f.db + 60) / 50) * 100)) : 0) + '%';
+      if (!LC.phase || f.blocked || f.t < LC.listenAt) return;
+      const target = LC.items[LC.idx];
+      if (target == null) return;
+      const dev = f.midi != null ? foldTo(f.midi, target).dev : null;
+      const since = f.t - LC.t0;
+      if (LC.phase === 'match') {
+        if (dev != null) {
+          LC.run += dt;
+          if (LC.run > 0.4) { LC.buf.push(Math.min(150, Math.abs(dev))); LC.voicedT += dt; } // skip the onset
+        } else LC.run = 0;
+        lcHint(dev != null ? 'Listening… keep holding' : 'Sing it back on ' + vowelWord());
+        if (LC.voicedT >= 1.6 || since > 7) {
+          LC.res.match.push(LC.voicedT >= 0.5 ? meanOf(LC.buf) : 100);
+          lcNext();
+        }
+      } else if (LC.phase === 'leap') {
+        if (dev != null && Math.abs(dev) <= 150) {
+          LC.run += dt;
+          if (LC.run > 0.1) { LC.buf.push(Math.abs(dev)); LC.voicedT += dt; }
+        } else LC.run = 0;
+        if (LC.voicedT >= 0.35 || since > (LC.idx ? 4 : 6)) {
+          LC.res.leap.push(LC.voicedT >= 0.15 ? meanOf(LC.buf) : 100);
+          lcNext();
+        }
+      } else if (LC.phase === 'hold') {
+        if (dev != null && Math.abs(dev) < 200) { LC.voicedT += dt; LC.held.push({ t: LC.voicedT, dev }); }
+        lcHint(dev != null ? 'Hold it… ' + Math.min(5, LC.voicedT).toFixed(1) + ' / 5 s' : 'Sing ' + noteName(target) + ' and hold it');
+        if (LC.voicedT >= 5 || since > 10) {
+          LC.res.hold = holdStats(LC.held);
+          lcNext();
+        }
+      } else if (LC.phase === 'run') {
+        if (dev != null && Math.abs(dev) <= 70) {
+          LC.run += dt;
+          if (LC.run >= 0.08) { LC.res.runHit++; lcNext(); return; }
+        } else {
+          LC.run = 0;
+          const nx = LC.items[LC.idx + 1];
+          if (f.midi != null && nx != null && Math.abs(foldTo(f.midi, nx).dev) <= 70) {
+            LC.skip += dt;
+            if (LC.skip >= 0.08) { LC.idx++; LC.res.runHit++; lcNext(); return; }
+          } else LC.skip = 0;
+        }
+        if (f.t - LC.listenAt > 7) { LC.idx = LC.items.length; lcPartDone(); }
+      }
+    },
+    onStop() { if (LC.phase) lcAbort(); },
+  };
+  function lcNext() {
+    Object.assign(LC, { idx: LC.idx + 1, buf: [], run: 0, voicedT: 0, skip: 0 });
+    if (LC.idx >= LC.items.length) { lcPartDone(); return; }
+    if (LC.phase === 'match') {
+      LC.listenAt = Infinity;
+      lcHint('Got it.');
+      renderLcDots();
+      lcLater(lcPlayItem, 500);
+    } else {
+      LC.t0 = AC.currentTime;
+      $('#lc-target').textContent = noteName(LC.items[LC.idx]);
+      renderLcDots();
+    }
+  }
+  function lcPartDone() {
+    LC.listenAt = Infinity;
+    renderLcDots();
+    const ph = LC.phase;
+    if (ph === 'match') { lcHint('Part 1 done.'); lcLater(() => lcPart('leap'), 900); }
+    else if (ph === 'leap') { lcHint('Part 2 done.'); lcLater(() => lcPart('hold'), 900); }
+    else if (ph === 'hold') {
+      if (placeLevel(lcMetrics()) >= 4) { lcHint('Strong control. One bonus round.'); lcLater(() => lcPart('run'), 1200); }
+      else lcFinish();
+    } else if (ph === 'run') { LC.res.runDone = true; lcFinish(); }
+  }
+  function lcMetrics() {
+    const r = LC.res;
+    return {
+      match: Math.round(meanOf(r.match)),
+      landed: r.match.filter(e => e <= 50).length,
+      leap: r.leap.length ? Math.round(meanOf(r.leap)) : 100,
+      sd: r.hold ? Math.round(r.hold.sd) : 60,
+      drift: r.hold && r.hold.drift != null ? Math.round(r.hold.drift) : null,
+      run: r.runDone ? r.runHit : null,
+      range: state.voice ? state.voice.high - state.voice.low : null,
+    };
+  }
+  function lcFails(m, L) {
+    const q = LC_REQ[L], fails = [];
+    if (q.match != null && m.match > q.match) fails.push('match');
+    if (q.landed != null && m.landed < q.landed) fails.push('landed');
+    if (q.leap != null && m.leap > q.leap) fails.push('leap');
+    if (q.sd != null && m.sd > q.sd) fails.push('sd');
+    if (q.range != null && m.range != null && m.range < q.range) fails.push('range');
+    if (q.run != null && (m.run == null || m.run < q.run)) fails.push('run');
+    return fails;
+  }
+  function placeLevel(m) {
+    let lvl = 1;
+    for (let L = 2; L <= 5; L++) {
+      if (lcFails(m, L).length) break;
+      lvl = L;
+    }
+    return lvl;
+  }
+  function metricLevel(key, m) {
+    if (m[key] == null) return null;
+    let best = 1;
+    for (let L = 2; L <= 5; L++) {
+      const q = LC_REQ[L][key];
+      if (q == null) continue;
+      const ok = key === 'run' || key === 'range' ? m[key] >= q : m[key] <= q;
+      if (!ok) break;
+      best = L;
+    }
+    return best;
+  }
+  function lcFixText(key, q, m) {
+    switch (key) {
+      case 'match': return 'match single notes within ' + q + '¢ on average (now ' + m.match + '¢)';
+      case 'landed': return 'land at least ' + q + ' of 5 notes within 50¢ (now ' + m.landed + ')';
+      case 'leap': return 'sing the pattern back within ' + q + '¢ (now ' + m.leap + '¢)';
+      case 'sd': return 'hold notes steadier, under ' + q + '¢ of wobble (now ' + m.sd + '¢)';
+      case 'range': return 'widen your range to ' + q + ' half steps (now ' + m.range + ')';
+      case 'run': return 'touch ' + q + ' of 9 notes in the quick run' + (m.run == null ? '' : ' (now ' + m.run + ')');
+      default: return '';
+    }
+  }
+  const LC_ROWS = [
+    { key: 'match', name: 'Matching single notes', fmt: m => m.match + '¢ average miss · ' + m.landed + ' of 5 within 50¢' },
+    { key: 'leap', name: 'Singing a pattern from memory', fmt: m => m.leap + '¢ average miss' },
+    { key: 'sd', name: 'Holding a note steady', fmt: m => m.sd + '¢ wobble' },
+    { key: 'range', name: 'Range', fmt: m => (m.range == null ? 'Take the voice type test to include this' : m.range + ' half steps') },
+    { key: 'run', name: 'Quick run', fmt: m => (m.run == null ? 'Bonus round opens at Level 4 caliber' : m.run + ' of 9 notes') },
+  ];
+  async function lcStart() {
+    const host = $('#lc-result');
+    if (!(await micStart())) {
+      host.hidden = false;
+      host.innerHTML = '';
+      host.appendChild(el('p', 'status err', micFailMsg()));
+      return;
+    }
+    stopAll();
+    LC.timers.forEach(clearTimeout);
+    LC.timers = [];
+    LC.res = { match: [], leap: [], hold: null, runHit: 0, runDone: false };
+    LC.last = 0;
+    host.hidden = true;
+    $('#lc').hidden = false;
+    $('#lc-start').hidden = true;
+    LC.phase = 'starting';
+    setConsumer(lcConsumer);
+    lcPart('match');
+  }
+  function lcAbort() {
+    LC.timers.forEach(clearTimeout);
+    LC.timers = [];
+    LC.phase = null;
+    stopAll();
+    $('#lc').hidden = true;
+    lcHint('');
+    renderLevelUI();
+  }
+  function lcFinish() {
+    const m = lcMetrics();
+    const placed = placeLevel(m);
+    const prev = P().level;
+    LC.timers.forEach(clearTimeout);
+    LC.timers = [];
+    LC.phase = null;
+    setConsumer(null);
+    $('#lc').hidden = true;
+    P().checks.push({ date: todayKey(), level: placed, match: m.match, landed: m.landed, leap: m.leap, sd: m.sd, run: m.run, range: m.range });
+    P().checks = P().checks.slice(-24);
+    const k = todayKey();
+    dayOf(k).checkMiss = m.match;
+    saveDay(k);
+    if (placed !== prev) changeLevel(placed, 'Level check: you\'re at Level ' + placed + ', ' + LEVELS[placed].name + '.');
+    else {
+      logLevel();
+      setNotice('Level check confirmed Level ' + placed + ', ' + LEVELS[placed].name + '.');
+      saveSettings();
+      renderAll();
+    }
+    renderLcResult(m, placed, prev);
+  }
+  function renderLcResult(m, placed, prev) {
+    const host = $('#lc-result');
+    host.hidden = false;
+    host.innerHTML = '';
+    host.appendChild(el('p', 'vt-step', 'Level check result'));
+    host.appendChild(el('div', 'vt-type', 'Level ' + placed + ' · ' + LEVELS[placed].name));
+    host.appendChild(el('p', 'vt-sub', placed > prev
+      ? 'Up from Level ' + prev + '. Your exercises and pitch target (±' + lv().tol + '¢) now match how you sing.'
+      : placed < prev
+        ? 'Down from Level ' + prev + ', so the pitch target (±' + lv().tol + '¢) fits where your voice is today. You\'ll move up automatically.'
+        : 'Same level as before. Pitch target: ±' + lv().tol + '¢.'));
+    const tbl = el('div', 'lc-table');
+    LC_ROWS.forEach(r => {
+      const row = el('div', 'lc-row');
+      row.appendChild(el('span', 'lc-name', r.name));
+      row.appendChild(el('span', 'lc-chip' + (metricLevel(r.key, m) == null ? ' none' : ''), metricLevel(r.key, m) == null ? '–' : 'Level ' + metricLevel(r.key, m)));
+      row.appendChild(el('span', 'lc-val', r.fmt(m)));
+      tbl.appendChild(row);
+    });
+    host.appendChild(tbl);
+    if (placed < 5) {
+      const nextL = placed + 1;
+      const fails = lcFails(m, nextL);
+      host.appendChild(el('p', 'small', 'To reach Level ' + nextL + ': ' + fails.map(key => lcFixText(key, LC_REQ[nextL][key], m)).join('; ') + '.'));
+    }
+    if (m.drift != null && Math.abs(m.drift) >= 20) {
+      host.appendChild(el('p', 'small', 'Your held note drifted ' + Math.abs(m.drift) + '¢ ' + (m.drift < 0 ? 'flat' : 'sharp') + ' by the end, usually a sign of breath support fading. The hiss rounds in do train exactly that.'));
+    }
+    host.appendChild(el('p', 'small muted', 'For reference: in research pitch-matching tests, untrained adults miss by about 90¢ on average, and staying within 50¢ counts as accurate singing. Your next check is due in 4 weeks.'));
+    const close = el('button', 'ghost', 'Close');
+    close.addEventListener('click', () => { host.hidden = true; });
+    host.appendChild(close);
+  }
+
+  // ----- exercise library -----
+  const LIB = {
+    posture: { title: 'Posture & release', min: 1, dur: '1 min', why: 'Tension in your jaw, neck, and shoulders pulls pitch and tone off before you sing a note.' },
+    staccato: { title: 'Clean onsets', min: 1, dur: '2 min', why: 'Short, bouncy notes train you to start right on pitch instead of scooping.' },
+    ngvowel: { title: 'Hum into a vowel', min: 1, dur: '2 min', why: 'Builds forward resonance and keeps your pitch still when your mouth opens.' },
+    interval: { title: 'Interval echo', min: 1, dur: '3 min', why: 'Ear training: hear a jump, then sing it. It\'s how you learn melodies by ear.' },
+    vowels: { title: 'Vowel tuning', min: 2, dur: '2 min', why: 'Most singers drift flat or sharp on certain vowels. This finds yours.' },
+    swell: { title: 'Hold & swell', min: 3, dur: '2 min', why: 'Steady pitch at any volume. A staple of classical training.' },
+    bridge: { title: 'Bridge the break', min: 3, dur: '3 min', why: 'Slow patterns through the spot where your voice flips, to blend your registers.' },
+    agility: { title: 'Agility run', min: 4, dur: '2 min', why: 'Quick, light runs for riffs and fast passages.' },
+    song: { title: 'Song phrase', min: 1, dur: '3 min', why: 'Apply it all to a real melody. Exercises only pay off in songs.' },
+    top: { title: 'Top-note check', min: 1, dur: '2 min', why: 'Grows your range safely: a new note unlocks only after your current top is easy and in tune.' },
+    quiz: { title: 'Interval quiz', min: 1, dur: '4 min', why: 'Ear training with no singing. Good on rest days, and it sharpens the ear you sing with.' },
+  };
+  function exDone(id, score) {
+    const k = todayKey();
+    const d = dayOf(k);
+    d.ex = d.ex || {};
+    if (d.ex[id] == null || score > d.ex[id]) d.ex[id] = score;
+    saveDay(k);
+    renderLibrary(false, true);
+    renderPicks();
+  }
+  function brkNote() {
+    const v = state.voice;
+    if (!v) return null;
+    if (v.brk != null) return v.brk;
+    const T = VOICE_TYPES.find(t => t.name === v.type);
+    return T ? Math.round(T.flip) : null;
+  }
+  function playStaccato(midis, step, onStep) {
+    const c = ac();
+    if (!c) return;
+    stopAll();
+    const t0 = c.currentTime + 0.05;
+    midis.forEach((m, i) => {
+      envelope(makeVoice(c, hz(m)), t0 + i * step, 0.2, 0.22);
+      seqTimers.push(setTimeout(() => onStep && onStep(i), (0.05 + i * step) * 1000));
+    });
+    seqTimers.push(setTimeout(() => onStep && onStep(-1), (0.05 + midis.length * step) * 1000));
+  }
+  function chipRow(hostSel, notes, onTap) {
+    const host = $(hostSel);
+    host.innerHTML = '';
+    notes.forEach((n, i) => {
+      const b = el('button', 'pc', n.label);
+      b.type = 'button';
+      b.addEventListener('click', () => onTap(n, i, b));
+      host.appendChild(b);
+    });
+  }
+  const litFn = sel => i => document.querySelectorAll(sel + ' .pc').forEach((c, j) => c.classList.toggle('lit', j === i));
+  const tapPlay = (n, i, b) => {
+    playNote(n.midi, 1.1);
+    b.classList.add('lit');
+    seqTimers.push(setTimeout(() => b.classList.remove('lit'), 1100));
+  };
+
+  // posture & release: a guided minute, no mic needed
+  const post = { timer: 0, t0: 0 };
+  function postureToggle() {
+    const steps = document.querySelectorAll('#post-steps li');
+    if (post.timer) {
+      clearInterval(post.timer);
+      post.timer = 0;
+      steps.forEach(li => li.classList.remove('cur'));
+      $('#post-btn').textContent = 'Start 1-minute release';
+      $('#post-time').textContent = '';
+      return;
+    }
+    post.t0 = performance.now();
+    $('#post-btn').textContent = 'Stop';
+    const tick = () => {
+      const t = (performance.now() - post.t0) / 1000;
+      const i = Math.min(steps.length - 1, Math.floor(t / 10));
+      steps.forEach((li, j) => { li.classList.toggle('cur', j === i); li.classList.toggle('done', j < i); });
+      $('#post-time').textContent = Math.max(0, Math.ceil(60 - t)) + ' s';
+      if (t >= 60) {
+        clearInterval(post.timer);
+        post.timer = 0;
+        steps.forEach(li => { li.classList.remove('cur'); li.classList.add('done'); });
+        $('#post-btn').textContent = 'Start 1-minute release';
+        $('#post-time').textContent = 'Done. Loose and ready.';
+        exDone('posture', 100);
+      }
+    };
+    tick();
+    post.timer = setInterval(tick, 250);
+  }
+
+  // clean onsets (staccato)
+  const STAC = [0, 4, 7, 4, 0];
+  const stacNotes = () => STAC.map(d => ({ midi: state.home + d, label: sylOf(d) + ' ' + noteName(state.home + d) }));
+  function playStac() { playStaccato(stacNotes().map(n => n.midi), 0.5, litFn('#stac-chips')); }
+  const stacDrill = makeDrill({
+    tuner: makeTuner($('#tuner-stac')),
+    chips: () => $('#stac-chips'),
+    notes: stacNotes,
+    perNote: false,
+    hold: () => 0.15,
+    tol: () => Math.max(35, lv().tol * 1.4),
+    timeout: 4,
+    btn: $('#stac-sing'),
+    btnLabel: 'Sing it back',
+    fb: $('#stac-fb'),
+    intro() { playStac(); return STAC.length * 0.5 + 0.3; },
+    onFinish(res) {
+      const hit = res.on + res.close;
+      const clean = Math.max(0, res.onsets - res.scoops);
+      const good = hit >= 4 && res.scoops <= 1;
+      drillFeedback($('#stac-fb'), hit + ' of ' + res.n + ' notes on pitch · ' + clean + ' of ' + Math.max(res.onsets, clean) + ' clean starts. ' +
+        (good ? 'Crisp. That\'s a balanced onset.' : 'Think "ha" with a light puff of air, and land in the middle of each note right away.'), res, good ? 'ok' : 'meh');
+      exDone('staccato', Math.round((100 * hit) / res.n));
+    },
+  });
+
+  // generic "hold one note through changing segments" (hum→vowel, vowel tuning)
+  function smoothSd(pts) {
+    if (pts.length < 20) return null;
+    const sm = pts.map(p => meanOf(pts.filter(q => Math.abs(q.t - p.t) <= 0.15).map(q => q.dev)));
+    const m = meanOf(sm);
+    return Math.sqrt(meanOf(sm.map(v => (v - m) * (v - m))));
+  }
+  function makeSustain(o) {
+    const s = { listenAt: 0, last: 0, v: 0, pts: [] };
+    const total = () => o.segs.reduce((a, g) => a + g.secs, 0);
+    const segStart = i => o.segs.slice(0, i).reduce((a, g) => a + g.secs, 0);
+    const segAt = v => { for (let i = 0; i < o.segs.length; i++) if (v < segStart(i + 1)) return i; return o.segs.length - 1; };
+    const consumer = {
+      frame(f) {
+        const dt = s.last ? Math.min(0.1, f.t - s.last) : 0;
+        s.last = f.t;
+        const target = o.target();
+        if (f.t < s.listenAt || f.blocked) { o.tuner.render({ target, blocked: true, hold: 0, msg: 'Listen…' }); return; }
+        const i = segAt(s.v);
+        $(o.prompt).textContent = o.segs[i].label;
+        $(o.prog).style.width = Math.min(100, (s.v / total()) * 100) + '%';
+        if (f.midi != null) {
+          const { dev, oct } = foldTo(f.midi, target);
+          s.v += dt;
+          if (Math.abs(dev) < 200) s.pts.push({ t: s.v, seg: i, dev });
+          o.tuner.render({ target, dev, oct, sung: f.midi, hold: s.v / total(), msg: o.segs[i].cue });
+        } else {
+          o.tuner.render({ target, dev: null, hold: s.v / total(), msg: 'Sing ' + noteName(target) + ': ' + o.segs[i].cue });
+        }
+        if (s.v >= total() || f.t - s.listenAt > total() + 8) finish();
+      },
+      onStop() {
+        o.tuner.show(false);
+        micLabel(o.btn, o.btnLabel);
+        $(o.sus).hidden = true;
+      },
+    };
+    function finish() {
+      const segs = o.segs.map((g, i) => {
+        const st = segStart(i);
+        const d = s.pts.filter(p => p.seg === i && p.t >= st + 0.4).map(p => p.dev);
+        return { label: g.label, key: g.key, n: d.length, mean: d.length >= 10 ? meanOf(d) : null };
+      });
+      const sd = smoothSd(s.pts.filter(p => p.t >= 0.4));
+      const voiced = s.v;
+      setConsumer(null);
+      o.onFinish({ segs, sd, voiced });
+    }
+    async function toggle() {
+      if (Mic.consumer === consumer) { setConsumer(null); return; }
+      if (!(await micStart())) { o.fb.className = 'feedback bad'; o.fb.textContent = micFailMsg(); return; }
+      stopAll();
+      Object.assign(s, { v: 0, pts: [], last: 0 });
+      playNote(o.target(), 1.3);
+      s.listenAt = AC.currentTime + 1.35;
+      o.fb.textContent = '';
+      if (o.onStart) o.onStart();
+      $(o.sus).hidden = false;
+      $(o.prompt).textContent = o.segs[0].label;
+      $(o.prog).style.width = '0';
+      o.tuner.show(true);
+      o.btn.textContent = 'Stop';
+      setConsumer(consumer);
+    }
+    return { toggle };
+  }
+
+  // hum into a vowel
+  const ngvSus = makeSustain({
+    tuner: makeTuner($('#tuner-ngv')),
+    target: () => swellMidi(),
+    segs: [{ label: 'ng', secs: 2.2, cue: 'Hum "ng" with an easy buzz' }, { label: 'ahhh', secs: 2.2, cue: 'Open to "ahhh". Keep the pitch still' }],
+    btn: $('#ngv-sing'), btnLabel: 'Start', fb: $('#ngv-fb'),
+    sus: '#ngv-sus', prompt: '#ngv-prompt', prog: '#ngv-prog',
+    onFinish(r) {
+      const fb = $('#ngv-fb');
+      const [ng, ah] = r.segs;
+      if (ng.mean == null || ah.mean == null) {
+        fb.className = 'feedback bad';
+        fb.textContent = 'I didn\'t hear both parts. Hum for 2 seconds, then open to "ahhh" and keep going until the bar fills.';
+        return;
+      }
+      const shift = Math.round(ah.mean - ng.mean);
+      const tol = lv().tol;
+      const onPitch = Math.abs(ng.mean) <= tol && Math.abs(ah.mean) <= tol;
+      const smooth = Math.abs(shift) <= 15;
+      let msg = 'Hum ' + signedC(ng.mean) + ' → ahhh ' + signedC(ah.mean) + '. ';
+      msg += smooth ? 'Seamless: the pitch held when you opened.'
+        : shift > 0 ? 'Your pitch jumped up ' + shift + '¢ when you opened. Let only your mouth move and keep the same easy buzz.'
+          : 'Your pitch dropped ' + Math.abs(shift) + '¢ when you opened. Keep the brightness of the hum as the vowel opens.';
+      if (!onPitch) msg += ' Aim for the center of the note before you open.';
+      fb.className = 'feedback ' + (smooth && onPitch ? 'ok' : smooth || onPitch ? 'meh' : 'bad');
+      fb.textContent = msg;
+      exDone('ngvowel', smooth && onPitch ? 100 : smooth || onPitch ? 60 : 30);
+    },
+  });
+
+  // vowel tuning
+  function vowTarget() {
+    let m = state.home + 2;
+    const t = rangeTop();
+    if (t != null) m = Math.min(m, t - 3);
+    return m;
+  }
+  const VOW = [['ee', 'ee as in "see"'], ['eh', 'eh as in "bed"'], ['ah', 'ah as in "father"'], ['oh', 'oh as in "go"'], ['oo', 'oo as in "food"']];
+  const vowSus = makeSustain({
+    tuner: makeTuner($('#tuner-vow')),
+    target: () => vowTarget(),
+    segs: VOW.map(([k, cue]) => ({ label: k, key: k, secs: 1.8, cue: 'Now: ' + cue })),
+    btn: $('#vow-sing'), btnLabel: 'Start', fb: $('#vow-fb'),
+    sus: '#vow-sus', prompt: '#vow-prompt', prog: '#vow-prog',
+    onStart() { $('#vow-res').innerHTML = ''; },
+    onFinish(r) {
+      const fb = $('#vow-fb');
+      const host = $('#vow-res');
+      host.innerHTML = '';
+      const got = r.segs.filter(g => g.mean != null);
+      if (got.length < 4) {
+        fb.className = 'feedback bad';
+        fb.textContent = 'I didn\'t hear enough of each vowel. Hold the note the whole time and change vowels when the prompt changes.';
+        return;
+      }
+      const tol = lv().tol;
+      r.segs.forEach(g => {
+        const ok = g.mean != null && Math.abs(g.mean) <= tol;
+        host.appendChild(el('span', 'vchip ' + (g.mean == null ? 'v-early' : ok ? 'v-up' : 'v-down'), g.label + ' ' + (g.mean == null ? '–' : signedC(g.mean)) + (ok ? ' ✓' : '')));
+      });
+      const worst = got.slice().sort((a, b) => Math.abs(b.mean) - Math.abs(a.mean))[0];
+      const okN = got.filter(g => Math.abs(g.mean) <= tol).length;
+      const spread = Math.round(Math.max(...got.map(g => g.mean)) - Math.min(...got.map(g => g.mean)));
+      let tip;
+      if (Math.abs(worst.mean) <= tol) tip = 'Every vowel stayed in tune. The spread between them was only ' + spread + '¢.';
+      else if (worst.mean < 0 && ['oh', 'oo', 'ah'].includes(worst.key)) tip = '"' + worst.key + '" sagged ' + Math.abs(Math.round(worst.mean)) + '¢ flat. Darker vowels tend to drop; keep the same lift and brightness you have on "ee".';
+      else if (worst.mean > 0 && ['ee', 'eh'].includes(worst.key)) tip = '"' + worst.key + '" pushed ' + Math.round(worst.mean) + '¢ sharp. Bright vowels can get pinched; relax your tongue and keep it easy.';
+      else tip = '"' + worst.key + '" was ' + flatSharp(worst.mean) + '. Slow down on that vowel and listen for the note before you move on.';
+      fb.className = 'feedback ' + (okN >= 5 ? 'ok' : okN >= 3 ? 'meh' : 'bad');
+      fb.textContent = okN + ' of 5 vowels in tune. ' + tip;
+      exDone('vowels', Math.round((100 * okN) / 5));
+    },
+  });
+
+  // interval echo
+  const IV_NAMES = { 2: 'up a 2nd', 4: 'up a 3rd', 5: 'up a 4th', 7: 'up a 5th', 9: 'up a 6th', 12: 'up an octave', '-3': 'down a 3rd', '-5': 'down a 4th', '-7': 'down a 5th' };
+  function intervalSet() {
+    const L = P().level;
+    let iv = [2, 4];
+    if (L >= 2) iv = iv.concat([5, 7]);
+    if (L >= 3) iv = iv.concat([9, 12, -3, -5]);
+    if (L >= 4) iv = iv.concat([-7]);
+    return iv;
+  }
+  let ivList = [], ivRound = 0;
+  function buildIntervals() {
+    const set = intervalSet();
+    let seed = (dayNum(todayKey()) * 131 + ivRound++ * 17) % 2147483647 || 1;
+    const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+    const lo = rangeLow() != null ? rangeLow() : state.home - 3;
+    const hi = rangeTop() != null ? rangeTop() - 1 : state.home + 12;
+    ivList = [];
+    let last = null;
+    for (let i = 0; i < 5; i++) {
+      let iv = set[Math.floor(rnd() * set.length)];
+      if (iv === last && set.length > 1) iv = set[(set.indexOf(iv) + 1) % set.length];
+      last = iv;
+      let root = iv > 0 ? state.home + Math.floor(rnd() * 3) : state.home + 7;
+      if (root + iv > hi) root = hi - iv;
+      if (root + iv < lo) root = lo - iv;
+      if (root < lo) root = lo;
+      ivList.push({ root, midi: root + iv, iv, label: IV_NAMES[iv] });
+    }
+    chipRow('#iv-chips', ivList, n => playSeq([n.root, n.midi], 0.7));
+  }
+  const ivDrill = makeDrill({
+    tuner: makeTuner($('#tuner-iv')),
+    chips: () => $('#iv-chips'),
+    notes: () => ivList,
+    perNote: true,
+    cue(n) { playSeq([n.root, n.midi], 0.7); return 1.45; },
+    prevOf: i => (ivList[i] ? ivList[i].root : null),
+    hold: () => lv().land + 0.2,
+    timeout: 10,
+    btn: $('#iv-sing'),
+    btnLabel: 'Start 5 jumps',
+    replayBtn: $('#iv-replay'),
+    fb: $('#iv-fb'),
+    onFinish(res) {
+      const misses = ivList.filter((n, i) => res.results[i] === 'miss').map(n => n.label);
+      const hit = res.on + res.close;
+      const good = hit >= 4;
+      drillFeedback($('#iv-fb'), hit + ' of 5 jumps landed. ' + (good ? 'Strong ear.' : 'Hear the second note in your head before you sing it.') + (misses.length ? ' Missed: ' + misses.join(', ') + '.' : ''), res, good ? 'ok' : res.on + res.close >= 2 ? 'meh' : 'bad');
+      exDone('interval', Math.round((100 * hit) / 5));
+    },
+  });
+  function renderIvInfo() {
+    $('#iv-set').textContent = 'Your jumps at Level ' + P().level + ': ' + intervalSet().map(i => IV_NAMES[i]).join(', ') + '.';
+    if (!ivDrill.isActive() && (!ivList.length || ivList.level !== P().level)) { buildIntervals(); ivList.level = P().level; }
+  }
+
+  // bridge the break
+  const BR = [0, 4, 7, 12, 7, 4, 0];
+  function bridgeNotes() {
+    const brk = brkNote();
+    if (brk == null) return [];
+    let root = brk - 9;
+    const t = rangeTop(), l = rangeLow();
+    if (t != null && root + 12 > t) root = t - 12;
+    if (l != null && root < l) root = l;
+    return BR.map(d => ({ midi: root + d, label: (d === 12 ? 'do′' : sylOf(d)) + ' ' + noteName(root + d) }));
+  }
+  const brDrill = makeDrill({
+    tuner: makeTuner($('#tuner-br')),
+    chips: () => $('#br-chips'),
+    notes: bridgeNotes,
+    perNote: true,
+    hold: () => lv().land,
+    tol: () => Math.round(lv().tol * 1.3),
+    timeout: 10,
+    btn: $('#br-sing'),
+    btnLabel: 'Sing it back',
+    replayBtn: $('#br-replay'),
+    fb: $('#br-fb'),
+    onFinish(res) {
+      const topOk = res.results[3] && res.results[3] !== 'miss';
+      const hit = res.on + res.close;
+      drillFeedback($('#br-fb'), hit + ' of ' + res.n + ' notes landed' + (topOk ? ', including the top note across your break. ' : '. The top note across your break was the hard one. ') +
+        (topOk ? 'Now try it softer, so the switch is smooth instead of a jump.' : 'Lighten up as you climb and let your voice tip over; don\'t carry heavy chest voice up.'), res, topOk && hit >= 6 ? 'ok' : 'meh');
+      exDone('bridge', Math.round((100 * hit) / res.n));
+    },
+  });
+  function renderBridgeInfo() {
+    const brk = brkNote();
+    const v = state.voice;
+    $('#br-note').textContent = brk == null ? '' : (v && v.brk != null ? 'Your voice flipped near ' + noteName(brk) + ' in your voice test.' : 'Typical break for a ' + v.type.toLowerCase() + ': near ' + noteName(brk) + '. Take the voice test\'s break step to pin down yours.');
+    if (!brDrill.isActive()) chipRow('#br-chips', bridgeNotes(), tapPlay);
+  }
+
+  // song phrases (public-domain melodies)
+  const SONGS = [
+    { id: 'twinkle', title: 'Twinkle, Twinkle, Little Star', min: 1, notes: [0, 0, 7, 7, 9, 9, 7, 5, 5, 4, 4, 2, 2, 0], words: 'Twinkle, twinkle, little star, how I wonder what you are' },
+    { id: 'frere', title: 'Frère Jacques', min: 1, notes: [0, 2, 4, 0, 0, 2, 4, 0, 4, 5, 7, 4, 5, 7], words: 'Frère Jacques, Frère Jacques, dormez-vous? Dormez-vous?' },
+    { id: 'cucaracha', title: 'La Cucaracha', min: 1, notes: [-5, -5, -5, 0, 4, -5, -5, -5, 0, 4, 0, 0, -1, -1, -3, -3, -5], words: 'La cucaracha, la cucaracha, ya no puede caminar (Mexican folk song)' },
+    { id: 'ode', title: 'Ode to Joy', min: 2, notes: [4, 4, 5, 7, 7, 5, 4, 2, 0, 0, 2, 4, 4, 2, 2], words: 'Beethoven\'s melody. Sing it on "la".' },
+    { id: 'birthday', title: 'Happy Birthday', min: 3, notes: [-5, -5, -3, -5, 0, -1, -5, -5, -3, -5, 2, 0, -5, -5, 7, 4, 0, -1, -3, 5, 5, 4, 0, 2, 0], words: 'Happy birthday to you, happy birthday to you, happy birthday dear friend, happy birthday to you' },
+    { id: 'grace', title: 'Amazing Grace', min: 3, notes: [-5, 0, 4, 0, 4, 2, 0, -3, -5, -5, 0, 4, 0, 4, 2, 7], words: 'Amazing grace, how sweet the sound, that saved a wretch like me' },
+  ];
+  let songPick = null;
+  const songsOpen = () => SONGS.filter(g => g.min <= P().level);
+  function curSong() {
+    const open = songsOpen();
+    const g = open.find(x => x.id === songPick);
+    if (g) return g;
+    const top = rangeTop(), low = rangeLow();
+    const fit = open.filter(x => top == null || low == null || Math.max(...x.notes) - Math.min(...x.notes) <= top - 1 - low);
+    const pool = fit.length ? fit : open;
+    return pool[((dayNum(todayKey()) % pool.length) + pool.length) % pool.length];
+  }
+  function songBase(g) {
+    let base = state.home;
+    const lo = Math.min(...g.notes), hi = Math.max(...g.notes);
+    const t = rangeTop(), l = rangeLow();
+    if (l != null && base + lo < l) base = l - lo;
+    if (t != null && base + hi > t - 1) base = t - 1 - hi;
+    return base;
+  }
+  // The app follows pitch changes, so repeated notes count once.
+  function songNotes() {
+    const g = curSong(), base = songBase(g);
+    const out = [];
+    g.notes.forEach(d => { if (!out.length || out[out.length - 1].deg !== d) out.push({ deg: d, midi: base + d, label: noteName(base + d) }); });
+    return out;
+  }
+  function playSong() {
+    const g = curSong(), base = songBase(g);
+    const chips = document.querySelectorAll('#song-chips .pc');
+    const map = [];
+    let k = -1;
+    g.notes.forEach((d, i) => { if (i === 0 || g.notes[i - 1] !== d) k++; map.push(k); });
+    playSeq(g.notes.map(d => base + d), 0.5, i => chips.forEach((c, j) => c.classList.toggle('lit', i >= 0 && j === map[i])));
+    return g.notes.length * 0.5 + 0.3;
+  }
+  const songDrill = makeDrill({
+    tuner: makeTuner($('#tuner-song')),
+    chips: () => $('#song-chips'),
+    notes: songNotes,
+    perNote: false,
+    hold: () => 0.2,
+    tol: () => Math.max(35, Math.round(lv().tol * 1.5)),
+    timeout: 4,
+    btn: $('#song-sing'),
+    btnLabel: 'Sing it',
+    fb: $('#song-fb'),
+    intro() { return playSong(); },
+    onFinish(res) {
+      const hit = res.on + res.close;
+      const pct = Math.round((100 * res.on) / res.n);
+      drillFeedback($('#song-fb'), res.on + ' of ' + res.n + ' notes on pitch' + (res.close ? ', ' + res.close + ' close' : '') + ' in ' + curSong().title + '. ' +
+        (hit >= res.n * 0.85 ? 'That\'s singing, not just exercises. Try it again with more feeling.' : 'Listen once more, then sing it a little slower.'), res, hit >= res.n * 0.85 ? 'ok' : hit >= res.n / 2 ? 'meh' : 'bad');
+      const k = todayKey();
+      const d = dayOf(k);
+      if (d.song == null || pct > d.song) { d.song = pct; saveDay(k); renderTrends(); }
+      exDone('song', pct);
+    },
+  });
+  function renderSongUI() {
+    const sel = $('#song-pick');
+    const g = curSong();
+    sel.innerHTML = '';
+    SONGS.forEach(x => {
+      const opt = el('option', '', x.title + (x.min > P().level ? ' (Level ' + x.min + ')' : ''));
+      opt.value = x.id;
+      opt.disabled = x.min > P().level;
+      opt.selected = x.id === g.id;
+      sel.appendChild(opt);
+    });
+    $('#song-words').textContent = g.words;
+    if (!songDrill.isActive()) chipRow('#song-chips', songNotes(), tapPlay);
+  }
+
+  // coach picks: 1–3 a day depending on session length, aimed at weak spots
+  function renderPicks() { renderSession(); }
+  function renderLibrary(reorder, tagsOnly) {
+    const L = P().level;
+    const picks = coachPicks().map(x => x.id);
+    const d = peekDay(todayKey());
+    const done = (d && d.ex) || {};
+    let open = 0;
+    Object.keys(LIB).forEach(id => {
+      const card = $('#ex-' + id);
+      const lib = LIB[id];
+      const locked = lib.min > L;
+      const needVoice = (id === 'bridge' || id === 'top') && !locked && (!Mic.available || brkNote() == null);
+      card.classList.toggle('locked', locked || needVoice);
+      card.querySelector('.ex-why').textContent = lib.why;
+      card.querySelector('.lock-note').textContent = locked ? 'Opens at Level ' + lib.min + '.'
+        : needVoice ? (Mic.available ? 'Take the voice type test first, so the app knows where your break is.' : 'Needs the voice type test in the GitHub version.') : '';
+      const tags = card.querySelector('.ex-tags');
+      tags.innerHTML = '';
+      if (picks.includes(id) && !locked) tags.appendChild(el('span', 'tag tag-pick', 'Coach pick'));
+      if (done[id] != null) tags.appendChild(el('span', 'tag tag-done', '✓ Today'));
+      tags.appendChild(el('span', 'dur', lib.dur));
+      if (!locked && !needVoice) open++;
+    });
+    $('#lib-count').textContent = open + ' of ' + Object.keys(LIB).length + ' open';
+    if (tagsOnly) return;
+    if (reorder && !Mic.consumer) {
+      const list = $('#lib-list');
+      const ids = picks.concat(Object.keys(LIB).filter(id => !picks.includes(id)));
+      const isLocked = id => $('#ex-' + id).classList.contains('locked');
+      ids.filter(id => !isLocked(id)).concat(ids.filter(isLocked)).forEach(id => list.appendChild($('#ex-' + id)));
+    }
+    $('#swell-how-note').textContent = noteName(swellMidi());
+    renderAgilityChips();
+    if (!stacDrill.isActive()) chipRow('#stac-chips', stacNotes(), tapPlay);
+    renderIvInfo();
+    renderBridgeInfo();
+    renderSongUI();
+    renderTopInfo();
+    renderQuiz();
+  }
+
+  // ----- coach: daily check-in, session plan, range rule, safety -----
+  // Priorities, in order: vocal health > pitch accuracy > breath support > register blending > range > style.
+  const CI_VOICE = { fresh: 'Feels good', tired: 'A bit tired', hoarse: 'Hoarse or scratchy', pain: 'Pain or losing my voice' };
+  const CI_ENERGY = { low: 'Low energy', ok: 'Normal', high: 'Lots of energy' };
+  const todayCheckin = () => { const d = peekDay(todayKey()); return (d && d.checkin) || null; };
+  function dayMode() {
+    const c = todayCheckin();
+    if (c && (c.voice === 'hoarse' || c.voice === 'pain')) return 'rest';
+    if (c && (c.voice === 'tired' || c.energy === 'low')) return 'light';
+    return 'normal';
+  }
+  const isPracticeDay = k => { const d = state.days[k]; return !!d && (stepsDone(k) >= 1 || (d.mins || 0) >= 3); };
+  // Daily time starts at 30–45 min. The max grows 5 min for every 10 practice days in a row
+  // without a tired, hoarse, or pain check-in, and never passes 60.
+  function capBumps() {
+    const keys = Object.keys(state.days).sort();
+    let n = 0;
+    for (let i = keys.length - 1; i >= 0; i--) {
+      const c = state.days[keys[i]].checkin;
+      if (c && c.voice && c.voice !== 'fresh') break;
+      if (isPracticeDay(keys[i])) n++;
+    }
+    return Math.min(3, Math.floor(n / 10));
+  }
+  function recMin() { const m = dayMode(); return m === 'rest' ? 0 : m === 'light' ? 15 : Math.min(45, 30 + 5 * capBumps()); }
+  function maxMin() { const m = dayMode(); return m === 'rest' ? 0 : m === 'light' ? 20 : Math.min(60, 45 + 5 * capBumps()); }
+  function weekMinutes() {
+    let t = PT.acc / 60;
+    for (let i = 0; i < 7; i++) {
+      const d = state.days[dkey(new Date(Date.now() - i * 86400000))];
+      if (d && d.mins) t += d.mins;
+    }
+    return Math.round(t);
+  }
+  function renderPracticeTime() {
+    const mode = dayMode();
+    const m = minsNow(), rec = recMin(), mx = maxMin();
+    $('#ptime').classList.toggle('static', !Mic.available || mode === 'rest');
+    if (mode === 'rest') {
+      $('#ptime-note').textContent = 'Rest day: no singing today. Ear training and silent breath work are fine.';
+      return;
+    }
+    $('#ptime-val').textContent = Math.floor(m) + ' of ' + rec + ' min';
+    const fill = $('#ptime-fill');
+    fill.style.width = Math.min(100, (m / mx) * 100) + '%';
+    fill.className = 'ptime-fill' + (m >= mx ? ' over' : m >= rec ? ' done' : '');
+    $('#ptime-rec').style.left = (rec / mx) * 100 + '%';
+    $('#ptime-max').textContent = 'Max ' + mx;
+    $('#ptime-reclab').textContent = rec + ' recommended';
+    $('#ptime-reclab').style.left = (rec / mx) * 100 + '%';
+    const grow = mode === 'normal' && capBumps() < 3 ? ' The max grows 5 minutes for every 10 practice days in a row with no tired or hoarse check-ins, up to 60.' : '';
+    let note;
+    if (!Mic.available) note = 'Recommended today: ' + rec + ' minutes, ' + mx + ' at most. The GitHub version tracks your time automatically.';
+    else if (m >= mx) note = 'Daily max reached. Mic exercises are paused until tomorrow so your voice can recover; rest is when the gains settle in.';
+    else if (m >= rec) note = 'You hit today\'s recommended ' + rec + ' minutes. Extra time is optional, up to ' + mx + '. Stop sooner if your voice feels tired, scratchy, or strained.';
+    else if (PT.cont >= 20 * 60) note = 'You\'ve been singing for 20 minutes straight. Take a 5-minute break: sip water, stay quiet, then come back.';
+    else note = (mode === 'light' ? 'Light day: about ' + rec + ' minutes, ' + mx + ' at most.' : 'Recommended today: ' + rec + ' minutes. Daily max: ' + mx + '.') + grow;
+    $('#ptime-note').textContent = note;
+  }
+
+  // check-in
+  function renderCheckin() {
+    const c = todayCheckin() || {};
+    document.querySelectorAll('input[name="ci-voice"]').forEach(i => { i.checked = i.value === c.voice; });
+    document.querySelectorAll('input[name="ci-energy"]').forEach(i => { i.checked = i.value === c.energy; });
+    $('#ci-q').textContent = c.voice ? 'Today\'s check-in' : 'How\'s your voice today?';
+  }
+  function setCheckin(field, val) {
+    const k = todayKey();
+    const d = dayOf(k);
+    d.checkin = Object.assign({ voice: 'fresh', energy: 'ok' }, d.checkin || {}, { [field]: val });
+    saveDay(k);
+    if (dayMode() === 'rest' && Mic.on) micStop();
+    renderAll();
+  }
+
+  // top note: grows one half step only after 3 easy days within ±20¢
+  const topHitDays = () => new Set(P().topHits || []).size;
+  const topSus = makeSustain({
+    tuner: makeTuner($('#tuner-top')),
+    target: () => rangeTop(),
+    segs: [{ label: 'oo', secs: 2.5, cue: 'Light "oo". Let it be heady, not pushed' }],
+    btn: $('#top-sing'), btnLabel: 'Sing the top note', fb: $('#top-fb'),
+    sus: '#top-sus', prompt: '#top-prompt', prog: '#top-prog',
+    onStart() { $('#top-ask').hidden = true; },
+    onFinish(r) {
+      const fb = $('#top-fb');
+      const g = r.segs[0];
+      const top = rangeTop();
+      if (g.mean == null) {
+        fb.className = 'feedback bad';
+        fb.textContent = 'I didn\'t hear the note long enough. Sing it lightly until the bar fills.';
+        return;
+      }
+      const steady = r.sd == null || r.sd <= 25;
+      if (Math.abs(g.mean) > 20 || !steady) {
+        fb.className = 'feedback meh';
+        fb.textContent = noteName(top) + ' came in ' + flatSharp(g.mean) + (steady ? '' : ' and wobbled') + '. It needs to be within ±20¢ and steady to count. Make it lighter and softer; don\'t push.';
+        exDone('top', 40);
+        return;
+      }
+      fb.className = 'feedback ok';
+      fb.textContent = noteName(top) + ' at ' + signedC(g.mean) + '. Did that feel easy?';
+      $('#top-ask').hidden = false;
+    },
+  });
+  function topAnswer(easy) {
+    $('#top-ask').hidden = true;
+    const fb = $('#top-fb');
+    const top = rangeTop();
+    if (!easy) {
+      fb.className = 'feedback meh';
+      fb.textContent = 'Then it doesn\'t count yet. Stay at ' + noteName(top) + ' and keep it light. Range comes from ease, not force.';
+      exDone('top', 60);
+      return;
+    }
+    const k = todayKey();
+    const already = (P().topHits || []).includes(k);
+    if (!already) P().topHits = (P().topHits || []).concat(k);
+    const days = topHitDays();
+    if (days >= 3) {
+      P().top = top + 1;
+      P().topHits = [];
+      setNotice('New top note: ' + noteName(top + 1) + '. Approach it light, through head voice or mix, never by pushing chest voice up.');
+      fb.className = 'feedback ok';
+      fb.textContent = 'Three easy days at ' + noteName(top) + '. ' + noteName(top + 1) + ' is your new top note.';
+    } else {
+      fb.className = 'feedback ok';
+      fb.textContent = already ? 'Already counted today (' + days + ' of 3 days). Come back tomorrow.' : 'Counted: ' + days + ' of 3 days at ' + noteName(top) + '.';
+    }
+    saveSettings();
+    exDone('top', 100);
+    renderAll();
+  }
+  function renderTopInfo() {
+    const t = rangeTop();
+    $('#top-note').textContent = t == null ? '' : 'Current top: ' + noteName(t) + ' · easy days: ' + topHitDays() + ' of 3 · next: ' + noteName(t + 1) + '.';
+  }
+
+  // interval quiz: ear training with no singing
+  const QUIZ_IV = { 2: '2nd', 4: '3rd', 5: '4th', 7: '5th', 9: '6th', 12: 'Octave' };
+  const quizSet = () => (P().level >= 3 ? [2, 4, 5, 7, 9, 12] : P().level >= 2 ? [2, 4, 5, 7, 12] : [2, 4, 7, 12]);
+  const quiz = { n: 0, right: 0, cur: null, answered: true };
+  function renderQuiz() {
+    const host = $('#quiz-opts');
+    host.innerHTML = '';
+    quizSet().forEach(iv => {
+      const b = el('button', '', QUIZ_IV[iv]);
+      b.type = 'button';
+      b.dataset.iv = iv;
+      b.disabled = !quiz.cur || quiz.answered;
+      b.addEventListener('click', () => quizAnswer(iv));
+      host.appendChild(b);
+    });
+    $('#quiz-hints').textContent = 'Memory hooks: 2nd "Hap-py" (Happy Birthday) · 3rd "Oh when the" (When the Saints) · 4th "Here comes" (Here Comes the Bride) · 5th "Twin-kle, twin-kle" · 6th "My Bon-nie" · Octave "Some-where" (Over the Rainbow).';
+  }
+  function quizNext() {
+    if (quiz.n >= 10 || !quiz.cur) { quiz.n = 0; quiz.right = 0; }
+    const set = quizSet();
+    const iv = set[Math.floor(Math.random() * set.length)];
+    quiz.cur = { root: state.home + Math.floor(Math.random() * 5), iv };
+    quiz.answered = false;
+    $('#quiz-fb').textContent = '';
+    $('#quiz-fb').className = 'feedback';
+    $('#quiz-status').textContent = 'Question ' + (quiz.n + 1) + ' of 10';
+    $('#quiz-start').hidden = true;
+    $('#quiz-replay').hidden = false;
+    renderQuiz();
+    quizPlay();
+  }
+  function quizPlay() { if (quiz.cur) playSeq([quiz.cur.root, quiz.cur.root + quiz.cur.iv], 0.8); }
+  function quizAnswer(iv) {
+    if (!quiz.cur || quiz.answered) return;
+    quiz.answered = true;
+    quiz.n++;
+    const ok = iv === quiz.cur.iv;
+    if (ok) quiz.right++;
+    renderQuiz();
+    $('#quiz-opts').querySelectorAll('button').forEach(b => {
+      if (Number(b.dataset.iv) === quiz.cur.iv) b.classList.add('right');
+      else if (Number(b.dataset.iv) === iv) b.classList.add('wrong');
+    });
+    const fb = $('#quiz-fb');
+    fb.className = 'feedback ' + (ok ? 'ok' : 'meh');
+    fb.textContent = ok ? '✓ ' + QUIZ_IV[iv] + '.' : '✗ That was a ' + QUIZ_IV[quiz.cur.iv].toLowerCase() + '. Tap "Hear it again" to lock it in.';
+    $('#quiz-start').hidden = false;
+    if (quiz.n >= 10) {
+      fb.textContent += ' Score: ' + quiz.right + ' of 10.';
+      $('#quiz-start').textContent = 'Start again';
+      $('#quiz-status').textContent = 'Done';
+      exDone('quiz', quiz.right * 10);
+      quiz.cur = null;
+    } else {
+      $('#quiz-start').textContent = 'Next question';
+    }
+  }
+
+  // "since last time": the biggest real improvement and any real regression, with numbers
+  function sinceLastTime() {
+    const cands = [];
+    METRICS.forEach(m => {
+      if (m.mic && !Mic.available) return;
+      const pts = metricPoints(m.key);
+      if (pts.length < 2) return;
+      const cur = pts[pts.length - 1], prev = pts[pts.length - 2];
+      const delta = m.better === 'up' ? cur.v - prev.v : prev.v - cur.v;
+      cands.push({ m, cur, prev, delta, rel: delta / Math.max(1, Math.abs(prev.v)), thr: m.thr });
+    });
+    const nd = Object.keys(state.days).filter(k => state.days[k].nerr).sort();
+    if (nd.length >= 2) {
+      const lastK = nd[nd.length - 1];
+      Object.entries(state.days[lastK].nerr).forEach(([midi, e]) => {
+        if (e[1] < 2) return;
+        for (let i = nd.length - 2; i >= 0; i--) {
+          const pe = state.days[nd[i]].nerr[midi];
+          if (pe && pe[1] >= 2) {
+            const a = pe[0] / pe[1], b = e[0] / e[1];
+            cands.push({ note: Number(midi), cur: { k: lastK, v: b }, prev: { k: nd[i], v: a }, delta: a - b, rel: (a - b) / Math.max(1, a), thr: 6 });
+            break;
+          }
+        }
+      });
+    }
+    const say = c => (c.note != null
+      ? 'your average miss on ' + noteName(c.note) + ' went from ' + Math.round(c.prev.v) + '¢ to ' + Math.round(c.cur.v) + '¢'
+      : c.m.name.toLowerCase() + ' went from ' + fmtV(c.m, c.prev.v) + ' to ' + fmtV(c.m, c.cur.v)) + ' (' + fmtDate(c.prev.k) + ' → ' + fmtDate(c.cur.k) + ')';
+    const good = cands.filter(c => c.delta >= c.thr).sort((a, b) => b.rel - a.rel)[0];
+    const bad = cands.filter(c => -c.delta >= c.thr).sort((a, b) => a.rel - b.rel)[0];
+    if (!good && !bad) {
+      return isPracticeDay(todayKey()) || Object.keys(state.days).some(isPracticeDay)
+        ? 'Not enough repeat data yet. After two sessions on the same exercises, this shows what changed, with numbers.'
+        : 'This is your first session. After two sessions, this shows what changed, with numbers.';
+    }
+    let out = '';
+    if (good) out += 'Better: ' + say(good) + '.';
+    if (bad) out += (out ? ' ' : '') + 'Slipped: ' + say(bad) + '. That\'s in today\'s plan.';
+    return out;
+  }
+
+  // today's focus: the first area that needs work, in priority order
+  const nr = (a, b) => noteName(a) + (b != null && b !== a ? '–' + noteName(b) : '');
+  const breathTarget = () => [0, 15, 20, 25, 30, 30][P().level];
+  const exOpen = id => LIB[id] && LIB[id].min <= P().level && (!['bridge', 'top'].includes(id) || (Mic.available && brkNote() != null && rangeTop() != null));
+  function focusArea() {
+    const p = P(), mode = dayMode(), c = todayCheckin();
+    if (mode === 'rest') return { area: 'health', line: 'Vocal rest. You reported ' + (c.voice === 'pain' ? 'pain' : 'hoarseness') + ', so today is ear training and silent breath work only.' };
+    if (mode === 'light') return { area: 'health', line: 'A lighter day. Your ' + (c.voice === 'tired' ? 'voice is tired' : 'energy is low') + ', so it\'s humming, breath, and ear training, nothing that pushes.' };
+    if (Mic.available && (!state.voice || !p.checks.length)) return { area: 'setup', line: 'Measure your voice first: the voice type test and the level check set every exercise to fit you.' };
+    const weak = weakNotes(2);
+    const tol = lv().tol;
+    if (weak.length) return { area: 'pitch', ex: 'weak', line: 'Pitch accuracy on ' + weak.map(w => noteName(w.midi) + ' (' + flatSharp(w.s.s) + ' on average)').join(' and ') + '.' };
+    if (p.dir.up.n >= 4 && p.dir.up.s <= -15) return { area: 'pitch', ex: 'interval', line: 'Rising notes: you go ' + flatSharp(p.dir.up.s) + ' on the way up.' };
+    const sc = habitRate('scoop');
+    if (sc != null && sc >= 0.3) return { area: 'pitch', ex: 'staccato', line: 'Clean starts: ' + Math.round(sc * 100) + '% of your notes scoop up into pitch.' };
+    const lc = lastCheck();
+    if (lc && lc.match > tol) return { area: 'pitch', ex: 'interval', line: 'Note matching: ' + lc.match + '¢ average miss in your last level check; the target at your level is ±' + tol + '¢.' };
+    const hiss5 = recentMedian('hiss', 5), st = recentMedian('steady', 5), bt = breathTarget();
+    const breathEx = exOpen('swell') ? 'swell' : 'ngvowel';
+    if (hiss5 != null && hiss5 < bt) return { area: 'breath', ex: breathEx, line: 'Breath support: your typical hiss is ' + hiss5.toFixed(1) + ' s; the target at your level is ' + bt + ' s.' };
+    if (st != null && st < 75) return { area: 'breath', ex: breathEx, line: 'Steady airflow: your hiss stays even ' + Math.round(st) + '% of the time; aim for 75% or more.' };
+    const rot = [];
+    if (exOpen('bridge') && p.level >= 3) rot.push({ area: 'blend', ex: 'bridge', line: 'Register blending through your break near ' + noteName(brkNote()) + '.' });
+    if (exOpen('top')) rot.push({ area: 'range', ex: 'top', line: 'Range: hit your top note, ' + noteName(rangeTop()) + ', within ±20¢ and without strain (' + topHitDays() + ' of 3 days) to unlock ' + noteName(rangeTop() + 1) + '.' });
+    const styleEx = exOpen('agility') ? 'agility' : exOpen('vowels') ? 'vowels' : 'interval';
+    rot.push({ area: 'style', ex: styleEx, line: styleEx === 'agility' ? 'Style: quick, light runs for riffs.' : styleEx === 'vowels' ? 'Tone: keep every vowel in tune on one note.' : 'Ear: sing jumps back accurately.' });
+    return rot[((dayNum(todayKey()) % rot.length) + rot.length) % rot.length];
+  }
+  function exInfo(id) {
+    const lib = { title: LIB[id] ? LIB[id].title : '', target: '#ex-' + id, key: 'ex:' + id, lib: id };
+    switch (id) {
+      case 'weak': {
+        const w = weakNotes(3);
+        return { title: 'Weak-note drill', notes: w.map(x => noteName(x.midi)).join(', '), listen: 'needle centered; start each note on pitch, no scooping', target: '#focus-start', key: 'ex:weak' };
+      }
+      case 'interval': return Object.assign(lib, { notes: intervalSet().map(i => IV_NAMES[i]).join(', '), listen: 'hear the second note in your head before you sing it' });
+      case 'staccato': { const n = stacNotes(); return Object.assign(lib, { title: 'Clean onsets (staccato)', notes: nr(n[0].midi, n[2].midi), listen: 'each "ha" lands right on pitch, no slide up' }); }
+      case 'swell': return Object.assign(lib, { notes: noteName(swellMidi()), listen: 'the pitch stays still while the volume grows and fades' });
+      case 'ngvowel': return Object.assign(lib, { notes: noteName(swellMidi()), listen: 'no pitch jump when "ng" opens to "ahhh"' });
+      case 'bridge': { const b = bridgeNotes(); return Object.assign(lib, { notes: b.length ? nr(b[0].midi, b[3].midi) : '', listen: 'stay light at the top and let it tip over' }); }
+      case 'top': return Object.assign(lib, { notes: noteName(rangeTop()), listen: 'light "oo", within ±20¢, no strain' });
+      case 'agility': { const a = agilityNotes(); return Object.assign(lib, { notes: nr(a[0].midi, a[4].midi), listen: 'quick, light touches, not heavy' }); }
+      case 'vowels': return Object.assign(lib, { notes: noteName(vowTarget()), listen: 'the same pitch on ee, eh, ah, oh, oo' });
+      case 'quiz': return Object.assign(lib, { title: 'Interval quiz (no singing)', notes: '', listen: 'name each jump by ear' });
+      case 'posture': return Object.assign(lib, { notes: '', listen: 'loose jaw, neck, and shoulders' });
+      default: return lib;
+    }
+  }
+  function songOfDay() {
+    const g = curSong(), base = songBase(g);
+    const lo = base + Math.min(...g.notes), hi = base + Math.max(...g.notes);
+    const top = rangeTop();
+    return { g, lo, hi, over: top != null && hi > top };
+  }
+  function sessionPlan() {
+    const p = P(), mode = dayMode(), f = focusArea();
+    const items = [];
+    const add = (sec, mins, info) => { if (info) items.push(Object.assign({ sec, mins }, info)); };
+    const rung = (step, title, notes, listen) => (p.skip[step] ? null : { title, notes, listen, target: '.rung[data-step="' + step + '"]', key: 'step:' + step });
+    const wp = warmPoints(), cp = coolPoints();
+    const wLo = Math.min(...wp.map(x => x[0])), wHi = Math.max(...wp.map(x => x[0]));
+    const mn = matchNotes();
+    const pat = curPattern().notes;
+    const sd = songOfDay();
+    const warmName = { trill: 'Lip trill slides', straw: 'Straw slides', hum: 'Hum slides' }[p.warm];
+    const song = { title: 'Song: ' + sd.g.title, notes: nr(sd.lo, sd.hi), listen: 'every note lands; sing it 3–4 times, then once with feeling', target: '#ex-song', key: 'ex:song', lib: 'song' };
+    const cool = rung('sol', 'Cool-down: hum slides down', nr(cp[0][0], cp[1][0]), 'soft and lazy, no effort');
+    if (mode === 'rest') {
+      add('Warm-up', 2, exInfo('posture'));
+      add('Technique', 4, { title: 'Silent breath: hiss rounds', notes: 'no voice', listen: 'a steady "sss" with zero strain', target: '.rung[data-step="do"]', key: 'step:do' });
+      add('Technique', 6, exInfo('quiz'));
+      add('Application', 5, { title: 'Active listening', notes: 'a song you like', listen: 'where the singer breathes, and which notes they make light or heavy', target: null, key: null });
+    } else if (mode === 'light') {
+      add('Warm-up', 1, exInfo('posture'));
+      add('Warm-up', 3, rung('do', 'Breathe: hiss rounds, gently', repTotal('do') + ' rounds', 'an even "sss", nothing forced'));
+      add('Warm-up', 3, rung('re', 'Hum slides, quietly', nr(wLo, Math.min(wHi, state.home + 5)), 'gentle and easy; stop if it scratches'));
+      add('Technique', 4, exInfo('quiz'));
+      add('Technique', 2, Object.assign(exInfo('ngvowel'), { listen: 'soft hum only; no need to open wide' }));
+      add('Cool-down', 2, cool);
+    } else {
+      const L = p.length;
+      const plan = L >= 45 ? [1, 3, 5, 5, 6, 5, 4, 13, 3] : L >= 35 ? [1, 2, 4, 4, 5, 7, 0, 10, 2] : [1, 2, 2, 2, 0, 3, 0, 3, 2];
+      add('Warm-up', plan[0], exInfo('posture'));
+      add('Warm-up', plan[1], rung('do', 'Breathe: hiss rounds', repTotal('do') + ' rounds', 'an even "sss" from start to finish'));
+      add('Warm-up', plan[2], rung('re', warmName, nr(wLo, wHi), 'a smooth glide, no bumps or breaks'));
+      add('Technique', plan[3], rung('mi', 'Match the note', nr(mn[0].midi, mn[mn.length - 1].midi), 'needle in the green (±' + lv().tol + '¢), held steady'));
+      if (plan[4]) add('Technique', plan[4], rung('fa', 'Scales: ' + curPattern().label, nr(scaleKey() + Math.min(...pat), scaleKey() + Math.max(...pat)), 'each note lands before you move on'));
+      if (f.area === 'setup') {
+        add('Technique', Math.ceil(plan[5] / 2), { title: 'Voice type test', notes: '3 short slides', listen: 'lowest and highest notes that still feel easy', target: '#voice-sec', key: 'voice' });
+        add('Technique', Math.floor(plan[5] / 2) || 2, { title: 'Level check', notes: '2 minutes', listen: 'sing each note back; there\'s no needle', target: '#lc-start', key: 'check' });
+      } else if (f.ex) {
+        add('Technique', plan[5], exInfo(f.ex));
+      }
+      if (plan[6]) {
+        const rot = ['staccato', 'ngvowel', 'interval', 'vowels', 'swell', 'bridge', 'top', 'agility'].filter(id => exOpen(id) && id !== f.ex);
+        if (rot.length) add('Technique', plan[6], exInfo(rot[((dayNum(todayKey()) % rot.length) + rot.length) % rot.length]));
+      }
+      add('Application', plan[7], song);
+      add('Cool-down', plan[8], cool);
+    }
+    const d = peekDay(todayKey()) || {};
+    items.forEach(it => {
+      const [kind, id] = (it.key || '').split(':');
+      it.done = kind === 'step' ? !!(d.steps && d.steps[id]) : kind === 'ex' ? !!(d.ex && d.ex[id] != null)
+        : it.key === 'voice' ? !!(state.voice && state.voice.date === todayKey()) : it.key === 'check' ? !!(lastCheck() && lastCheck().date === todayKey()) : false;
+    });
+    return { f, items, total: items.reduce((a, it) => a + it.mins, 0), song: sd };
+  }
+  function nextMilestone(f) {
+    if (f.area === 'range' && rangeTop() != null) return 'Hit ' + noteName(rangeTop()) + ' within ±20¢, without strain, on 3 different days (' + topHitDays() + ' of 3) to unlock ' + noteName(rangeTop() + 1) + '.';
+    const m = roadmap().find(x => !x.goals.every(g => g.done));
+    if (m) {
+      const g = m.goals.find(x => !x.done);
+      return m.when + ': ' + g.label.charAt(0).toLowerCase() + g.label.slice(1) + (g.progress ? ' (' + g.progress + ')' : '') + '.';
+    }
+    return P().level < 5 ? 'Level ' + (P().level + 1) + ': 3 strong sessions on different days (' + strongDays().length + ' of 3).' : 'Keep your streak and polish everything at ±15¢.';
+  }
+  function scrollFlash(sel) {
+    const t = sel && $(sel);
+    if (!t) return;
+    const card = t.closest('.drill, .rung, .home, .coach') || t;
+    card.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    card.classList.remove('flash');
+    void card.offsetWidth;
+    card.classList.add('flash');
+  }
+  function renderSession() {
+    renderCheckin();
+    const plan = sessionPlan();
+    $('#s-focus').textContent = plan.f.line;
+    $('#s-since').textContent = sinceLastTime();
+    $('#s-title').textContent = 'Session (' + plan.total + ' min)' + (dayMode() === 'light' ? ' · light day' : dayMode() === 'rest' ? ' · no singing' : '');
+    const host = $('#s-list');
+    host.innerHTML = '';
+    let sec = null;
+    plan.items.forEach(it => {
+      if (it.sec !== sec) {
+        sec = it.sec;
+        const mins = plan.items.filter(x => x.sec === sec).reduce((a, x) => a + x.mins, 0);
+        host.appendChild(el('p', 'sess-sec', sec + ' · ' + mins + ' min'));
+      }
+      const b = el('button', 'sess-item' + (it.done ? ' done' : '') + (it.target ? '' : ' static'));
+      b.type = 'button';
+      b.appendChild(el('span', 'si-check', it.done ? '✓' : '○'));
+      const main = el('span', 'si-main');
+      main.appendChild(el('span', 'si-title', it.title));
+      main.appendChild(el('span', 'si-meta', [it.notes, it.mins + ' min'].filter(Boolean).join(' · ')));
+      main.appendChild(el('span', 'si-listen', 'Listen for: ' + it.listen));
+      b.appendChild(main);
+      if (it.target) b.addEventListener('click', () => scrollFlash(it.target));
+      host.appendChild(b);
+    });
+    const sd = plan.song;
+    $('#s-song').textContent = sd.g.title + ' · range ' + nr(sd.lo, sd.hi) + (sd.over ? '. Goes above your comfortable top (' + noteName(rangeTop()) + '): sing the high note lightly.' : ' (in your key, inside your range).');
+    $('#s-next').textContent = nextMilestone(plan.f);
+    let streak = 0;
+    for (let i = practiced(todayKey()) ? 0 : 1; practiced(dkey(new Date(Date.now() - i * 86400000))); i++) streak++;
+    $('#s-stats').textContent = 'Streak ' + streak + ' day' + (streak === 1 ? '' : 's') + ' · ' + weekMinutes() + ' min this week · practice day ' + practiceDays();
+  }
+  // library picks now come straight from today's session
+  function coachPicks() { return sessionPlan().items.filter(it => it.lib).map(it => ({ id: it.lib })); }
+
+  // safety: pain, hoarseness that lasts, sudden range loss
+  function safetyNotes(add) {
+    const c = todayCheckin();
+    if (c && c.voice === 'pain') add('Pain is a stop sign: no singing today. If it continues or keeps coming back, see an ENT or laryngologist.', 'rest');
+    const hoarseDays = Object.keys(state.days).filter(k => { const x = state.days[k].checkin; return x && (x.voice === 'hoarse' || x.voice === 'pain'); }).sort();
+    if (hoarseDays.length >= 3) {
+      const first = hoarseDays[0], last = hoarseDays[hoarseDays.length - 1];
+      const recent = dayNum(todayKey()) - dayNum(last) <= 2;
+      const span = dayNum(last) - dayNum(hoarseDays.filter(k => dayNum(last) - dayNum(k) <= 21)[0] || first);
+      if (recent && span >= 14) add('You\'ve reported hoarseness for more than two weeks. Rest your voice and see an ENT or laryngologist; don\'t train through it.', 'rest');
+    }
+    const ra = P().rangeAlert;
+    if (ra && dayNum(todayKey()) - dayNum(ra.date) <= 14) add('Your range dropped ' + ra.drop + ' half steps since your previous test. Rest a few days and retest; if it doesn\'t come back, see an ENT or laryngologist.', 'rest');
+  }
+
+  // copy a filled-in coach prompt for Claude
+  function sessionLine(k) {
+    const d = state.days[k];
+    const parts = [fmtDate(k)];
+    if (d.mins) parts.push(Math.round(d.mins) + ' min');
+    const steps = Object.keys(d.steps || {});
+    if (steps.length) parts.push('routine: ' + steps.join(', '));
+    const ex = Object.entries(d.ex || {}).map(([id, v]) => (id === 'weak' ? 'weak-note drill' : LIB[id] ? LIB[id].title.toLowerCase() : id) + ' ' + v + '%');
+    if (ex.length) parts.push('exercises: ' + ex.join(', '));
+    const acc = [];
+    if (d.checkMiss != null) acc.push('level check ' + d.checkMiss + '¢ avg miss');
+    if (d.avgMiss != null) acc.push('sing-back ' + d.avgMiss + '¢ avg miss');
+    if (d.onTarget != null) acc.push(d.onTarget + '% of the time on pitch');
+    if (acc.length) parts.push('pitch: ' + acc.join(', '));
+    if (d.nerr) {
+      const hit = [], miss = [];
+      Object.entries(d.nerr).forEach(([m, e]) => { const a = e[0] / e[1]; (a <= 25 ? hit : miss).push(noteName(Number(m)) + ' ' + Math.round(a) + '¢'); });
+      if (hit.length) parts.push('notes hit: ' + hit.join(', '));
+      if (miss.length) parts.push('notes missed: ' + miss.join(', '));
+    }
+    if (d.hiss) parts.push('longest hiss ' + d.hiss + ' s');
+    if (d.checkin) parts.push('check-in: ' + CI_VOICE[d.checkin.voice].toLowerCase() + ', ' + CI_ENERGY[d.checkin.energy].toLowerCase());
+    return '- ' + parts.join(' · ');
+  }
+  function coachPrompt() {
+    const p = P();
+    const N = (p.name || '').trim() || 'the singer';
+    const v = state.voice;
+    const hist = p.rangeHistory || [];
+    const base = hist[0] || (v ? { date: v.date, low: v.low, high: v.high, brk: v.brk } : null);
+    const firstDay = Object.keys(state.days).filter(isPracticeDay).sort()[0];
+    const brkText = r => (r.brk != null ? 'register break near ' + noteName(r.brk) : 'no clear register break detected');
+    const recent = Object.keys(state.days).filter(isPracticeDay).sort().slice(-7).map(sessionLine);
+    const c = todayCheckin();
+    let streak = 0;
+    for (let i = practiced(todayKey()) ? 0 : 1; practiced(dkey(new Date(Date.now() - i * 86400000))); i++) streak++;
+    return [
+      'You are ' + N + '\'s personal vocal coach inside Voice Ladder, a daily singing practice app. Act like a skilled one-on-one voice teacher who knows their voice, tracks their progress session to session, and plans each day\'s training around what the data shows.',
+      '',
+      '## Student profile',
+      '- Name: ' + N,
+      '- Level: Level ' + p.level + ' (' + lv().name + ')' + (firstDay ? ', training since ' + fmtDate(firstDay) : ''),
+      '- Voice type: ' + (v ? v.type + ' (estimated; reconfirm as range data grows)' : 'not tested yet'),
+      '- Baseline range test' + (base ? ' (' + fmtDate(base.date) + '): ' + noteName(base.low) + '–' + noteName(base.high) + ' usable, ' + (base.high - base.low) + ' half steps; ' + brkText(base) + '.' : ': not taken yet.'),
+      '- Current comfortable top for exercises: ' + (rangeTop() != null ? noteName(rangeTop()) : 'unknown'),
+      '- Goals and notes: ' + ((p.about || '').trim() || GOALS[p.goal].name + ' singing'),
+      '',
+      '## Live data',
+      '- Range test history: ' + (hist.length ? hist.map(r => fmtDate(r.date) + ': ' + noteName(r.low) + '–' + noteName(r.high) + ' (' + (r.high - r.low) + ' half steps), ' + brkText(r)).join('; ') : 'none yet'),
+      '- Recent sessions:',
+      recent.length ? recent.join('\n') : '- none yet',
+      '- Today\'s self-report: ' + (c ? CI_VOICE[c.voice] + ', ' + CI_ENERGY[c.energy] : 'not answered'),
+      '- Current streak and total practice minutes this week: ' + streak + ' day' + (streak === 1 ? '' : 's') + ' / ' + weekMinutes() + ' min',
+      '',
+      '## How to coach',
+      '1. Start every session from the data. Name one specific thing that improved and one specific focus for today, citing real numbers (e.g., "Your average pitch error on F4 dropped from 38 to 22 cents").',
+      '2. Build today\'s session in this structure, with exact exercises, note ranges, and times:',
+      '   - Warm-up (5–10 min): lip trills, humming, gentle sirens',
+      '   - Technique (15–20 min): targeted at today\'s weakest area',
+      '   - Application (10–15 min): a song or phrase that uses today\'s skill',
+      '   - Cool-down (2–3 min): gentle humming or descending slides',
+      '3. Keep total singing to 30–45 minutes per day for now. Increase gradually only after several weeks of consistent sessions with no reported fatigue, never past 60–90 minutes.',
+      '4. Progress range carefully. Only extend a target note by one half step once ' + N + ' can hit the current top note within ±20 cents, without strain, across at least 3 sessions. Never encourage pushing chest voice higher by force; route upward progress through head voice and mix.',
+      '5. Prioritize in this order: vocal health > pitch accuracy > breath support > register blending > range > power/style.',
+      '6. Adapt to the check-in. If energy is low or the voice feels tired, give a lighter session (humming, ear training, breath work). If they report hoarseness, pain, or loss of voice, skip singing for the day and give non-vocal practice (ear training, listening, rhythm).',
+      '7. Include non-vocal training when useful: interval recognition, active listening assignments, and breathing drills that don\'t tire the voice.',
+      '8. Every 4 weeks, prompt a range retest and compare it with the history. Reassess voice type if the data shifts meaningfully.',
+      '9. Recommend songs that fit their current usable range, and name the highest and lowest notes in each song. Flag any song that goes above their current comfortable top.',
+      '',
+      '## Feedback style',
+      '- Direct and specific, like a good trainer: say exactly what to fix and how. Skip vague encouragement.',
+      '- Be honest about plateaus or regressions, then give a concrete plan to fix them.',
+      '- Use numbers, note names, and short visual descriptions (e.g., "imagine the sound going up and forward behind your nose") over abstract theory.',
+      '- Keep responses short and scannable: bullets for exercises, one key takeaway per session.',
+      '- Celebrate measurable milestones: a new note in usable range, a new accuracy best, streak milestones.',
+      '',
+      '## Safety',
+      '- If pain, persistent hoarseness (more than two weeks), or sudden loss of range is reported, tell them to rest and see an ENT or laryngologist. Don\'t diagnose.',
+      '- Suggest an occasional lesson with a human voice teacher to check technique, especially when they start working on mixed voice.',
+      '',
+      '## Output format for a session plan',
+      '**Today\'s focus:** [one line]',
+      '**Since last time:** [1–2 data-backed observations]',
+      '**Session ([total] min):**',
+      '- [Exercise] — [notes/range] — [time] — [what to listen for]',
+      '**Song of the day:** [title] — range [low]–[high]',
+      '**Next milestone:** [specific measurable target]',
+      '',
+      'Give me today\'s session plan.',
+    ].join('\n');
+  }
+  async function copyPrompt() {
+    const text = coachPrompt();
+    const ta = $('#cp-text');
+    try {
+      await navigator.clipboard.writeText(text);
+      ta.hidden = true;
+      $('#cp-status').textContent = 'Copied. Paste it into a new Claude chat for a deeper plan and song picks.';
+    } catch (e) {
+      ta.hidden = false;
+      ta.value = text;
+      ta.focus();
+      ta.select();
+      $('#cp-status').textContent = 'Copy this text, then paste it into a new Claude chat.';
+    }
+  }
+
   // ----- plan, coach, bonus and roadmap rendering -----
   const DURS = {
-    5: { do: '1 min', re: '1 min', mi: '1 min', fa: '1½ min', sol: '½ min' },
-    11: { do: '2 min', re: '2 min', mi: '3 min', fa: '3 min', sol: '1 min' },
-    20: { do: '3 min', re: '3 min', mi: '4 min', fa: '5 min', sol: '2 min' },
+    15: { do: '2 min', re: '2 min', mi: '2 min', fa: '3 min', sol: '2 min' },
+    35: { do: '2 min', re: '4 min', mi: '4 min', fa: '5 min', sol: '2 min' },
+    45: { do: '3 min', re: '5 min', mi: '5 min', fa: '6 min', sol: '3 min' },
   };
-  const REPS = { 5: { do: 2, re: 3, sol: 2 }, 11: { do: 3, re: 5, sol: 3 }, 20: { do: 4, re: 8, sol: 4 } };
-  const repTotal = step => (REPS[P().length] || REPS[11])[step];
+  const REPS = { 15: { do: 2, re: 3, sol: 2 }, 35: { do: 3, re: 6, sol: 3 }, 45: { do: 4, re: 8, sol: 4 } };
+  const repTotal = step => (REPS[P().length] || REPS[35])[step];
   const WARM = {
     trill: { title: 'Warm up: lip trills', how: 'Close your lips loosely and blow so they flutter like a motorboat, then add your voice and slide up and back down with the tone. If trills won\'t happen yet, hum instead.' },
     straw: { title: 'Warm up: straw', how: 'Seal your lips around a narrow straw (a coffee stirrer works best) and hum through it, sliding up and back down with the tone. You should feel an easy buzz and no strain.' },
@@ -3097,8 +4835,8 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     choir: { name: 'Choir / classical', tip: 'Choirs need steady pitch on long notes and even tone through the break. Hold & swell is your signature drill.' },
   };
   const LEVEL_UNLOCKS = {
-    2: 'Arpeggios (1-3-5-3-1) and a full octave of notes to match are unlocked.',
-    3: 'Octave arpeggios, octave warm-up slides, and Hold & swell are unlocked.',
+    2: 'Arpeggios, vowel tuning, Ode to Joy, wider interval jumps, and a full octave of notes to match are unlocked.',
+    3: 'Octave arpeggios and slides, Hold & swell, Bridge the break, and new songs are unlocked.',
     4: 'Agility runs are unlocked and the pitch target tightens to ±20¢.',
     5: 'The 9-note scale is unlocked and the target tightens to ±15¢. Try ear-training mode.',
   };
@@ -3109,13 +4847,14 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     setRadio('p-warm', p.warm);
     setRadio('p-vowel', p.vowel);
     $('#p-goal').value = p.goal;
-    $('#p-level').value = String(p.level);
     $('#p-blind').checked = !!p.blind;
     document.querySelectorAll('.p-step').forEach(c => { c.checked = !p.skip[c.dataset.step]; });
     const vw = { ah: '"ah"', ee: '"ee"', oo: '"oo"', mix: 'rotating vowels' }[p.vowel] || '"ah"';
     $('#plan-sum').textContent = p.length + ' min · ' + WARM[p.warm].title.replace('Warm up: ', '') + ' · ' + vw + ' · ' + GOALS[p.goal].name;
     // apply to the routine
-    const d = DURS[p.length] || DURS[11];
+    const d = DURS[p.length] || DURS[35];
+    if (document.activeElement !== $('#p-name')) $('#p-name').value = p.name || '';
+    if (document.activeElement !== $('#p-about')) $('#p-about').value = p.about || '';
     document.querySelectorAll('.rung').forEach(r => {
       const s = r.dataset.step;
       r.querySelector('.dur').textContent = d[s];
@@ -3137,16 +4876,25 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     $('#lvl-num').textContent = 'Level ' + p.level;
     $('#lvl-name').textContent = lv().name;
     const days = strongDays().length;
-    const ready = p.level < 5 && days >= 3;
     $('#lvl-fill').style.width = p.level >= 5 ? '100%' : Math.min(100, (days / 3) * 100) + '%';
-    $('#lvl-up').hidden = !ready;
-    if (ready) $('#lvl-up').textContent = 'Level up to ' + (p.level + 1) + ': ' + LEVELS[p.level + 1].name;
-    if (!$('#lvl-note').dataset.sticky) {
-      $('#lvl-note').textContent = p.level >= 5
-        ? 'Top level. Keep your streak and polish everything at ±15¢.'
-        : ready ? 'You\'ve earned it. ' + LEVEL_UNLOCKS[p.level + 1]
-          : days + ' of 3 strong sessions (on different days) toward Level ' + (p.level + 1) + '. A strong session is landing 75% of a sing-back or matching every note. Target now: ±' + lv().tol + '¢.';
+    $('#lvl-msg').textContent = p.notice && p.notice.date === todayKey() ? p.notice.text : '';
+    const last = lastCheck();
+    const due = !!last && dayNum(todayKey()) - dayNum(last.date) >= 28;
+    let note;
+    if (!last) {
+      note = Mic.available
+        ? 'Your level hasn\'t been measured yet. Take the 2-minute level check and the app will place you based on how you actually sing.'
+        : 'The level check needs the mic, so it runs in the GitHub version. Until then you\'re on Level ' + p.level + '.';
+    } else {
+      note = 'Last level check: ' + fmtDate(last.date) + ' (Level ' + last.level + ').' +
+        (p.level >= 5 ? ' Top level.' : ' Your level also moves up on its own after 3 strong sessions on different days (' + days + ' of 3 so far), and down if sing-backs keep falling short.') +
+        ' Pitch target now: ±' + lv().tol + '¢.' + (due ? ' Your monthly recheck is due.' : '');
     }
+    $('#lvl-note').textContent = note;
+    const btn = $('#lc-start');
+    btn.hidden = !Mic.available || !!LC.phase;
+    micLabel(btn, !last ? 'Start the level check' : due ? 'Take your monthly level check' : 'Recheck my level');
+    btn.className = !last || due ? 'primary' : '';
   }
   function practicedStreakEndingYesterday() {
     const now = new Date();
@@ -3162,15 +4910,20 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     const items = [];
     const add = (html, kind) => items.push({ html, kind: kind || '' });
     const p = P();
+    safetyNotes(add);
     if (practicedStreakEndingYesterday() >= 6 && stepsDone(todayKey()) === 0) add('Rest day recommended. You\'ve practiced 6 days straight, and pros take at least one day off a week. A few gentle hums are plenty today.', 'rest');
+    if (Mic.available && overLimit()) add('You\'ve hit today\'s practice max. Rest your voice until tomorrow; that\'s part of the training.', 'rest');
+    if (Mic.available && !p.checks.length) add('Take the level check above (about 2 minutes) so the app can set your level from how you actually sing.');
+    else if (Mic.available && dayNum(todayKey()) - dayNum(p.checks[p.checks.length - 1].date) >= 28) add('Your monthly level check is due. It measures how far you\'ve come and adjusts your level.');
     if (Mic.available && !state.voice) add('Take the voice type test below (about 2 minutes). Then every slide, scale, and note fits your range.');
     const weak = weakNotes(3);
-    if (weak.length) add('Weakest notes right now: ' + weak.map(w => noteName(w.midi) + ' (' + flatSharp(w.s.s) + ' on average)').join(', ') + '. Drill them with the button below.');
+    const fx = focusArea().ex;
+    if (weak.length && fx !== 'weak') add('Weakest notes right now: ' + weak.map(w => noteName(w.midi) + ' (' + flatSharp(w.s.s) + ' on average)').join(', ') + '. Drill them with the button below.');
     const up = p.dir.up, down = p.dir.down;
-    if (up.n >= 4 && up.s <= -15) add('You tend to go flat on rising notes (' + flatSharp(up.s) + '). Aim a little higher as you climb; it\'s the most common miss for every singer.');
+    if (up.n >= 4 && up.s <= -15 && fx !== 'interval') add('You tend to go flat on rising notes (' + flatSharp(up.s) + '). Aim a little higher as you climb; it\'s the most common miss for every singer.');
     if (down.n >= 4 && down.s >= 15) add('You drift sharp on falling notes (' + flatSharp(down.s) + '). Let descending notes settle instead of reaching for them.');
     const sc = habitRate('scoop');
-    if (sc != null && sc >= 0.35) add('You often scoop up into notes (' + Math.round(sc * 100) + '% of starts). Hear the note in your head first, then begin it right on pitch with breath and tone together.');
+    if (sc != null && sc >= 0.35 && fx !== 'staccato') add('You often scoop up into notes (' + Math.round(sc * 100) + '% of starts). Hear the note in your head first, then begin it right on pitch with breath and tone together.');
     const wb = habitRate('wobble');
     if (wb != null && wb >= 0.35) add('Your held notes wobble (' + Math.round(wb * 100) + '% of holds). Extra hiss rounds build the steady airflow that fixes it.');
     METRICS.forEach(m => {
@@ -3178,30 +4931,19 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       const fit = fitTrend(metricPoints(m.key));
       if (fit && verdict(m, fit) === 'down') add(m.name + ' dipped lately. ' + (m.key === 'hiss' || m.key === 'steady' ? 'Add an extra breath round today.' : 'Slow down and give that exercise a few extra minutes today.'));
     });
-    if (items.length < 2) {
-      const lvTips = {
-        1: 'Today: tap Check me with the mic in mi and match every note. Small, accurate wins build your ear fastest.',
-        2: 'Today: try the arpeggio in fa. Leaping between notes trains your ear harder than stepping.',
-        3: 'Today: octave slides and Hold & swell. Keep everything light as you cross your break.',
-        4: 'Today: agility runs. Stay light and small; speed comes from less effort.',
-        5: 'Today: switch on ear-training mode and see how accurate you are without the needle.',
-      };
-      add(Mic.available ? lvTips[p.level] : 'Today: run the routine, then upload a quick voice memo of the fa pattern to see how close you were. Live mic coaching works in the GitHub version.');
-    }
+    if (state.voice && dayNum(todayKey()) - dayNum(state.voice.date) >= 28) add('Time for your monthly range retest (the voice type test). It tracks your range over time and reconfirms your voice type.');
+    if (p.level >= 3 && dayNum(todayKey()) % 14 === 0) add('Book a lesson with a human voice teacher to check your mix technique. An expert ear catches things a mic can\'t.');
     const list = $('#focus-list');
     list.innerHTML = '';
     items.slice(0, 3).forEach(it => list.appendChild(el('li', it.kind, it.html)));
+    $('#notes-h').hidden = !items.length;
     $('#focus-start').hidden = !(Mic.available && weak.length);
     $('#goal-tip').textContent = (p.goal === 'fun' ? 'Coach\'s note: ' : 'For ' + GOALS[p.goal].name + ': ') + GOALS[p.goal].tip;
+    renderSession();
   }
   function renderBonus() {
-    const b = lv().bonus;
-    const show = Mic.available && b.length > 0;
-    $('#bonus').hidden = !show;
-    $('#swell-card').hidden = !b.includes('swell');
-    $('#agility-card').hidden = !b.includes('agility');
-    $('#swell-how-note').textContent = noteName(swellMidi());
-    renderAgilityChips();
+    renderLibrary(true);
+    renderPicks();
   }
   function renderPatternChips() {
     const host = $('#pat-chips');
@@ -3234,55 +4976,162 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   }
 
   // ----- roadmap -----
-  function practiceDays() { return Object.keys(state.days).filter(k => stepsDone(k) >= 1).length; }
-  function bestOf(key, days) {
-    const since = days ? dkey(new Date(Date.now() - days * 86400000)) : '';
-    const vals = metricPoints(key).filter(p => p.k >= since).map(p => p.v);
-    return vals.length ? Math.max(...vals) : null;
+  // A practice day is one with at least one finished step or 3+ minutes of practice.
+  function practiceDays() {
+    return Object.keys(state.days).filter(k => stepsDone(k) >= 1 || ((state.days[k] && state.days[k].mins) || 0) >= 3).length;
   }
-  function latestOf(key) { const pts = metricPoints(key); return pts.length ? pts[pts.length - 1].v : null; }
+  function recentMedian(key, n) {
+    const pts = metricPoints(key).slice(-n).map(p => p.v);
+    return pts.length >= Math.min(3, n) ? median(pts) : null;
+  }
+  const lastCheck = () => (P().checks.length ? P().checks[P().checks.length - 1] : null);
   function rangeGain() {
     const pts = metricPoints('range');
     return pts.length >= 2 ? pts[pts.length - 1].v - pts[0].v : null;
   }
   const goal = (label, done, progress) => ({ label, done: !!done, progress: done ? '' : progress || '' });
+  // Typical level by practice days, at about 15–20 minutes a day, 5 days a week.
+  const TYPICAL = [[0, 1], [20, 2], [55, 3], [110, 4], [220, 5]];
+  function typicalLevel(d) {
+    for (let i = 1; i < TYPICAL.length; i++) {
+      const [d0, l0] = TYPICAL[i - 1], [d1, l1] = TYPICAL[i];
+      if (d <= d1) return l0 + ((l1 - l0) * (d - d0)) / (d1 - d0);
+    }
+    return 5;
+  }
+  const ROAD_SHORT = ['Day 1', 'Wk 1', 'Wk 2', 'Mo 1', 'Mo 3', 'Mo 6', 'Yr 1'];
   function roadmap() {
-    const hiss = bestHissAllTime();
-    const lvl = P().level;
-    const miss = latestOf('avgMiss');
-    const on = bestOf('onTarget', 30);
-    const sp = bestOf('scalePct');
+    const n = practiceDays();
+    const lc = lastCheck();
+    const lcl = lc ? lc.level : 0;
+    const hiss5 = recentMedian('hiss', 5);
     const rg = rangeGain();
-    const st = bestOf('steady');
+    const days = k => goal('Practice on ' + k + ' different days', n >= k, n + ' / ' + k);
+    const check = (L, label) => goal(label || 'Level check places you at Level ' + L + ' or higher', lcl >= L, lc ? 'now Level ' + lcl : 'take the level check');
+    const hissGoal = s => goal('Hiss steadily for ' + s + ' seconds, typical of your last 5 days', hiss5 != null && hiss5 >= s, hiss5 != null ? hiss5.toFixed(1) + ' / ' + s + ' s' : 'log a few breath rounds');
+    const mic = Mic.available ? '' : 'needs the GitHub version';
     return [
-      { at: 1, when: 'Day 1', title: 'First session', expect: 'Everything feels new. Tones can be hard to match and lip trills may sputter. That\'s normal and it fades fast.',
-        goals: [goal('Finish your first routine', practiceDays() >= 1), goal('Take the voice type test', !!state.voice, Mic.available ? '' : 'needs the GitHub version')] },
-      { at: 7, when: 'Week 1', title: 'Getting your bearings', expect: 'Singing starts to feel easier before it sounds different. Most early pitch gains show up in the first few weeks.',
-        goals: [goal('Hold a steady hiss for 15 seconds', hiss >= 15, hiss ? hiss.toFixed(1) + ' / 15 s' : ''), goal('Match every note in mi with the mic', P().flags.matchAll)] },
-      { at: 14, when: 'Week 2', title: 'Hearing the target', expect: 'You start noticing when you\'re off before the screen tells you. Scooped and flat starts get rarer.',
-        goals: [goal('Land 2 of every 3 notes in a sing-back', sp != null && sp >= 67, sp != null ? sp + '% / 67%' : ''), goal('Reach Level 2', lvl >= 2, 'Level ' + lvl)] },
-      { at: 24, when: 'Month 1', title: 'Steadier pitch, better breath', expect: 'Breath lasts longer and pitch feels steadier in your comfortable range. Warm-ups become routine.',
-        goals: [goal('60% of a take on pitch', on != null && on >= 60, on != null ? on + '% / 60%' : ''), goal('Average miss under 30¢', miss != null && miss < 30, miss != null ? Math.round(miss) + '¢ now' : ''), goal('Hiss for 20 seconds', hiss >= 20, hiss ? hiss.toFixed(1) + ' / 20 s' : '')] },
-      { at: 70, when: 'Month 3', title: 'Wider, more even range', expect: 'Your comfortable range widens (a few half steps is typical) and your low and high notes start to sound like the same voice.',
-        goals: [goal('Range up 2 half steps since your first test', rg != null && rg >= 2, rg != null ? '+' + rg + ' so far' : 'retest monthly'), goal('Average miss under 20¢', miss != null && miss < 20, miss != null ? Math.round(miss) + '¢ now' : ''), goal('Reach Level 3', lvl >= 3, 'Level ' + lvl)] },
-      { at: 140, when: 'Month 6', title: 'Whole songs with control', expect: 'Full songs with less strain, longer phrases on one breath, and phrasing you choose on purpose. Many singers feel their voice "fill in" around here.',
-        goals: [goal('75% of a take on pitch', on != null && on >= 75, on != null ? on + '% / 75%' : ''), goal('Hiss steadiness 80%', st != null && st >= 80, st != null ? st + '% / 80%' : ''), goal('Reach Level 4', lvl >= 4, 'Level ' + lvl)] },
-      { at: 280, when: 'Year 1', title: 'Your own sound', expect: 'Real stylistic control, stamina for a full song or set, and confidence singing for people. Blending registers keeps improving for years after this.',
-        goals: [goal('Average miss under 15¢', miss != null && miss < 15, miss != null ? Math.round(miss) + '¢ now' : ''), goal('Range up 4 half steps', rg != null && rg >= 4, rg != null ? '+' + rg + ' so far' : ''), goal('Reach Level 5', lvl >= 5, 'Level ' + lvl)] },
+      { at: 1, when: 'Day 1', title: 'First session',
+        expect: 'Everything feels new. Tones can be hard to match and lip trills may sputter. That\'s normal and it fades fast.',
+        goals: [goal('Finish your first routine', n >= 1), goal('Take the voice type test', !!state.voice, mic), goal('Take the level check', !!lc, mic)] },
+      { at: 5, when: 'Week 1', title: 'Getting your bearings',
+        expect: 'Singing starts to feel easier before it sounds different. Expect quick early gains in pitch.',
+        goals: [days(5), hissGoal(15)] },
+      { at: 10, when: 'Week 2', title: 'Hearing the target',
+        expect: 'You start noticing when you\'re off before the screen tells you, and scooped starts get rarer.',
+        goals: [days(10), goal('Level check: land 4 of 5 notes within 50¢', lc && lc.landed >= 4, lc ? lc.landed + ' / 5 now' : 'take the level check')] },
+      { at: 20, when: 'Month 1', title: 'Steadier pitch, better breath',
+        expect: 'Breath lasts longer and pitch feels steadier in your comfortable range. Warm-ups become routine.',
+        goals: [days(20), check(2, 'Level check: match notes within 50¢ on average (Level 2)'), hissGoal(20)] },
+      { at: 55, when: 'Month 3', title: 'Wider, more even range',
+        expect: 'Your comfortable range widens (2–4 half steps is typical) and your low and high notes start to sound like the same voice.',
+        goals: [days(55), check(3), goal('Range up 2 half steps since your first voice test', rg != null && rg >= 2, rg != null ? '+' + rg + ' so far' : 'retest monthly')] },
+      { at: 110, when: 'Month 6', title: 'Whole songs with control',
+        expect: 'Full songs with less strain, longer phrases on one breath, and phrasing you choose on purpose. Many singers feel their voice "fill in" around here.',
+        goals: [days(110), check(4), hissGoal(30)] },
+      { at: 220, when: 'Year 1', title: 'Your own sound',
+        expect: 'Real stylistic control, stamina for a full song or set, and confidence singing for people. Blending registers keeps improving for years after this.',
+        goals: [days(220), check(5), goal('Range up 4 half steps since your first voice test', rg != null && rg >= 4, rg != null ? '+' + rg + ' so far' : 'retest monthly')] },
     ];
+  }
+  function renderRoadChart(ms, hereIdx) {
+    const host = $('#road-chart');
+    host.innerHTML = '';
+    const W = Math.max(300, host.clientWidth || 340), H = 236;
+    const L = 58, R = 20, T = 30, B = 28;
+    const MAXD = 240;
+    const n = practiceDays();
+    const x = d => L + (Math.log(1 + Math.max(0, Math.min(MAXD, d)) / 3) / Math.log(1 + MAXD / 3)) * (W - L - R);
+    const y = l => T + ((5 - l) / 4) * (H - T - B);
+    const NS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', 'Roadmap chart: you are at Level ' + P().level + ' on practice day ' + n + '. Typical pace: Level 2 by Month 1, Level 3 by Month 3, Level 4 by Month 6, Level 5 by Year 1.');
+    const add = (tag, attrs, text) => {
+      const e = document.createElementNS(NS, tag);
+      Object.entries(attrs).forEach(([a, v]) => {
+        if (String(v).indexOf('var(') === 0) e.style.setProperty(a, v);
+        else e.setAttribute(a, v);
+      });
+      if (text != null) e.textContent = text;
+      svg.appendChild(e);
+      return e;
+    };
+    for (let l = 1; l <= 5; l++) {
+      add('line', { x1: L, x2: W - R, y1: y(l), y2: y(l), stroke: 'var(--hair)', 'stroke-width': 1 });
+      add('text', { x: L - 8, y: y(l) + 4, 'text-anchor': 'end', fill: 'var(--muted)', 'font-size': 11, 'font-family': 'var(--font-mono)' }, 'Level ' + l);
+    }
+    // milestone columns
+    ms.forEach((m, i) => {
+      const mx = x(m.at);
+      const done = m.goals.every(g => g.done);
+      add('line', { x1: mx, x2: mx, y1: T - 6, y2: H - B, stroke: 'var(--line)', 'stroke-width': 1, 'stroke-dasharray': '2 3' });
+      if (i === hereIdx) add('circle', { cx: mx, cy: T - 15, r: 10, fill: 'var(--accent-soft)', stroke: 'none' });
+      add('ellipse', { cx: mx, cy: T - 15, rx: 6.5, ry: 4.5, transform: 'rotate(-22 ' + mx.toFixed(1) + ' ' + (T - 15) + ')', fill: done ? 'var(--accent)' : 'var(--bg)', stroke: 'var(--accent)', 'stroke-width': 2 });
+      add('text', { x: mx, y: H - B + 17, 'text-anchor': 'middle', fill: i === hereIdx ? 'var(--ink)' : 'var(--muted)', 'font-size': 10, 'font-weight': i === hereIdx ? 700 : 500, 'font-family': 'var(--font-mono)' }, ROAD_SHORT[i]);
+    });
+    // typical pace band and line
+    const ds = [];
+    for (let d = 0; d <= MAXD; d += 2) ds.push(d);
+    const upper = ds.map(d => x(d).toFixed(1) + ' ' + y(Math.min(5, typicalLevel(d) + 0.45)).toFixed(1));
+    const lower = ds.slice().reverse().map(d => x(d).toFixed(1) + ' ' + y(Math.max(1, typicalLevel(d) - 0.45)).toFixed(1));
+    add('path', { d: 'M' + upper.join(' L') + ' L' + lower.join(' L') + ' Z', fill: 'var(--accent)', opacity: 0.1, stroke: 'none' });
+    add('path', { d: 'M' + ds.map(d => x(d).toFixed(1) + ' ' + y(typicalLevel(d)).toFixed(1)).join(' L'), fill: 'none', stroke: 'var(--accent)', 'stroke-width': 1.5, 'stroke-dasharray': '5 4', opacity: 0.75 });
+    add('text', { x: x(110) - 6, y: y(typicalLevel(110)) - 12, 'text-anchor': 'end', fill: 'var(--accent-text)', 'font-size': 11, 'font-weight': 600, 'font-family': 'var(--font-body)' }, 'Typical pace');
+    // your path
+    const log = P().levelLog.slice().sort((a, b) => a.day - b.day);
+    if (log.length) {
+      const pts = log.map(p => [p.day, p.level]).concat([[n, P().level]]);
+      let d = 'M' + x(pts[0][0]).toFixed(1) + ' ' + y(pts[0][1]).toFixed(1);
+      for (let i = 1; i < pts.length; i++) {
+        d += ' L' + x(pts[i][0]).toFixed(1) + ' ' + y(pts[i - 1][1]).toFixed(1) + ' L' + x(pts[i][0]).toFixed(1) + ' ' + y(pts[i][1]).toFixed(1);
+      }
+      add('path', { d, fill: 'none', stroke: 'var(--ink)', 'stroke-width': 2.5, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' });
+    }
+    const cx = x(n), cy = y(P().level);
+    add('circle', { cx, cy, r: 7, fill: 'var(--accent)', stroke: 'var(--bg)', 'stroke-width': 3 });
+    add('text', { x: cx + (cx > W - 50 ? -10 : 0), y: P().level >= 5 ? cy + 22 : cy - 12, 'text-anchor': cx > W - 50 ? 'end' : 'middle', fill: 'var(--ink)', 'font-size': 12, 'font-weight': 700, 'font-family': 'var(--font-body)' }, 'You');
+    // tap or hover a column to read its milestone
+    const read = $('#road-read');
+    const def = 'Tap the chart to see each milestone\'s goals.';
+    read.textContent = def;
+    const hit = add('rect', { x: L - 12, y: 0, width: W - L - R + 24, height: H, fill: 'transparent' });
+    const onMove = ev => {
+      const r = svg.getBoundingClientRect();
+      const px = ((ev.clientX - r.left) / r.width) * W;
+      let bi = 0, bd = Infinity;
+      ms.forEach((m, i) => { const dd = Math.abs(x(m.at) - px); if (dd < bd) { bd = dd; bi = i; } });
+      const m = ms[bi];
+      read.textContent = m.when + ' · ' + m.title + ' · ' + m.goals.filter(g => g.done).length + ' of ' + m.goals.length + ' goals';
+    };
+    hit.addEventListener('pointermove', onMove);
+    hit.addEventListener('pointerdown', onMove);
+    hit.addEventListener('pointerleave', () => { read.textContent = def; });
+    host.appendChild(svg);
   }
   function renderRoadmap() {
     const n = practiceDays();
-    const list = $('#road-list');
-    list.innerHTML = '';
     const ms = roadmap();
-    let hereIdx = ms.findIndex(m => n < m.at);
+    let hereIdx = ms.findIndex(m => !m.goals.every(g => g.done));
     if (hereIdx < 0) hereIdx = ms.length;
     $('#road-pos').textContent = n ? 'Practice day ' + n : 'Not started yet';
+    const pace = $('#road-pace');
+    if (!lastCheck()) {
+      pace.textContent = Mic.available ? 'Take the level check so the app can place you on this chart.' : 'Your place on this chart comes from the level check in the GitHub version.';
+    } else {
+      const diff = P().level - typicalLevel(n);
+      pace.textContent = diff >= 0.75 ? 'You\'re ahead of the typical pace. Keep the habit going.'
+        : diff <= -0.75 ? 'Behind the typical pace so far. That\'s common early on; steady days close the gap.'
+          : 'You\'re right on the typical pace.';
+    }
+    renderRoadChart(ms, hereIdx);
+    const list = $('#road-list');
+    list.innerHTML = '';
     ms.forEach((m, i) => {
-      const reached = n >= m.at;
       const doneGoals = m.goals.filter(g => g.done).length;
-      const li = el('li', 'mile' + (reached ? ' reached' : '') + (i === hereIdx ? ' next' : ''));
+      const complete = doneGoals === m.goals.length;
+      const li = el('li', 'mile' + (complete ? ' reached' : '') + (i === hereIdx ? ' next' : ''));
       const head = el('div', 'mile-head');
       head.appendChild(el('span', 'mile-dot'));
       const t = el('div', 'mile-title');
@@ -3301,7 +5150,11 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
         ul.appendChild(gi);
       });
       li.appendChild(ul);
-      if (i === hereIdx) li.appendChild(el('p', 'mile-here', n ? 'You\'re working toward this one. ' + (m.at - n) + ' practice day' + (m.at - n === 1 ? '' : 's') + ' to go.' : 'Start here.'));
+      if (i === hereIdx) {
+        li.appendChild(el('p', 'mile-here', m.at > n
+          ? 'You\'re working toward this one. About ' + (m.at - n) + ' more practice day' + (m.at - n === 1 ? '' : 's') + '.'
+          : 'You\'ve put in the days. Finish the goals to reach it.'));
+      }
       list.appendChild(li);
     });
   }
@@ -3416,7 +5269,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
       const host = $('#vt-result');
       host.hidden = false;
       host.innerHTML = '<p class="status err"></p>';
-      host.firstChild.textContent = MIC_FAIL;
+      host.firstChild.textContent = micFailMsg();
       return;
     }
     stopAll();
@@ -3481,6 +5334,13 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     }
     const brk = vt.brkTested ? vt.brk : (state.voice && state.voice.brk != null ? state.voice.brk : null);
     const { best, near } = classifyVoice(low, high, brk);
+    const prevV = state.voice;
+    P().rangeHistory = (P().rangeHistory || []).concat({ date: todayKey(), low, high, brk: brk != null ? brk : null }).slice(-24);
+    P().top = null;
+    P().topHits = [];
+    if (prevV && dayNum(todayKey()) - dayNum(prevV.date) <= 45 && (prevV.high - high >= 3 || low - prevV.low >= 3)) {
+      P().rangeAlert = { date: todayKey(), drop: Math.max(prevV.high - high, low - prevV.low) };
+    }
     state.voice = { low, high, type: best.name, near: near ? near.name : null, brk, brkTested: vt.brkTested || !!(state.voice && state.voice.brkTested), date: todayKey() };
     clampScaleKey();
     renderPlan();
@@ -3772,11 +5632,13 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
   // What "getting better" means for each thing the app measures.
   const METRICS = [
     { key: 'avgMiss', name: 'Pitch accuracy', chart: 'Average miss in cents (lower is better)', unit: '¢', better: 'down', thr: 5, how: 'upload a take or sing the scale back' },
+    { key: 'checkMiss', name: 'Level check', chart: 'Level check: average miss matching notes (¢, lower is better)', unit: '¢', better: 'down', thr: 5, how: 'take the level check', mic: true },
     { key: 'onTarget', name: 'Time on pitch', chart: 'Time within 25¢ of the note (%)', unit: '%', better: 'up', thr: 5, max: 100, how: 'upload a take or sing the scale back' },
     { key: 'scalePct', name: 'Sing-back', chart: 'Sing-back notes landed on pitch (%)', unit: '%', better: 'up', thr: 8, max: 100, how: 'use "Sing it back" in fa', mic: true },
     { key: 'follow', name: 'Slides', chart: 'How closely you follow a slide (%)', unit: '%', better: 'up', thr: 5, max: 100, how: 'use "Sing a slide" in re or sol', mic: true },
     { key: 'hiss', name: 'Breath length', chart: 'Longest hiss (seconds)', unit: ' s', better: 'up', thr: 1.5, how: 'finish a breath round in do' },
     { key: 'steady', name: 'Breath control', chart: 'Hiss steadiness (%)', unit: '%', better: 'up', thr: 5, max: 100, how: 'do a breath round with the mic on', mic: true },
+    { key: 'song', name: 'Songs', chart: 'Song phrase notes on pitch (%)', unit: '%', better: 'up', thr: 6, max: 100, how: 'sing a song phrase in the library', mic: true },
     { key: 'swell', name: 'Hold & swell', chart: 'Hold & swell control (%)', unit: '%', better: 'up', thr: 5, max: 100, how: 'unlocks at Level 3', mic: true },
     { key: 'range', name: 'Range', chart: 'Lowest to highest note (half steps)', unit: ' half steps', short: '', better: 'up', thr: 1, how: 'take the voice type test', mic: true },
   ];
@@ -3930,6 +5792,7 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     renderBonus();
     renderCoach();
     renderRoadmap();
+    renderPracticeTime();
     renderRungs();
     renderAllReps();
     renderBreathMeta();
@@ -4030,6 +5893,23 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     $('#scale-replay').addEventListener('click', faDrill.replay);
     $('#focus-start').addEventListener('click', focusToggle);
     $('#swell-btn').addEventListener('click', swellToggle);
+    [['#stac-sing', 'Sing it back'], ['#ngv-sing', 'Start'], ['#iv-sing', 'Start 5 jumps'], ['#vow-sing', 'Start'], ['#br-sing', 'Sing it back'], ['#song-sing', 'Sing it'], ['#agility-sing', 'Sing the run']].forEach(([sel, label]) => {
+      micLabel($(sel), label);
+      $(sel).hidden = false;
+    });
+    $('#stac-sing').addEventListener('click', stacDrill.toggle);
+    $('#ngv-sing').addEventListener('click', ngvSus.toggle);
+    $('#iv-sing').addEventListener('click', () => { if (!ivDrill.isActive()) buildIntervals(); ivDrill.toggle(); });
+    $('#iv-replay').addEventListener('click', ivDrill.replay);
+    $('#vow-sing').addEventListener('click', vowSus.toggle);
+    $('#br-sing').addEventListener('click', brDrill.toggle);
+    $('#br-replay').addEventListener('click', brDrill.replay);
+    $('#song-sing').addEventListener('click', songDrill.toggle);
+    micLabel($('#top-sing'), 'Sing the top note');
+    $('#top-sing').hidden = false;
+    $('#top-sing').addEventListener('click', topSus.toggle);
+    $('#top-easy').addEventListener('click', () => topAnswer(true));
+    $('#top-strain').addEventListener('click', () => topAnswer(false));
     $('#agility-play').addEventListener('click', playAgility);
     $('#agility-sing').addEventListener('click', agilityDrill.toggle);
     micLabel($('#swell-btn'), 'Start a swell');
@@ -4053,13 +5933,37 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     });
   }
 
+  // exercise library controls that work without the mic
+  $('#post-btn').addEventListener('click', postureToggle);
+  $('#stac-play').addEventListener('click', playStac);
+  $('#ngv-play').addEventListener('click', () => playNote(swellMidi(), 1.6));
+  $('#vow-play').addEventListener('click', () => playNote(vowTarget(), 1.6));
+  $('#iv-play').addEventListener('click', () => { const n = ivList[0]; if (n) playSeq([n.root, n.midi], 0.7, litFn('#iv-chips')); });
+  $('#br-play').addEventListener('click', () => playSeq(bridgeNotes().map(n => n.midi), 0.9, litFn('#br-chips')));
+  $('#song-play').addEventListener('click', playSong);
+  $('#song-pick').addEventListener('change', e => { songPick = e.target.value; renderSongUI(); });
+
+  // coach controls
+  document.querySelectorAll('input[name="ci-voice"]').forEach(i => i.addEventListener('change', e => setCheckin('voice', e.target.value)));
+  document.querySelectorAll('input[name="ci-energy"]').forEach(i => i.addEventListener('change', e => setCheckin('energy', e.target.value)));
+  $('#top-play').addEventListener('click', () => { if (rangeTop() != null) playNote(rangeTop(), 1.6); });
+  $('#quiz-start').addEventListener('click', quizNext);
+  $('#quiz-replay').addEventListener('click', quizPlay);
+  $('#cp-btn').addEventListener('click', copyPrompt);
+  let aboutT = 0;
+  const onAbout = () => {
+    clearTimeout(aboutT);
+    aboutT = setTimeout(() => { P().name = $('#p-name').value.trim(); P().about = $('#p-about').value.trim(); saveSettings(); }, 600);
+  };
+  $('#p-name').addEventListener('input', onAbout);
+  $('#p-about').addEventListener('input', onAbout);
+
   // plan controls
   const onPlan = fn => e => { fn(e); saveSettings(); renderAll(); };
   document.querySelectorAll('input[name="p-length"]').forEach(i => i.addEventListener('change', onPlan(e => { P().length = Number(e.target.value); })));
   document.querySelectorAll('input[name="p-warm"]').forEach(i => i.addEventListener('change', onPlan(e => { P().warm = e.target.value; })));
   document.querySelectorAll('input[name="p-vowel"]').forEach(i => i.addEventListener('change', onPlan(e => { P().vowel = e.target.value; })));
   $('#p-goal').addEventListener('change', onPlan(e => { P().goal = e.target.value; }));
-  $('#p-level').addEventListener('change', onPlan(e => { P().level = Number(e.target.value); P().strong = []; P().pattern = null; match.matched.clear(); }));
   $('#p-blind').addEventListener('change', onPlan(e => { P().blind = e.target.checked; }));
   document.querySelectorAll('.p-step').forEach(c => c.addEventListener('change', onPlan(e => {
     const st = e.target.dataset.step;
@@ -4067,24 +5971,28 @@ label.inline { display: inline-flex; align-items: center; gap: 8px; font-size: 1
     else if (activeSteps().length > 1) P().skip[st] = true;
     else e.target.checked = true;
   })));
-  $('#lvl-up').addEventListener('click', levelUp);
+  $('#lc-start').addEventListener('click', lcStart);
+  $('#lc-cancel').addEventListener('click', () => { if (Mic.consumer === lcConsumer) setConsumer(null); else lcAbort(); });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) flushPracticeTime(); });
+  window.addEventListener('pagehide', flushPracticeTime);
 
   // redraw on resize and theme change
   let rt = 0;
   const redraw = () => {
     cancelAnimationFrame(rt);
-    rt = requestAnimationFrame(() => { drawGraph(); renderTrends(); sirenSlide.redraw(); coolSlide.redraw(); renderVoice(); if (!$('#swell-cv').hidden) drawSwell(); });
+    rt = requestAnimationFrame(() => { drawGraph(); renderTrends(); sirenSlide.redraw(); coolSlide.redraw(); renderVoice(); renderRoadmap(); if (!$('#swell-cv').hidden) drawSwell(); });
   };
   if (window.ResizeObserver) new ResizeObserver(redraw).observe(gw);
   else window.addEventListener('resize', redraw);
   const mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
   if (mq) { if (mq.addEventListener) mq.addEventListener('change', redraw); else if (mq.addListener) mq.addListener(redraw); }
   new MutationObserver(redraw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) { renderStats(); renderCal(); renderRungs(); renderCoach(); renderRoadmap(); } });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) { renderStats(); renderCal(); renderRungs(); renderCoach(); renderRoadmap(); renderPracticeTime(); } });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(redraw);
 
   // boot
   lsLoad();
+  if (state.voice && !P().rangeHistory.length) P().rangeHistory = [{ date: state.voice.date, low: state.voice.low, high: state.voice.high, brk: state.voice.brk != null ? state.voice.brk : null }];
   renderAll();
   initRemote();
   if (!inViewer) {

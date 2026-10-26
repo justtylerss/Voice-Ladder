@@ -1,55 +1,60 @@
 # Voice Ladder
 
-A daily beginner singing routine that runs in the browser, 5 to 20 minutes a day, with live mic feedback and a coach that adapts to your voice.
+A daily singing coach that runs in the browser. It gives you a 15–45 minute session plan, live mic feedback on every exercise, and a coach that adapts to how you actually sing.
 
 **Live app:** https://justtylerss.github.io/Voice-Ladder/
 
-## The routine
+## Today's session
+
+Each day starts with a quick **check-in** (how your voice feels, your energy level), then a session plan in a coach's format:
+
+- **Today's focus:** the weakest area, in priority order: vocal health > pitch accuracy > breath support > register blending > range > style
+- **Since last time:** the biggest real improvement and any real regression, with numbers (for example, "your average miss on E3 went from 38¢ to 22¢")
+- **Session:** warm-up, technique aimed at today's focus, application (a song), and cool-down, each with notes, minutes, and what to listen for
+- **Song of the day** with its range in your key, flagged if it goes above your comfortable top
+- **Next milestone:** a specific, measurable target
+
+A tired voice or low energy gets a lighter 15-minute session. Hoarseness or pain means no singing that day: mic exercises lock, and the plan switches to ear training, silent breath work, and active listening. Lasting hoarseness, pain, or a sudden range drop brings up advice to rest and see an ENT or laryngologist.
+
+**Practice time:** recommended 30 minutes and a 45-minute daily max to start. The max grows 5 minutes for every 10 practice days in a row with no tired or hoarse check-ins, up to 60. Mic exercises pause once you reach the max.
+
+**Copy coach prompt for Claude** fills a full coaching prompt with your live data (range history, recent sessions, notes hit and missed, check-in, streak, and weekly minutes). Paste it into Claude for a deeper plan and song picks.
+
+## The daily core
 
 | Step | What you do | What the mic shows |
 |------|-------------|--------------------|
-| do · Breathe | A 4-count inhale, then a steady "sss" | A hiss loudness bar with a steady zone; it stops the timer automatically and scores steadiness |
-| re · Warm up | Lip trills, straw phonation, or hums sliding up and down (an octave from Level 3) | Follow-the-dot graph: your pitch traced against the slide |
-| mi · Match the note | Play a note, sing it back, hold it (a full octave of notes from Level 2) | A tuner bar (flat ← on pitch → sharp); hold in the green to match |
-| fa · Scales & arpeggios | 1-2-3-2-1, the 5-note scale, arpeggios, octave arpeggios, and the 9-note scale as you level up | Sing it back: the app plays one note, waits for you to land it, and checks it off ✓ / ~ / ✗ |
-| sol · Cool down | Quiet hums sliding down | Follow-the-dot graph plus a check that you're singing softly |
+| do · Breathe | A 4-count inhale, then a steady "sss" | Hiss loudness bar with a steady zone, auto-timing, and a steadiness score |
+| re · Warm up | Lip trills, straw, or hums sliding up and down | Follow-the-dot graph of your pitch against the slide |
+| mi · Match the note | Hear a note, sing it back, hold it | Tuner bar; hold in the green to match |
+| fa · Scales & arpeggios | 1-2-3-2-1 up to the 9-note scale as you level up | One note at a time, checked off ✓ / ~ / ✗ |
+| sol · Cool down | Quiet hums sliding down | Follow-the-dot graph plus a softness check |
 
-## Coach
+## Exercise library
 
-- **Levels 1–5** (Foundations → Pitch control → Range & registers → Agility → Polish). They follow the progression voice clinics use: glides and short scales, then arpeggios, wider leaps, sustained dynamics, and agility. The pitch target tightens from ±40¢ to ±15¢. Three strong sessions on different days unlock the next level.
-- **Weak-spot coaching:** every note you sing is logged by pitch (average cents off and flat/sharp tendency), along with whether you go flat on rising notes, scoop into notes, or wobble on held notes. **Today's focus** turns that into plain advice and a drill on your weakest notes.
-- **Coach tips** after each sing-back round, based on what the mic heard.
-- **Level drills:** Hold & swell (*messa di voce*) from Level 3, and agility runs from Level 4.
-- **Ear training mode** hides the needle until each note is done.
+Posture & release, clean onsets (staccato), hum into a vowel, interval echo, interval quiz (no singing), vowel tuning, top-note check, Hold & swell (*messa di voce*), bridge the break, agility runs, and song phrases. Songs include Twinkle Twinkle, Frère Jacques, La Cucaracha, Ode to Joy, Happy Birthday, and Amazing Grace, all transposed to your range. The session plan picks from the library every day based on your weak spots.
 
-## Your plan
+**Range rule:** your top note moves up a half step only after you hit it within ±20¢, steady, and without strain on 3 different days.
 
-Session length (5 / 11 / 20 min), warm-up style (lip trills, straw, or hum), vowel (ah, ee, oo, or rotating daily), goal (pop, R&B, rock, musical theater, choir, or just for fun), which steps to include, and your level.
+## Levels
+
+A 2-minute **level check** places you at Level 1–5. It measures note matching, a pattern sung back from memory, how steady a held note is, and (if you qualify) a quick run. Your level then moves up after 3 strong sessions on different days, or down if sing-backs keep falling short. The pitch target tightens from ±40¢ at Level 1 to ±15¢ at Level 5. A recheck is suggested every 4 weeks.
 
 ## Voice type test
 
-You sing your lowest clear note, then your highest comfortable note, then (optionally) one slow slide so the app can find where your voice flips (your register break, or passaggio). It combines range and break to estimate bass, baritone, tenor, alto, mezzo-soprano, or soprano, then fits every exercise to that range: slides stay inside it, scales stop at your comfortable top, and the tuner warns you near the top.
+Sing your lowest clear note, your highest comfortable note, then (optionally) one slow slide so the app can find where your voice flips (your register break). The app estimates bass, baritone, tenor, alto, mezzo-soprano, or soprano, then fits every exercise to your range.
 
-## Progress
+## Progress and roadmap
 
-The **Your progress** section tracks each metric per day (pitch accuracy in cents, time on pitch, sing-back notes landed, slide following, breath length, breath steadiness, hold & swell control, and range). Each metric gets a chart with a least-squares trend line and a plain verdict: improving, holding steady, or dipping.
-
-## Roadmap
-
-Day 1, Week 1, Week 2, Month 1, Month 3, Month 6, and Year 1. Each milestone covers what to expect at roughly 15 minutes a day, 5–6 days a week, plus goals that check off automatically from your log.
+Per-skill charts with trend lines and an improving / holding steady / dipping verdict. The roadmap chart plots your level against the typical pace from Day 1 to Year 1. Its goals need both the practice days and a passing level check.
 
 ## Pitch tracking
 
-- **Live mic:** wear headphones for the best results. Without headphones, the mic pauses while the app's own tones play.
-- **Upload a take:** a voice memo or video gets graphed against the target notes.
-
-Pitch detection uses the YIN algorithm, running entirely in the browser. No audio leaves your device.
+Pitch detection uses the YIN algorithm and runs entirely in your browser. No audio leaves your device. Headphones give the best results; without them, the mic pauses while the app's own tones play.
 
 ## Saving and sync
 
-Your practice log (streak, breath times, accuracy) is saved in the browser's local storage. To share it across your phone and computer, connect each device under **Sync your phone and computer** with a GitHub token that has only `gist` scope. The app keeps the log in a private gist (`voice-ladder-log.json`) and merges by day, keeping whichever device's change is newest. It syncs when the app opens, after each change, and when you come back to the tab.
-
-The token is stored only in each device's local storage. You can revoke it anytime at github.com/settings/tokens.
+Everything is saved in the browser's local storage, including your name and goals for the coach. To share it across your phone and computer, connect each device under **Sync your phone and computer** with a GitHub token that has only `gist` scope. The log lives in a private gist (`voice-ladder-log.json`), merged by day. The token stays in each device's local storage, and you can revoke it anytime at github.com/settings/tokens.
 
 ## Files
 
