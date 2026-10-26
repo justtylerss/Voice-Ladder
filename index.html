@@ -4901,13 +4901,17 @@ button.sess-item.done { border-color: var(--good); }
     } catch (e) {}
   }
   const aiOn = () => !!(AI.sample || AI.key);
-  async function askClaude({ system, messages, maxTokens, onText, signal }) {
+  // Newer models think before answering by default, and thinking counts toward max_tokens,
+  // so budgets are generous (billing is for tokens actually used). Quick calls on Sonnet 5.5
+  // keep thinking to a minimum.
+  async function askClaude({ system, messages, maxTokens, onText, signal, quick, noThinkingParam }) {
     if (AI.sample) {
       const turns = [{ role: 'user', content: system }].concat(messages);
       const r = await AI.sample(turns, { onText: ({ text }) => onText && onText(text), signal, cache: false });
       return r.text;
     }
     if (!AI.key) throw { code: 'no_key' };
+    const sendThinking = !!quick && !noThinkingParam && AI.model === 'claude-sonnet-5-5';
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       signal,
@@ -4917,16 +4921,22 @@ button.sess-item.done { border-color: var(--good); }
         'content-type': 'application/json',
         'anthropic-dangerous-direct-browser-access': 'true',
       },
-      body: JSON.stringify({ model: AI.model, max_tokens: maxTokens || 1200, system, messages, stream: true }),
+      body: JSON.stringify(Object.assign(
+        { model: AI.model, max_tokens: maxTokens || 6000, system, messages, stream: true },
+        sendThinking ? { thinking: { type: 'between_tools' } } : {},
+      )),
     });
     if (!res.ok) {
       let message = '';
       try { const j = await res.json(); message = (j.error && j.error.message) || ''; } catch (e) {}
+      if (sendThinking && res.status === 400 && /thinking/i.test(message)) {
+        return askClaude({ system, messages, maxTokens, onText, signal, quick, noThinkingParam: true });
+      }
       throw { code: 'http', status: res.status, message };
     }
     const reader = res.body.getReader();
     const dec = new TextDecoder();
-    let buf = '', text = '';
+    let buf = '', text = '', stop = null;
     for (;;) {
       const { value, done } = await reader.read();
       if (done) break;
@@ -4942,12 +4952,14 @@ button.sess-item.done { border-color: var(--good); }
         if (ev.type === 'content_block_delta' && ev.delta && ev.delta.type === 'text_delta') {
           text += ev.delta.text;
           if (onText) onText(text);
+        } else if (ev.type === 'message_delta' && ev.delta && ev.delta.stop_reason) {
+          stop = ev.delta.stop_reason;
         } else if (ev.type === 'error') {
           throw { code: 'http', status: 529, message: (ev.error && ev.error.message) || '' };
         }
       }
     }
-    if (!text.trim()) throw { code: 'empty' };
+    if (!text.trim()) throw { code: 'empty', stop };
     return text;
   }
   function aiErrorText(e) {
@@ -4966,7 +4978,8 @@ button.sess-item.done { border-color: var(--good); }
     if (e.code === 'rate_limited') return 'You\'ve hit a usage limit. Try again later.';
     if (e.code === 'session_expired') return 'Sign in to Claude again, then retry.';
     if (e instanceof TypeError) return 'Couldn\'t reach Claude. Check your internet connection.';
-    return 'Claude couldn\'t answer just now. Try again.';
+    if (e.code === 'empty') return e.stop === 'max_tokens' ? 'Claude spent its whole reply thinking. Ask a shorter question, or try again.' : 'Claude sent an empty reply. Try again.';
+    return 'Claude couldn\'t answer just now. Try again.' + (e.code || e.message ? ' (' + (e.code || e.message) + ')' : '');
   }
   // Small, safe Markdown: paragraphs, headings, bullet and numbered lists, **bold**.
   function renderMd(host, md) {
@@ -5056,7 +5069,8 @@ button.sess-item.done { border-color: var(--good); }
     btn.addEventListener('click', () => aiRun(out, btn, {
       system: 'You are a skilled one-on-one vocal coach inside the Voice Ladder practice app. ' + aiContext() + ' ' + AI_RULES,
       messages: [{ role: 'user', content: 'Exercise: ' + title + '\nApp feedback: ' + fbEl.textContent.trim() + '\nData: ' + detail + '\n\nExplain what happened in 2–4 sentences using the numbers, then give one concrete fix to try on the next round. No preamble.' }],
-      maxTokens: 350,
+      maxTokens: 3000,
+      quick: true,
     }));
   }
   const fmtNotes = list => list.map(n => n.t + ' ' + (n.r === 'miss' ? 'missed' : n.r) + (n.mean != null ? ' (' + signedC(n.mean) + ')' : '') + (n.sc ? ' scooped' : '')).join(', ');
@@ -5069,7 +5083,7 @@ button.sess-item.done { border-color: var(--good); }
     aiRun(out, $('#ai-plan'), {
       system: coachPrompt({ ask: false }) + '\n\nKeep the whole plan under 260 words.',
       messages: [{ role: 'user', content: 'Give me today\'s session plan. Use exercises that exist in the Voice Ladder app (breath rounds, warm-up slides, match the note, scales and arpeggios, cool-down, and the library: posture, clean onsets, hum into a vowel, interval echo, interval quiz, vowel tuning, top-note check, hold & swell, bridge the break, agility run, song phrases).' }],
-      maxTokens: 900,
+      maxTokens: 10000,
     }, text => { d.aiPlan = text; saveDay(todayKey()); addRegen(out); });
   }
   function addRegen(out) {
@@ -5082,7 +5096,7 @@ button.sess-item.done { border-color: var(--good); }
     aiRun($('#ai-plan-out'), $('#ai-week'), {
       system: coachPrompt({ ask: false, days: 14 }),
       messages: [{ role: 'user', content: 'Give me my weekly review: what improved and what didn\'t over the last 1–2 weeks (with numbers), any plateau or regression and the likely reason, and next week\'s plan (one focus, three exercises with targets). Under 230 words.' }],
-      maxTokens: 800,
+      maxTokens: 10000,
     });
   }
 
@@ -5120,7 +5134,8 @@ button.sess-item.done { border-color: var(--good); }
       const reply = await askClaude({
         system: coachPrompt({ ask: false }) + '\n\nYou\'re chatting inside the app. Answer the question directly in under 150 words unless asked for more, using their data when it helps.',
         messages: AI.chat.slice(-12).map(m => ({ role: m.role, content: m.content })),
-        maxTokens: 700,
+        maxTokens: 6000,
+        quick: true,
         onText: t => renderMd(bubble, t),
       });
       AI.chat.push({ role: 'assistant', content: reply });
@@ -5148,7 +5163,11 @@ button.sess-item.done { border-color: var(--good); }
     st.textContent = 'Checking your key…';
     AI.key = key;
     try {
-      await askClaude({ system: 'Reply with the single word OK.', messages: [{ role: 'user', content: 'Test' }], maxTokens: 5 });
+      try {
+        await askClaude({ system: 'Reply with the single word OK.', messages: [{ role: 'user', content: 'Test' }], maxTokens: 400, quick: true });
+      } catch (e) {
+        if (e.code !== 'empty') throw e; // the key worked; the reply was just empty
+      }
       aiSave();
       $('#ai-key').value = '';
       st.textContent = '';
